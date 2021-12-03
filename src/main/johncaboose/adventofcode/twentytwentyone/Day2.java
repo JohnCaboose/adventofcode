@@ -7,7 +7,7 @@ import java.util.Scanner;
 public class Day2 implements ISolvableDay {
 
     @Override
-    public int partOneSolver(String input) {
+    public long partOneSolver(String input) {
         List<MovementStep> movementSteps = populateList(input);
 
         int horizontalPosition = 0;
@@ -29,7 +29,7 @@ public class Day2 implements ISolvableDay {
     }
 
     @Override
-    public int partTwoSolver(String input) {
+    public long partTwoSolver(String input) {
         List<MovementStep> movementSteps = populateList(input);
 
         int horizontalPosition = 0;

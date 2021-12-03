@@ -2,7 +2,7 @@ package johncaboose.adventofcode.twentytwentyone;
 
 public interface ISolvableDay {
 
-    int partOneSolver(String input);
+    long partOneSolver(String input);
 
-    int partTwoSolver(String input);
+    long partTwoSolver(String input);
 }

@@ -7,13 +7,13 @@ public class Day1 implements ISolvableDay {
 
 
     @Override
-    public int partOneSolver(String input) {
+    public long partOneSolver(String input) {
         List<Long> depths = Utils.populateListWithLongs(input);
         return amountOfIncreases(depths);
     }
 
     @Override
-    public int partTwoSolver(String input) {
+    public long partTwoSolver(String input) {
         List<Long> depths = Utils.populateListWithLongs(input);
         List<Long> slidingWindowOfDepths = new ArrayList<>();
         for (int i = 0; i < depths.size(); i++) {

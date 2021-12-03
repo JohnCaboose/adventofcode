@@ -16,8 +16,7 @@ public class Day3Test {
 
     @Test
     void part1Solver_WHEN_realInput_THEN_outputMatchesValidatedAnswer() {
-        assertEquals(-1, sut.partOneSolver(ProblemInput.DAY_3_INPUT));
-        fail();
+        assertEquals(4001724, sut.partOneSolver(ProblemInput.DAY_3_INPUT));
     }
 
     @Test
