@@ -1,13 +1,14 @@
-package com.johncaboose.adventofcode.twentytwentyone;
+package johncaboose.adventofcode.twentytwentyone;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class Day2 implements ISolvableDay {
+
     @Override
-    public String solutionPartOne() {
-        List<MovementStep> movementSteps = populateList(ProblemInput.DAY_2_INPUT);
+    public int partOneSolver(String input) {
+        List<MovementStep> movementSteps = populateList(input);
 
         int horizontalPosition = 0;
         int verticalDepth = 0;
@@ -24,12 +25,12 @@ public class Day2 implements ISolvableDay {
 
         int product = horizontalPosition * verticalDepth;
 
-        return String.valueOf(product);
+        return product;
     }
 
     @Override
-    public String solutionPartTwo() {
-        List<MovementStep> movementSteps = populateList(ProblemInput.DAY_2_INPUT);
+    public int partTwoSolver(String input) {
+        List<MovementStep> movementSteps = populateList(input);
 
         int horizontalPosition = 0;
         int verticalDepth = 0;
@@ -49,8 +50,9 @@ public class Day2 implements ISolvableDay {
 
         int product = horizontalPosition * verticalDepth;
 
-        return String.valueOf(product);
+        return product;
     }
+
 
     private enum Axis {
         VERTICAL,
