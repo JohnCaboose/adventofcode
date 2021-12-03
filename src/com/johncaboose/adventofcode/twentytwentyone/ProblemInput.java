@@ -2004,14 +2004,15 @@ public class ProblemInput {
             9752
             9745
             """;
-public static final String DAY_2_EXAMPLE_1 =
-        """
-        forward 5
-        down 5
-        forward 8
-        up 3
-        down 8
-        forward 2""";
+
+    public static final String DAY_2_EXAMPLE_1 =
+            """
+                    forward 5
+                    down 5
+                    forward 8
+                    up 3
+                    down 8
+                    forward 2""";
 
     public static final String DAY_2_INPUT =
             """
