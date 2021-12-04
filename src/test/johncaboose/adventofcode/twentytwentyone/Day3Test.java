@@ -3,7 +3,6 @@ package johncaboose.adventofcode.twentytwentyone;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
 
 public class Day3Test {
 
@@ -21,14 +20,12 @@ public class Day3Test {
 
     @Test
     void part2Solver_WHEN_exampleInput_THEN_outputMatchesExampleOutput() {
-        assertEquals(-1, sut.partTwoSolver(ProblemInput.DAY_3_EXAMPLE));
-        fail();
+        assertEquals(230, sut.partTwoSolver(ProblemInput.DAY_3_EXAMPLE));
     }
 
     @Test
     void part2Solver_WHEN_realInput_THEN_outputMatchesValidatedAnswer() {
-        assertEquals(-1, sut.partTwoSolver(ProblemInput.DAY_3_INPUT));
-        fail();
+        assertEquals(587895, sut.partTwoSolver(ProblemInput.DAY_3_INPUT));
     }
 
 }
