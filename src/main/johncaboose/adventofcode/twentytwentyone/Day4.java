@@ -1,8 +1,15 @@
 package johncaboose.adventofcode.twentytwentyone;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Day4 implements ISolvableDay {
+
+    /**
+     * This is the same as the number of columns
+     */
+    private static final int NUMBER_OF_ROWS = 5;
+    private static final int NUMBER_OF_BINGO_CARD_ELEMENTS = NUMBER_OF_ROWS * NUMBER_OF_ROWS;
 
     private interface IBingoable {
         boolean hasBingo();
@@ -12,10 +19,16 @@ public class Day4 implements ISolvableDay {
         int getUnmarkedNumberSum();
     }
 
-    private interface MapThatStoresDefault<K, V> extends Map<K, V> {
+    private interface ExtendedMap<K, V> extends Map<K, V> {
 
-        @Override
-        default V getOrDefault(Object key, V defaultValue) {
+        /**
+         * Same as {@link #getOrDefault(Object, Object)} except the default value is also stored in the underlying Map.
+         *
+         * @param key
+         * @param defaultValue
+         * @return
+         */
+        default V getOrStoreDefault(Object key, V defaultValue) {
             V returnValue = Map.super.getOrDefault(key, defaultValue);
             if (get(key) == null) {
                 this.put((K) key, returnValue);
@@ -24,13 +37,8 @@ public class Day4 implements ISolvableDay {
         }
     }
 
-    private static class HashMapThatStoresDefault<K, V> extends HashMap<K, V> implements MapThatStoresDefault<K, V> {
+    private static class ExtendedHashMap<K, V> extends HashMap<K, V> implements ExtendedMap<K, V> {
 
-
-        @Override
-        public V getOrDefault(Object key, V defaultValue) {
-            return MapThatStoresDefault.super.getOrDefault(key, defaultValue);
-        }
     }
 
     private static class BingoBoard implements IBingoable {
@@ -53,12 +61,23 @@ public class Day4 implements ISolvableDay {
 
         public int getUnmarkedNumberSum() {
             //Don't count same number twice
-            List<BingoableSequence> rowsOnly = boardSequences.subList(0, 5);
+            List<BingoableSequence> rowsOnly = boardSequences.subList(0, NUMBER_OF_ROWS);
             int sum = 0;
             for (BingoableSequence sequence : rowsOnly) {
                 sum += sequence.getUnmarkedNumberSum();
             }
             return sum;
+        }
+
+        public int getFinalScore(int lastDrawnNumber) {
+            return getUnmarkedNumberSum() * lastDrawnNumber;
+        }
+
+        @Override
+        public String toString() {
+            return "BingoBoard{" +
+                    "boardSequences=" + boardSequences +
+                    '}';
         }
     }
 
@@ -87,6 +106,13 @@ public class Day4 implements ISolvableDay {
             }
             return sum;
         }
+
+        @Override
+        public String toString() {
+            return "BingoableSequence{" +
+                    "numberSequence=" + numberSequence +
+                    '}';
+        }
     }
 
     private static class BoardNumber implements ISumable {
@@ -109,6 +135,14 @@ public class Day4 implements ISolvableDay {
         public int getUnmarkedNumberSum() {
             return !marked ? number : 0;
         }
+
+        @Override
+        public String toString() {
+            return "BoardNumber{" +
+                    "number=" + number +
+                    ", marked=" + marked +
+                    '}';
+        }
     }
 
 
@@ -116,7 +150,7 @@ public class Day4 implements ISolvableDay {
     public long partOneSolver(String input) {
         List<Integer> drawSequence = new ArrayList<>();
         List<BingoBoard> allBoards = new ArrayList<>();
-        MapThatStoresDefault<Integer, BoardNumber> allBoardNumbers = new HashMapThatStoresDefault<>();
+        ExtendedMap<Integer, BoardNumber> allBoardNumbers = new ExtendedHashMap<>();
 
         //Read input and populate data
         try (Scanner scanner = new Scanner(input)) {
@@ -126,12 +160,11 @@ public class Day4 implements ISolvableDay {
 
         //With all boards read, we can now find out the winning board
         for (int drawnNumber : drawSequence) {
-            allBoardNumbers.getOrDefault(drawnNumber, new BoardNumber(drawnNumber)).setMarked(true);
+            allBoardNumbers.getOrStoreDefault(drawnNumber, new BoardNumber(drawnNumber)).setMarked(true);
 
             for (BingoBoard board : allBoards) {
                 if (board.hasBingo()) {
-                    int winningBoardsScore = board.getUnmarkedNumberSum() * drawnNumber;
-                    return winningBoardsScore;
+                    return board.getFinalScore(drawnNumber);
                 }
             }
 
@@ -142,10 +175,10 @@ public class Day4 implements ISolvableDay {
     }
 
     /**
-     * Reads the draw sequence, found on the first row of the input
+     * Reads the draw sequence, a comma-separated list of integers found on the next line of the scanner
      *
-     * @param drawSequence
-     * @param scanner
+     * @param drawSequence list that will be populated with the comma-separated integers found with the scanner
+     * @param scanner      one line of this scanner will be read
      */
     private void readDrawSequence(List<Integer> drawSequence, Scanner scanner) {
         //First read the comma-separated bingo numbers, all found on the first row
@@ -159,20 +192,20 @@ public class Day4 implements ISolvableDay {
     /**
      * Reads all bingo boards, every 25 numbers make up one board (they're 5x5)
      *
-     * @param allBoards
-     * @param allBoardNumbers
-     * @param scanner
+     * @param allBoards       list that will be populated with all bingo boards read from the scanner
+     * @param allBoardNumbers all scanned numbers in the BoardNumber representation
+     * @param scanner         scanner where the next token is the first number of the first bingo board
      */
-    private void readAllBingoBoards(List<BingoBoard> allBoards, Map<Integer, BoardNumber> allBoardNumbers, Scanner scanner) {
+    private void readAllBingoBoards(List<BingoBoard> allBoards, ExtendedMap<Integer, BoardNumber> allBoardNumbers, Scanner scanner) {
         int amountOfNumbersHandled = 0;
-        MapThatStoresDefault<Integer, BingoableSequence> rows = new HashMapThatStoresDefault<>();
-        MapThatStoresDefault<Integer, BingoableSequence> columns = new HashMapThatStoresDefault<>();
+        ExtendedMap<Integer, BingoableSequence> rows = new ExtendedHashMap<>();
+        ExtendedMap<Integer, BingoableSequence> columns = new ExtendedHashMap<>();
         while (scanner.hasNextInt()) {
             int currentNumber = scanner.nextInt();
-            BoardNumber currentBoardNumber = allBoardNumbers.getOrDefault(currentNumber, new BoardNumber(currentNumber));
+            BoardNumber currentBoardNumber = allBoardNumbers.getOrStoreDefault(currentNumber, new BoardNumber(currentNumber));
 
-            BingoableSequence currentRow = rows.getOrDefault(amountOfNumbersHandled / 5, new BingoableSequence());
-            BingoableSequence currentColumn = columns.getOrDefault(amountOfNumbersHandled % 5, new BingoableSequence());
+            BingoableSequence currentRow = rows.getOrStoreDefault(amountOfNumbersHandled / NUMBER_OF_ROWS, new BingoableSequence());
+            BingoableSequence currentColumn = columns.getOrStoreDefault(amountOfNumbersHandled % NUMBER_OF_ROWS, new BingoableSequence());
 
             currentRow.addNumber(currentBoardNumber);
             currentColumn.addNumber(currentBoardNumber);
@@ -180,7 +213,7 @@ public class Day4 implements ISolvableDay {
 
             amountOfNumbersHandled++;
 
-            if (amountOfNumbersHandled % 25 == 0) {
+            if (amountOfNumbersHandled % NUMBER_OF_BINGO_CARD_ELEMENTS == 0) {
                 // Board complete, assemble it
                 List<BingoableSequence> boardContents = new ArrayList<>();
                 boardContents.addAll(rows.values());
@@ -199,6 +232,32 @@ public class Day4 implements ISolvableDay {
 
     @Override
     public long partTwoSolver(String input) {
+        List<Integer> drawSequence = new ArrayList<>();
+        List<BingoBoard> allBoards = new ArrayList<>();
+        ExtendedMap<Integer, BoardNumber> allBoardNumbers = new ExtendedHashMap<>();
+
+        //Read input and populate data
+        try (Scanner scanner = new Scanner(input)) {
+            readDrawSequence(drawSequence, scanner);
+            readAllBingoBoards(allBoards, allBoardNumbers, scanner);
+        }
+
+        //With all boards read, we can now find out which board is worst
+        for (int drawnNumber : drawSequence) {
+            allBoardNumbers.getOrStoreDefault(drawnNumber, new BoardNumber(drawnNumber)).setMarked(true);
+
+            //Filter out boards until one left
+            if (allBoards.size() > 1) {
+                allBoards = allBoards.stream().filter(board -> !board.hasBingo()).collect(Collectors.toList());
+            }
+
+            if (allBoards.size() == 1 && allBoards.get(0).hasBingo()) {
+                return allBoards.get(0).getFinalScore(drawnNumber);
+            }
+
+        }
+
+        //No bingo
         return 0;
     }
 

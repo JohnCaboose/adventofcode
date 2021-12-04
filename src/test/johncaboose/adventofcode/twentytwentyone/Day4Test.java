@@ -20,12 +20,12 @@ public class Day4Test {
 
     @Test
     void part2Solver_WHEN_exampleInput_THEN_outputMatchesExampleOutput() {
-        assertEquals(-1, sut.partTwoSolver(ProblemInput.DAY_4_EXAMPLE));
+        assertEquals(1924, sut.partTwoSolver(ProblemInput.DAY_4_EXAMPLE));
     }
 
     @Test
     void part2Solver_WHEN_realInput_THEN_outputMatchesValidatedAnswer() {
-        assertEquals(-1, sut.partTwoSolver(ProblemInput.DAY_4_INPUT));
+        assertEquals(30070, sut.partTwoSolver(ProblemInput.DAY_4_INPUT));
     }
 
 }
