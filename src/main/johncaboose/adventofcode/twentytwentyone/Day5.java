@@ -1,6 +1,7 @@
 package johncaboose.adventofcode.twentytwentyone;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Collectors;
@@ -31,32 +32,47 @@ public class Day5 implements ISolvableDay {
         }
 
         /**
-         * @return modifiable list of all coordinates between start and end (inclusive),
-         * or an unmodifiable empty list if line is not straight.
+         * @param includeDiagonal true to include coordinates in diagonal lines, false to exclude them
+         * @return list of all coordinates in the line
          */
-        public List<VentCoordinate> allCoordinates() {
+        public List<VentCoordinate> allCoordinates(boolean includeDiagonal) {
             List<VentCoordinate> coordinates = new ArrayList<>();
 
+            if (includeDiagonal || isStraight()) {
+                List<Integer> xCoordinates = rangeClosed(start.x, end.x);
+                List<Integer> yCoordinates = rangeClosed(start.y, end.y);
 
-            if (isHorizontal()) {
+                int maxSize = max(xCoordinates.size(), yCoordinates.size());
 
-                List<Integer> yValues = IntStream.rangeClosed(min(start.y, end.y), max(start.y, end.y))
-                        .boxed()
-                        .collect(Collectors.toList());
-                for (int y : yValues) {
-                    coordinates.add(new VentCoordinate(start.x(), y));
+                if (xCoordinates.size() == 1) {
+                    xCoordinates = Collections.nCopies(maxSize, start.x);
                 }
-            } else if (isVertical()) {
-                List<Integer> xValues = IntStream.rangeClosed(min(start.x, end.x), max(start.x, end.x))
-                        .boxed()
-                        .collect(Collectors.toList());
-                for (int x : xValues) {
-                    coordinates.add(new VentCoordinate(x, start.y));
+
+                if (yCoordinates.size() == 1) {
+                    yCoordinates = Collections.nCopies(maxSize, start.y);
                 }
+
+                //Now x and y are the same size, combine them to coordinates and return
+                for (int i = 0; i < maxSize; i++) {
+                    coordinates.add(new VentCoordinate(xCoordinates.get(i), yCoordinates.get(i)));
+                }
+
             }
+
             return coordinates;
         }
+
+        private static List<Integer> rangeClosed(int start, int end) {
+            List<Integer> values = IntStream.rangeClosed(min(start, end), max(start, end))
+                    .boxed()
+                    .collect(Collectors.toList());
+            if (start > end) {
+                Collections.reverse(values);
+            }
+            return values;
+        }
     }
+
 
     private record VentCoordinate(int x, int y) {
         @Override
@@ -105,12 +121,21 @@ public class Day5 implements ISolvableDay {
 
     @Override
     public long partOneSolver(String input) {
+        return solve(input, false);
+    }
+
+    @Override
+    public long partTwoSolver(String input) {
+        return solve(input, true);
+    }
+
+    private long solve(String input, boolean includeDiagonal) {
         List<LineSegment> lineSegments = readAllLineSegments(input);
 
         Utils.ExtendedMap<VentCoordinate, Counter> allVentCoordinates = new Utils.ExtendedHashMap<>();
 
         lineSegments.stream()
-                .flatMap(lineSegment -> lineSegment.allCoordinates().stream())
+                .flatMap(lineSegment -> lineSegment.allCoordinates(includeDiagonal).stream())
                 .forEach(ventCoordinate -> allVentCoordinates.getOrStoreDefault(ventCoordinate, new Counter()).increment());
 
         long overlappingPoints = allVentCoordinates.entrySet()
@@ -120,10 +145,5 @@ public class Day5 implements ISolvableDay {
                 .count();
 
         return overlappingPoints;
-    }
-
-    @Override
-    public long partTwoSolver(String input) {
-        return 0;
     }
 }

@@ -28,7 +28,7 @@ public class Day5Test {
 
     @Test
     void part2Solver_WHEN_realInput_THEN_outputMatchesValidatedAnswer() {
-        assertEquals(-1, sut.partTwoSolver(INPUT));
+        assertEquals(18442, sut.partTwoSolver(INPUT));
     }
 
 }
