@@ -1,6 +1,8 @@
 package johncaboose.adventofcode.twentytwentyone;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 import java.util.stream.Collectors;
 
 public class Day4 implements ISolvableDay {
@@ -17,28 +19,6 @@ public class Day4 implements ISolvableDay {
 
     private interface ISumable {
         int getUnmarkedNumberSum();
-    }
-
-    private interface ExtendedMap<K, V> extends Map<K, V> {
-
-        /**
-         * Same as {@link #getOrDefault(Object, Object)} except the default value is also stored in the underlying Map.
-         *
-         * @param key
-         * @param defaultValue
-         * @return
-         */
-        default V getOrStoreDefault(Object key, V defaultValue) {
-            V returnValue = Map.super.getOrDefault(key, defaultValue);
-            if (get(key) == null) {
-                this.put((K) key, returnValue);
-            }
-            return returnValue;
-        }
-    }
-
-    private static class ExtendedHashMap<K, V> extends HashMap<K, V> implements ExtendedMap<K, V> {
-
     }
 
     private static class BingoBoard implements IBingoable {
@@ -150,7 +130,7 @@ public class Day4 implements ISolvableDay {
     public long partOneSolver(String input) {
         List<Integer> drawSequence = new ArrayList<>();
         List<BingoBoard> allBoards = new ArrayList<>();
-        ExtendedMap<Integer, BoardNumber> allBoardNumbers = new ExtendedHashMap<>();
+        Utils.ExtendedMap<Integer, BoardNumber> allBoardNumbers = new Utils.ExtendedHashMap<>();
 
         //Read input and populate data
         try (Scanner scanner = new Scanner(input)) {
@@ -196,10 +176,10 @@ public class Day4 implements ISolvableDay {
      * @param allBoardNumbers all scanned numbers in the BoardNumber representation
      * @param scanner         scanner where the next token is the first number of the first bingo board
      */
-    private void readAllBingoBoards(List<BingoBoard> allBoards, ExtendedMap<Integer, BoardNumber> allBoardNumbers, Scanner scanner) {
+    private void readAllBingoBoards(List<BingoBoard> allBoards, Utils.ExtendedMap<Integer, BoardNumber> allBoardNumbers, Scanner scanner) {
         int amountOfNumbersHandled = 0;
-        ExtendedMap<Integer, BingoableSequence> rows = new ExtendedHashMap<>();
-        ExtendedMap<Integer, BingoableSequence> columns = new ExtendedHashMap<>();
+        Utils.ExtendedMap<Integer, BingoableSequence> rows = new Utils.ExtendedHashMap<>();
+        Utils.ExtendedMap<Integer, BingoableSequence> columns = new Utils.ExtendedHashMap<>();
         while (scanner.hasNextInt()) {
             int currentNumber = scanner.nextInt();
             BoardNumber currentBoardNumber = allBoardNumbers.getOrStoreDefault(currentNumber, new BoardNumber(currentNumber));
@@ -234,7 +214,7 @@ public class Day4 implements ISolvableDay {
     public long partTwoSolver(String input) {
         List<Integer> drawSequence = new ArrayList<>();
         List<BingoBoard> allBoards = new ArrayList<>();
-        ExtendedMap<Integer, BoardNumber> allBoardNumbers = new ExtendedHashMap<>();
+        Utils.ExtendedMap<Integer, BoardNumber> allBoardNumbers = new Utils.ExtendedHashMap<>();
 
         //Read input and populate data
         try (Scanner scanner = new Scanner(input)) {

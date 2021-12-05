@@ -1,8 +1,6 @@
 package johncaboose.adventofcode.twentytwentyone;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class Utils {
 
@@ -20,4 +18,25 @@ public class Utils {
     }
 
 
+    public interface ExtendedMap<K, V> extends Map<K, V> {
+
+        /**
+         * Same as {@link #getOrDefault(Object, Object)} except the default value is also stored in the underlying Map.
+         *
+         * @param key
+         * @param defaultValue
+         * @return
+         */
+        default V getOrStoreDefault(Object key, V defaultValue) {
+            V returnValue = Map.super.getOrDefault(key, defaultValue);
+            if (get(key) == null) {
+                this.put((K) key, returnValue);
+            }
+            return returnValue;
+        }
+    }
+
+    public static class ExtendedHashMap<K, V> extends HashMap<K, V> implements ExtendedMap<K, V> {
+
+    }
 }
