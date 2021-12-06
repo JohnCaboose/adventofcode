@@ -30,21 +30,36 @@ public class Day6 implements ISolvableDay {
     }
 
     private long calculateFishPopulation(List<Long> allFish, long days) {
-        allFish = new ArrayList<>(allFish);
+
+        List<Long> currentAmountPerAge = new ArrayList<>();
+        int maxAge = 8;
+        for (int currentAge = 0; currentAge <= maxAge; currentAge++) {
+            final int finalCurrentAge = currentAge;
+            long amountOfFishAtCurrentAge = allFish.stream()
+                    .filter(l -> l == finalCurrentAge)
+                    .count();
+            currentAmountPerAge.add(amountOfFishAtCurrentAge);
+        }
+
 
         for (int currentDay = 1; currentDay <= days; currentDay++) {
-            List<Long> newFish = new ArrayList<>();
-            for (int i = 0; i < allFish.size(); i++) {
-                long currentFishValue = allFish.get(i);
-                if (currentFishValue == 0) {
-                    newFish.add(8L);
-                    allFish.set(i, 6L);
+            List<Long> nextAmountPerAge = new ArrayList<>(currentAmountPerAge);
+            for (int i = 0; i < currentAmountPerAge.size(); i++) {
+                long currentAmount = currentAmountPerAge.get(i);
+                if (i == 0) {
+                    nextAmountPerAge.set(8, currentAmount);
+                    nextAmountPerAge.set(6, currentAmount);
+                } else if (i == 7) {
+                    nextAmountPerAge.set(6, currentAmount + nextAmountPerAge.get(6));
                 } else {
-                    allFish.set(i, currentFishValue - 1);
+                    nextAmountPerAge.set(i - 1, currentAmount);
                 }
+
             }
-            allFish.addAll(newFish);
+            currentAmountPerAge = nextAmountPerAge;
         }
-        return allFish.size();
+        return currentAmountPerAge.stream()
+                .mapToLong(l -> l)
+                .sum();
     }
 }
