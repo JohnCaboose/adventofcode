@@ -17,6 +17,20 @@ public class Utils {
         return list;
     }
 
+    public static List<Long> populateListWithCommaSeparatedLongs(String input) {
+        return populateListWithCommaSeparatedLongs(input, 10);
+    }
+
+    public static List<Long> populateListWithCommaSeparatedLongs(String input, int radix) {
+        List<Long> list = new ArrayList<>();
+        Scanner scanner = new Scanner(input);
+        scanner.useDelimiter(",");
+        while (scanner.hasNextLong()) {
+            list.add(scanner.nextLong(radix));
+        }
+        return list;
+    }
+
 
     public interface ExtendedMap<K, V> extends Map<K, V> {
 
