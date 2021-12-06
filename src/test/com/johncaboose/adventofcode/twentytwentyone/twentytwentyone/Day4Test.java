@@ -1,4 +1,4 @@
-package johncaboose.adventofcode.twentytwentyone;
+package com.johncaboose.adventofcode.twentytwentyone.twentytwentyone;
 
 import org.junit.jupiter.api.Test;
 

@@ -1,4 +1,4 @@
-package johncaboose.adventofcode;
+package com.johncaboose.adventofcode;
 
 public class Main {
 

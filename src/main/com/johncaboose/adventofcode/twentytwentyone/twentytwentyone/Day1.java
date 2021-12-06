@@ -1,4 +1,4 @@
-package johncaboose.adventofcode.twentytwentyone;
+package com.johncaboose.adventofcode.twentytwentyone.twentytwentyone;
 
 import java.util.ArrayList;
 import java.util.List;
