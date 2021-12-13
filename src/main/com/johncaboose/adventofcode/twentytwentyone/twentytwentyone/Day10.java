@@ -4,76 +4,121 @@ import java.util.*;
 
 public class Day10 implements ISolvableDay {
 
-    private final Map<Character, Integer> scoreLookup = new HashMap<>();
-
-    public Day10() {
-        scoreLookup.put(')', 3);
-        scoreLookup.put(']', 57);
-        scoreLookup.put('}', 1197);
-        scoreLookup.put('>', 25137);
-    }
-
     @Override
     public long partOneSolver(String input) {
-        long score = 0;
-        try (Scanner scanner = new Scanner(input)) {
-            while (scanner.hasNextLine()) {
-                Deque<Character> closerStack = new ArrayDeque<>();
-                String line = scanner.nextLine();
-                for (Character currentChar : line.toCharArray()) {
-                    final Character expectedNextCloser = closerStack.peek();
-
-
-                    if (isOpener(currentChar)) {
-                        switch (currentChar) {
-                            case '(':
-                                closerStack.push(')');
-                                break;
-                            case '[':
-                                closerStack.push(']');
-                                break;
-                            case '{':
-                                closerStack.push('}');
-                                break;
-                            case '<':
-                                closerStack.push('>');
-                                break;
-                            default:
-                                throw new RuntimeException("Faulty code or input");
-                        }
-                    } else if (currentChar.equals(expectedNextCloser)) {
-                        //Found the right closer
-                        closerStack.pop();
-                    } else {
-                        //Expected a closer but found the wrong closer
-                        score = score + scoreLookup.get(currentChar);
-                        break; //done with this line now
-                    }
-
-
-                }
-            }
-
-        }
-        return score;
-    }
-
-    private boolean isOpener(Character currentChar) {
-        switch (currentChar) {
-            case '(':
-            case '[':
-            case '{':
-            case '<':
-                return true;
-            default:
-                return false;
-        }
-
+        List<Long> allLineScores = getAllLineScores(input, ScoringType.ILLEGAL_CHARACTERS);
+        long sum = sum(allLineScores);
+        return sum;
     }
 
     @Override
     public long partTwoSolver(String input) {
-        return 0;
+        List<Long> allLineScores = getAllLineScores(input, ScoringType.INCOMPLETE_LINES);
+        long median = median(allLineScores);
+        return median;
+    }
+
+    private List<Long> getAllLineScores(String input, ScoringType scoringType) {
+        List<Long> allLineScores = new ArrayList<>();
+        try (Scanner scanner = new Scanner(input)) {
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                long lineScore = calculateLineScore(line, scoringType);
+                if (lineScore > 0) {
+                    allLineScores.add(lineScore);
+                }
+            }
+        }
+        return allLineScores;
+    }
+
+    private long sum(Collection<Long> numbers) {
+        long sum = numbers.stream()
+                .reduce(0L, Long::sum);
+        return sum;
+    }
+
+    private long median(Collection<Long> numbers) {
+        if (numbers.isEmpty() || numbers.size() % 2 == 0) {
+            throw new IllegalArgumentException("Can't find true median, list empty or has even number of elements");
+        }
+
+        List<Long> sortedList = numbers.stream()
+                .sorted()
+                .toList();
+
+        return sortedList.get(sortedList.size() / 2);
+    }
+
+    private enum ScoringType {
+        INCOMPLETE_LINES, ILLEGAL_CHARACTERS
+    }
+
+    private long calculateLineScore(String line, ScoringType scoringType) {
+        Deque<Character> closerStack = new ArrayDeque<>();
+        for (Character currentChar : line.toCharArray()) {
+
+            final Character expectedNextCloser = closerStack.peek();
+            if (isOpener(currentChar)) {
+                switch (currentChar) {
+                    case '(' -> closerStack.push(')');
+                    case '[' -> closerStack.push(']');
+                    case '{' -> closerStack.push('}');
+                    case '<' -> closerStack.push('>');
+                    default -> throw new RuntimeException("Faulty code or input");
+                }
+            } else if (currentChar.equals(expectedNextCloser)) {
+                //Found the right closer
+                closerStack.pop();
+            } else {
+                //Expected a closer but found the wrong closer - corrupted line
+                if (scoringType.equals(ScoringType.ILLEGAL_CHARACTERS)) {
+                    return getScore(currentChar, scoringType);
+                } else {
+                    return -1;
+                }
+            }
+
+        }
+        if (scoringType.equals(ScoringType.INCOMPLETE_LINES)) {
+
+            long score = 0;
+            for (Character missingCloser : closerStack) {
+                score *= 5;
+                score += getScore(missingCloser, scoringType);
+            }
+            return score;
+        } else {
+            return -1;
+        }
+    }
+
+    private boolean isOpener(Character currentChar) {
+        return switch (currentChar) {
+            case '(', '[', '{', '<' -> true;
+            default -> false;
+        };
+    }
+
+    private long getScore(Character character, ScoringType scoringType) {
+        if (scoringType.equals(ScoringType.ILLEGAL_CHARACTERS))
+            return switch (character) {
+                case '(' -> 3;
+                case '[' -> 57;
+                case '{' -> 1197;
+                case '<' -> 25137;
+                default -> throw new RuntimeException("Faulty code or input");
+            };
+        else if (scoringType.equals(ScoringType.INCOMPLETE_LINES)) {
+            return switch (character) {
+                case '(' -> 1;
+                case '[' -> 2;
+                case '{' -> 3;
+                case '<' -> 4;
+                default -> throw new RuntimeException("Faulty code or input");
+            };
+        }
+        throw new RuntimeException("Faulty code or input");
     }
 
 
