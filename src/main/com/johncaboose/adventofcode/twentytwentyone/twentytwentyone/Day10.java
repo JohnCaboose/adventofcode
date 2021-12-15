@@ -65,7 +65,7 @@ public class Day10 implements ISolvableDay {
                     case '[' -> closerStack.push(']');
                     case '{' -> closerStack.push('}');
                     case '<' -> closerStack.push('>');
-                    default -> throw new RuntimeException("Faulty code or input");
+                    default -> throw new RuntimeException("Faulty code or input, currentLine: " + line);
                 }
             } else if (currentChar.equals(expectedNextCloser)) {
                 //Found the right closer
@@ -103,22 +103,22 @@ public class Day10 implements ISolvableDay {
     private long getScore(Character character, ScoringType scoringType) {
         if (scoringType.equals(ScoringType.ILLEGAL_CHARACTERS))
             return switch (character) {
-                case '(' -> 3;
-                case '[' -> 57;
-                case '{' -> 1197;
-                case '<' -> 25137;
-                default -> throw new RuntimeException("Faulty code or input");
+                case ')' -> 3;
+                case ']' -> 57;
+                case '}' -> 1197;
+                case '>' -> 25137;
+                default -> throw new RuntimeException("Faulty code or input, character: " + character);
             };
         else if (scoringType.equals(ScoringType.INCOMPLETE_LINES)) {
             return switch (character) {
-                case '(' -> 1;
-                case '[' -> 2;
-                case '{' -> 3;
-                case '<' -> 4;
-                default -> throw new RuntimeException("Faulty code or input");
+                case ')' -> 1;
+                case ']' -> 2;
+                case '}' -> 3;
+                case '>' -> 4;
+                default -> throw new RuntimeException("Faulty code or input, character: " + character);
             };
         }
-        throw new RuntimeException("Faulty code or input");
+        throw new RuntimeException("Faulty code or input, character: " + character);
     }
 
 

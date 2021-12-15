@@ -143,7 +143,6 @@ public class Day11 implements ISolvableDay {
 
     }
 
-
     private long step(OctopusGrid octopusGrid, int amountOfSteps) {
         long amountOfFlashes = 0;
         for (int i = 0; i < amountOfSteps; i++) {
@@ -154,6 +153,5 @@ public class Day11 implements ISolvableDay {
         }
         return amountOfFlashes;
     }
-
 
 }
