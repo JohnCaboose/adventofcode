@@ -29,7 +29,7 @@ public class Day12Test {
 
     @Test
     void part2Solver_WHEN_realInput_THEN_outputMatchesValidatedAnswer() {
-        assertEquals(-1, sut.partTwoSolver(INPUT));
+        assertEquals(120535, sut.partTwoSolver(INPUT));
     }
 
 }

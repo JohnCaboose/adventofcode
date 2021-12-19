@@ -5,6 +5,7 @@ import com.johncaboose.adventofcode.twentytwentyone.twentytwentyone.Utils.Extend
 
 import java.util.*;
 
+
 public class Day12 implements ISolvableDay {
 
     public static final String START = "start";
@@ -12,35 +13,63 @@ public class Day12 implements ISolvableDay {
 
     @Override
     public long partOneSolver(String input) {
-        CaveNetwork caveNetwork = constructCaveNetwork(input);
-        int amountOfPaths = possiblePathsToEnd(caveNetwork, new HashSet<>(), new Cave(START));
-        return amountOfPaths;
+        return solveProblem(input, 1);
     }
 
     @Override
     public long partTwoSolver(String input) {
-        return 0;
+        return solveProblem(input, 2);
     }
 
-    private int possiblePathsToEnd(CaveNetwork caves, Set<Cave> traversedSmallCaves, Cave currentCave) {
+    private int solveProblem(String input, int maxTraversalCount) {
+        CaveNetwork caveNetwork = constructCaveNetwork(input);
+        List<String> allPaths = new ArrayList<>();
+        possiblePathsToEnd(caveNetwork, new HashMap<>(), maxTraversalCount, new Cave(START),
+                allPaths, new StringBuilder());
+        return allPaths.size();
+    }
+
+    private void possiblePathsToEnd(CaveNetwork caves, Map<String, Integer> smallCaveTraversalCount,
+                                    int maxTraversalCount, Cave currentCave, List<String> allPaths, StringBuilder currentPath) {
+        if (!START.equals(currentCave.name)) {
+            currentPath.append(",");
+        }
+        currentPath.append(currentCave.name);
 
         if (currentCave.caveType.equals(CaveType.END)) {
-            return 1;
+            allPaths.add(currentPath.toString());
+            return;
         }
 
-        boolean currentCaveSmallAndAlreadyTraversed = currentCave.caveType.equals(CaveType.SMALL) && !traversedSmallCaves.add(currentCave);
-        if (currentCaveSmallAndAlreadyTraversed) {
-            return 0;
+        // Only one small cave can be visited more than max amount, unless max is one
+        if (currentCave.caveType.equals(CaveType.SMALL)) {
+            //Check max amount of visits for any cave, excluding current visit
+            int maxVisitForAnyCave = smallCaveTraversalCount.values()
+                    .stream()
+                    .max(Integer::compareTo)
+                    .orElse(0);
+
+            int timesVisitedIncludingThis = smallCaveTraversalCount.getOrDefault(currentCave.name, 0) + 1;
+            smallCaveTraversalCount.put(currentCave.name, timesVisitedIncludingThis);
+
+            if (timesVisitedIncludingThis == maxTraversalCount) {
+                //This is fine to continue with but only if no others are already traveled max amount
+                if (maxVisitForAnyCave == maxTraversalCount && maxTraversalCount > 1) {
+                    return;
+                }
+            } else if (timesVisitedIncludingThis > maxTraversalCount) {
+                return;
+            }
         }
 
-        int pathsFound = 0;
 
         List<Cave> possibleOptions = caves.adjacencyMap.get(currentCave.name);
         for (Cave cave : possibleOptions) {
-            pathsFound += possiblePathsToEnd(caves, new HashSet<>(traversedSmallCaves), cave);
+            possiblePathsToEnd(caves, new HashMap<>(smallCaveTraversalCount), maxTraversalCount, cave,
+                    allPaths, new StringBuilder(currentPath));
         }
 
-        return pathsFound;
+        return;
     }
 
 
@@ -105,6 +134,9 @@ public class Day12 implements ISolvableDay {
                 String[] caveNames = line.split("-");
                 caveNetwork.addConnection(caveNames[0], caveNames[1]);
             }
+        }
+        for (List<Cave> lists : caveNetwork.adjacencyMap.values()) {
+            lists.sort((c1, c2) -> c1.name.compareToIgnoreCase(c2.name));
         }
         return caveNetwork;
     }
