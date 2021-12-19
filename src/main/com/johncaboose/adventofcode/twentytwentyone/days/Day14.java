@@ -11,8 +11,21 @@ import java.util.Scanner;
 public class Day14 implements ISolvableDay {
     @Override
     public long partOneSolver(String input) {
+        int steps = 10;
+        long solution = solve(input, steps);
+        return solution;
+    }
+
+    @Override
+    public long partTwoSolver(String input) {
+        int steps = 40;
+        long solution = solve(input, steps);
+        return solution;
+    }
+
+    private long solve(String input, int steps) {
         Map<String, String> insertionRules = new HashMap<>();
-        String template = null;
+        String template;
         try (Scanner scanner = new Scanner(input)) {
             template = scanner.nextLine();
             scanner.nextLine(); // discard empty line
@@ -22,47 +35,58 @@ public class Day14 implements ISolvableDay {
             }
         }
 
+        ExtendedMap<String, Long> pairCounts = new ExtendedHashMap<>();
+        for (int i = 0; i < template.length() - 1; i++) {
+            String pair = template.substring(i, i + 2);
+            Long currentValue = pairCounts.getOrStoreDefault(pair, 0L);
+            pairCounts.put(pair, currentValue + 1);
+        }
 
-        int steps = 10;
-        final String finalChar = template.substring(template.length() - 1);
-        StringBuilder stepResult = new StringBuilder(template);
         for (int step = 0; step < steps; step++) {
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < stepResult.length() - 1; i++) {
-                String pair = stepResult.substring(i, i + 2);
-                sb.append(pair.substring(0, 1));
-                String elementToInsert = insertionRules.get(pair);
-                if (elementToInsert != null) {
-                    sb.append(elementToInsert);
-                }
+            ExtendedMap<String, Long> postStepPairCounts = new ExtendedHashMap<>();
+
+            for (Map.Entry<String, Long> pairEntry : pairCounts.entrySet()) {
+                String insertedElement = insertionRules.get(pairEntry.getKey());
+                char[] pairCharArray = pairEntry.getKey().toCharArray();
+
+                String firstCreatedPair = pairCharArray[0] + insertedElement;
+                String secondCreatedPair = insertedElement + pairCharArray[1];
+                long amountCreated = pairEntry.getValue();
+
+                Long currentFirstPairValue = postStepPairCounts.getOrStoreDefault(firstCreatedPair, 0L);
+                postStepPairCounts.put(firstCreatedPair, currentFirstPairValue + amountCreated);
+
+                Long currentSecondPairValue = postStepPairCounts.getOrStoreDefault(secondCreatedPair, 0L);
+                postStepPairCounts.put(secondCreatedPair, currentSecondPairValue + amountCreated);
             }
-            sb.append(finalChar); //final char is always same for every step
-            stepResult = sb;
+            pairCounts = postStepPairCounts;
         }
 
-        ExtendedMap<Character, Integer> elementCount = new ExtendedHashMap<>();
-        for (Character element : stepResult.toString().toCharArray()) {
-            Integer currentValue = elementCount.getOrStoreDefault(element, 0);
-            elementCount.put(element, currentValue + 1);
+
+        ExtendedMap<Character, Long> elementCount = new ExtendedHashMap<>();
+        for (String pair : pairCounts.keySet()) {
+            Character element = pair.charAt(0);
+            Long currentValue = elementCount.getOrStoreDefault(element, 0L);
+            elementCount.put(element, currentValue + pairCounts.get(pair));
         }
 
-        int maxAmount = elementCount.entrySet()
+        Character finalCharacter = template.charAt(template.length() - 1);
+        Long currentValue = elementCount.getOrStoreDefault(finalCharacter, 0L);
+        elementCount.put(finalCharacter, currentValue + 1);
+
+
+        long maxAmount = elementCount.entrySet()
                 .stream()
-                .max(Comparator.comparingInt(Map.Entry::getValue))
+                .max(Comparator.comparingLong(Map.Entry::getValue))
                 .get()
                 .getValue();
 
-        int minAmount = elementCount.entrySet()
+        long minAmount = elementCount.entrySet()
                 .stream()
-                .min(Comparator.comparingInt(Map.Entry::getValue))
+                .min(Comparator.comparingLong(Map.Entry::getValue))
                 .get()
                 .getValue();
 
         return maxAmount - minAmount;
-    }
-
-    @Override
-    public long partTwoSolver(String input) {
-        return 0;
     }
 }
