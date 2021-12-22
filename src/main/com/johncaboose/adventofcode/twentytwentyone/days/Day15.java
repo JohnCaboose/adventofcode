@@ -140,10 +140,10 @@ public class Day15 implements ISolvableDay {
 
     }
 
-    private static class Node {
+    private static class Node implements Comparable<Node> {
 
         private Coordinate coordinate;
-        private Integer distance = Integer.MAX_VALUE;
+        private int distance = Integer.MAX_VALUE;
         private Map<Node, Integer> adjacentNodes = new HashMap<>();
 
         public void addDestination(Node destination, int distance) {
@@ -154,11 +154,15 @@ public class Day15 implements ISolvableDay {
             this.coordinate = coordinate;
         }
 
-        public Integer getDistance() {
+        public Coordinate getCoordinate() {
+            return coordinate;
+        }
+
+        public int getDistance() {
             return distance;
         }
 
-        public void setDistance(Integer distance) {
+        public void setDistance(int distance) {
             this.distance = distance;
         }
 
@@ -183,50 +187,46 @@ public class Day15 implements ISolvableDay {
         public String toString() {
             return "Node{" + coordinate.toString() + "}";
         }
+
+        @Override
+        public int compareTo(Node o) {
+            return Integer.compare(distance, o.distance);
+        }
     }
 
-    private static Node calculateShortestPathFromSource(Node source, Coordinate target) {
+    private static Node calculateShortestPathFromSource(Node source, Coordinate targetCoordinate) {
         source.setDistance(0);
 
         Set<Node> settledNodes = new HashSet<>();
-        Set<Node> unsettledNodes = new HashSet<>();
+        PriorityQueue<Node> unsettledNodes = new PriorityQueue<>();
 
         unsettledNodes.add(source);
 
         while (unsettledNodes.size() > 0) {
-            Node currentNode = getLowestDistanceNode(unsettledNodes);
-            unsettledNodes.remove(currentNode);
+            Node currentNode = unsettledNodes.poll();
+
             for (Entry<Node, Integer> adjacencyPair : currentNode.getAdjacentNodes().entrySet()) {
                 Node adjacentNode = adjacencyPair.getKey();
                 Integer edgeWeight = adjacencyPair.getValue();
                 if (!settledNodes.contains(adjacentNode)) {
                     calculateMinimumDistance(adjacentNode, edgeWeight, currentNode);
-                    unsettledNodes.add(adjacentNode);
+                    if (!unsettledNodes.contains(adjacentNode)) {
+                        unsettledNodes.add(adjacentNode);
+                    }
                 }
             }
             settledNodes.add(currentNode);
-            if (currentNode.coordinate.equals(target)) {
+
+            if (currentNode.getCoordinate().equals(targetCoordinate)) {
+                // settling target node means we have found the shortest path to it, no need for further calculations
                 return currentNode;
             }
         }
         return null; // target never found!?
     }
 
-    private static Node getLowestDistanceNode(Set<Node> unsettledNodes) {
-        Node lowestDistanceNode = null;
-        int lowestDistance = Integer.MAX_VALUE;
-        for (Node node : unsettledNodes) {
-            int nodeDistance = node.getDistance();
-            if (nodeDistance < lowestDistance) {
-                lowestDistance = nodeDistance;
-                lowestDistanceNode = node;
-            }
-        }
-        return lowestDistanceNode;
-    }
-
-    private static void calculateMinimumDistance(Node evaluationNode, Integer edgeWeigh, Node sourceNode) {
-        Integer sourceDistance = sourceNode.getDistance();
+    private static void calculateMinimumDistance(Node evaluationNode, int edgeWeigh, Node sourceNode) {
+        int sourceDistance = sourceNode.getDistance();
         if (sourceDistance + edgeWeigh < evaluationNode.getDistance()) {
             evaluationNode.setDistance(sourceDistance + edgeWeigh);
         }
