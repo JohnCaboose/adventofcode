@@ -215,6 +215,7 @@ public class Day15 implements ISolvableDay {
                     }
                 }
             }
+            
             settledNodes.add(currentNode);
 
             if (currentNode.getCoordinate().equals(targetCoordinate)) {
@@ -225,10 +226,10 @@ public class Day15 implements ISolvableDay {
         return null; // target never found!?
     }
 
-    private static void calculateMinimumDistance(Node evaluationNode, int edgeWeigh, Node sourceNode) {
+    private static void calculateMinimumDistance(Node evaluationNode, int edgeWeight, Node sourceNode) {
         int sourceDistance = sourceNode.getDistance();
-        if (sourceDistance + edgeWeigh < evaluationNode.getDistance()) {
-            evaluationNode.setDistance(sourceDistance + edgeWeigh);
+        if (sourceDistance + edgeWeight < evaluationNode.getDistance()) {
+            evaluationNode.setDistance(sourceDistance + edgeWeight);
         }
     }
 }
