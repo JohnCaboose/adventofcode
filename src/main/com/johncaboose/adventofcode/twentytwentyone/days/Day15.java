@@ -28,11 +28,12 @@ public class Day15 implements ISolvableDay {
         Coordinate startCoordinate = new Coordinate(0, 0);
         Node startNode = graph.getNode(startCoordinate);
 
-        Node destinationNode = calculateShortestPathFromSource(graph, startNode, cavern.getDestinationCoordinate());
+        Node destinationNode = calculateShortestPathFromSource(startNode, cavern.getDestinationCoordinate());
         return destinationNode.getDistance();
     }
 
     private static class Cavern {
+        private static final int SIZE_INCREASE_FACTOR = 5;
         private final HashMap<Coordinate, Integer> grid = new HashMap<>();
         private int lastX = 0;
         private int lastY = 0;
@@ -54,6 +55,35 @@ public class Day15 implements ISolvableDay {
                 }
 
             }
+        }
+
+        public void adjustRiskLevelsAndSize() {
+            List<Integer> possibleValues = List.of(1, 2, 3, 4, 5, 6, 7, 8, 9);
+            int tileSizeX = lastX + 1;
+            int newLastX = tileSizeX * SIZE_INCREASE_FACTOR - 1;
+
+            int tileSizeY = lastY + 1;
+            int newLastY = tileSizeY * SIZE_INCREASE_FACTOR - 1;
+
+            for (int x = 0; x <= newLastX; x++) {
+                for (int y = 0; y <= newLastY; y++) {
+                    int toAdd = (x / tileSizeX) + (y / tileSizeY);
+                    if (toAdd == 0) {
+                        //In original tile: move on
+                        continue;
+                    }
+
+                    int riskAtCoordinate = grid.get(new Coordinate(x % tileSizeX, y % tileSizeY));
+                    int originalValueIndex = possibleValues.indexOf(riskAtCoordinate);
+                    int riskIndex = originalValueIndex + toAdd;
+
+
+                    grid.put(new Coordinate(x, y), possibleValues.get(riskIndex % possibleValues.size()));
+                }
+            }
+
+            lastX = newLastX;
+            lastY = newLastY;
         }
 
         private Coordinate getDestinationCoordinate() {
@@ -84,8 +114,16 @@ public class Day15 implements ISolvableDay {
             return graph;
         }
 
-        public void adjustRiskLevelsAndSize() {
-            //TODO
+        @Override
+        public String toString() {
+            StringBuilder result = new StringBuilder();
+            for (int x = 0; x <= lastX; x++) {
+                for (int y = 0; y <= lastY; y++) {
+                    result.append(grid.get(new Coordinate(x, y)));
+                }
+                result.append(System.lineSeparator());
+            }
+            return result.toString();
         }
     }
 
@@ -105,7 +143,6 @@ public class Day15 implements ISolvableDay {
     private static class Node {
 
         private Coordinate coordinate;
-        private List<Node> shortestPath = new LinkedList<>();
         private Integer distance = Integer.MAX_VALUE;
         private Map<Node, Integer> adjacentNodes = new HashMap<>();
 
@@ -125,21 +162,30 @@ public class Day15 implements ISolvableDay {
             this.distance = distance;
         }
 
-        public List<Node> getShortestPath() {
-            return shortestPath;
-        }
-
-        public void setShortestPath(List<Node> shortestPath) {
-            this.shortestPath = shortestPath;
-        }
-
         public Map<Node, Integer> getAdjacentNodes() {
             return adjacentNodes;
         }
 
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Node node = (Node) o;
+            return coordinate.equals(node.coordinate);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(coordinate);
+        }
+
+        @Override
+        public String toString() {
+            return "Node{" + coordinate.toString() + "}";
+        }
     }
 
-    private static Node calculateShortestPathFromSource(Graph graph, Node source, Coordinate target) {
+    private static Node calculateShortestPathFromSource(Node source, Coordinate target) {
         source.setDistance(0);
 
         Set<Node> settledNodes = new HashSet<>();
@@ -183,9 +229,6 @@ public class Day15 implements ISolvableDay {
         Integer sourceDistance = sourceNode.getDistance();
         if (sourceDistance + edgeWeigh < evaluationNode.getDistance()) {
             evaluationNode.setDistance(sourceDistance + edgeWeigh);
-            LinkedList<Node> shortestPath = new LinkedList<>(sourceNode.getShortestPath());
-            shortestPath.add(sourceNode);
-            evaluationNode.setShortestPath(shortestPath);
         }
     }
 }
