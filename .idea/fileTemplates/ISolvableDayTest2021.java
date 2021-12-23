@@ -6,10 +6,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class Day${DAY_NAME}Test {
 
-    public static final String EXAMPLE = ProblemInput.DAY_${DAY_NAME}_EXAMPLE;
-    public static final String INPUT = ProblemInput.DAY_${DAY_NAME}_INPUT;
+    private static final String EXAMPLE = ProblemInput.DAY_${DAY_NAME}_EXAMPLE;
+    private static final String INPUT = ProblemInput.DAY_${DAY_NAME}_INPUT;
 
-    ISolvableDay sut = new Day${DAY_NAME}();
+    private ISolvableDay sut = new Day${DAY_NAME}();
 
     @Test
     void part1Solver_WHEN_exampleInput_THEN_outputMatchesExampleOutput() {
