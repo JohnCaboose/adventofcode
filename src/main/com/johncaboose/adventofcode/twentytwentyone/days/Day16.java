@@ -13,6 +13,8 @@ public class Day16 implements ISolvableDay {
     private static final int GROUP_CONTENT_LENGTH = 4;
     private static final int GROUP_LENGTH = GROUP_PREFIX_LENGTH + GROUP_CONTENT_LENGTH;
 
+    private static final int LITERAL_VALUE_TYPE_ID = 4;
+
 
     @Override
     public long partOneSolver(String input) {
@@ -25,12 +27,23 @@ public class Day16 implements ISolvableDay {
         return topLevelPacket.sumOfPacketAndSubPacketVersions();
     }
 
+    @Override
+    public long partTwoSolver(String input) {
+        String binaryString = binaryString(input);
+
+        Cursor cursor = new Cursor();
+
+        Packet topLevelPacket = readPacket(binaryString, cursor);
+
+        return topLevelPacket.result();
+    }
+
     private Packet readPacket(String binaryString, Cursor cursor) {
         int packetVersion = readInteger(binaryString, cursor, PACKET_VERSION_LENGTH);
         int typeId = readInteger(binaryString, cursor, TYPE_ID_LENGTH);
 
 
-        Packet packet = typeId == 4 ?
+        Packet packet = typeId == LITERAL_VALUE_TYPE_ID ?
                 readLiteralValuePacket(packetVersion, typeId, binaryString, cursor) :
                 readOperatorPacket(packetVersion, typeId, binaryString, cursor);
 
@@ -61,8 +74,8 @@ public class Day16 implements ISolvableDay {
     private Packet readLiteralValuePacket(int packetVersion, int typeId, String binaryString, Cursor cursor) {
         String binaryLiteral = "";
         while (true) {
-            String bit = readBitString(binaryString, cursor, 1);
-            binaryLiteral += readBitString(binaryString, cursor, 4);
+            String bit = readBitString(binaryString, cursor, GROUP_PREFIX_LENGTH);
+            binaryLiteral += readBitString(binaryString, cursor, GROUP_CONTENT_LENGTH);
             if (bit.equals("0")) {
                 break;
             }
@@ -73,12 +86,16 @@ public class Day16 implements ISolvableDay {
     }
 
 
-    @Override
-    public long partTwoSolver(String input) {
-        return 0;
-    }
-
     private record Packet(int packetVersion, int typeId, List<Packet> subPackets, long literalValue) {
+        private static final int SUM_TYPE_ID = 0;
+        private static final int PRODUCT_TYPE_ID = 1;
+        private static final int MINIMUM_TYPE_ID = 2;
+        private static final int MAXIMUM_TYPE_ID = 3;
+        private static final int GREATER_THAN_TYPE_ID = 5;
+        private static final int LESS_THAN_TYPE_ID = 6;
+        private static final int EQUAL_TO_TYPE_ID = 7;
+
+
         public Packet(int packetVersion, int typeId, long literalValue) {
             this(packetVersion, typeId, List.of(), literalValue);
         }
@@ -93,6 +110,24 @@ public class Day16 implements ISolvableDay {
                     .sum();
             return packetVersion + subPacketsVersionSum;
         }
+
+        public long result() {
+            long result = switch (typeId) {
+                case SUM_TYPE_ID -> subPackets.stream().mapToLong(Packet::result).sum();
+                case PRODUCT_TYPE_ID -> subPackets.stream().mapToLong(Packet::result).reduce(Math::multiplyExact).getAsLong();
+                case MINIMUM_TYPE_ID -> subPackets.stream().mapToLong(Packet::result).min().getAsLong();
+                case MAXIMUM_TYPE_ID -> subPackets.stream().mapToLong(Packet::result).max().getAsLong();
+                case GREATER_THAN_TYPE_ID -> subPackets.get(0).result() > subPackets.get(1).result() ? 1 : 0;
+                case LESS_THAN_TYPE_ID -> subPackets.get(0).result() < subPackets.get(1).result() ? 1 : 0;
+                case EQUAL_TO_TYPE_ID -> subPackets.get(0).result() == subPackets.get(1).result() ? 1 : 0;
+                case LITERAL_VALUE_TYPE_ID -> literalValue;
+                default -> 0L;
+            };
+
+            return result;
+        }
+
+
     }
 
     private static String readBitString(String packet, Cursor cursor, int bitsToRead) {

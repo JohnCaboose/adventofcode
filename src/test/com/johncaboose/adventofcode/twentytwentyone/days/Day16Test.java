@@ -12,6 +12,7 @@ public class Day16Test {
     private static final String EXAMPLE_4 = "A0016C880162017C3686B18A3D4780";
     private static final String EXAMPLE_5 = "D2FE28";
     private static final String EXAMPLE_6 = "38006F45291200";
+    private static final String PART_TWO_EXAMPLE = "9C0141080250320F1802104A08";
     private static final String INPUT = ProblemInput.DAY_16_INPUT;
 
     ISolvableDay sut = new Day16();
@@ -53,12 +54,12 @@ public class Day16Test {
 
     @Test
     void part2Solver_WHEN_exampleInput_THEN_outputMatchesExampleOutput() {
-        assertEquals(-1, sut.partTwoSolver(EXAMPLE_1));
+        assertEquals(1, sut.partTwoSolver(PART_TWO_EXAMPLE));
     }
 
     @Test
     void part2Solver_WHEN_realInput_THEN_outputMatchesValidatedAnswer() {
-        assertEquals(-1, sut.partTwoSolver(INPUT));
+        assertEquals(470949537659L, sut.partTwoSolver(INPUT));
     }
 
 }
