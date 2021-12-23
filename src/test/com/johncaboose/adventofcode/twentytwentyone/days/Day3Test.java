@@ -5,27 +5,29 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class Day3Test {
+    private static final String EXAMPLE = ProblemInput.DAY_3_EXAMPLE;
+    private static final String INPUT = ProblemInput.DAY_3_INPUT;
 
-    ISolvableDay sut = new Day3();
+    private ISolvableDay sut = new Day3();
 
     @Test
     void part1Solver_WHEN_exampleInput_THEN_outputMatchesExampleOutput() {
-        assertEquals(198, sut.partOneSolver(ProblemInput.DAY_3_EXAMPLE));
+        assertEquals(198, sut.partOneSolver(EXAMPLE));
     }
 
     @Test
     void part1Solver_WHEN_realInput_THEN_outputMatchesValidatedAnswer() {
-        assertEquals(4001724, sut.partOneSolver(ProblemInput.DAY_3_INPUT));
+        assertEquals(4001724, sut.partOneSolver(INPUT));
     }
 
     @Test
     void part2Solver_WHEN_exampleInput_THEN_outputMatchesExampleOutput() {
-        assertEquals(230, sut.partTwoSolver(ProblemInput.DAY_3_EXAMPLE));
+        assertEquals(230, sut.partTwoSolver(EXAMPLE));
     }
 
     @Test
     void part2Solver_WHEN_realInput_THEN_outputMatchesValidatedAnswer() {
-        assertEquals(587895, sut.partTwoSolver(ProblemInput.DAY_3_INPUT));
+        assertEquals(587895, sut.partTwoSolver(INPUT));
     }
 
 }
