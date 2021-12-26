@@ -1,9 +1,7 @@
 package com.johncaboose.adventofcode.twentytwentyone.days;
 
 
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.Scanner;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -22,6 +20,10 @@ public class Day18 implements ISolvableDay {
 
     @Override
     public long partOneSolver(String input) {
+        return magnitudeOfSum(input);
+    }
+
+    private static long magnitudeOfSum(String input) {
         String result = calculateSum(input);
         SnailfishElement finalResult = readInputNumber(result);
         long magnitude = finalResult.getMagnitude();
@@ -30,11 +32,35 @@ public class Day18 implements ISolvableDay {
 
     @Override
     public long partTwoSolver(String input) {
-        return 0;
+        List<String> inputNumbers = new ArrayList<>(readInput(input));
+        List<String> constructedInputStringsOfAllCombinations = new ArrayList<>();
+
+        for (int i = 0; i < inputNumbers.size(); i++) {
+            for (int j = 0; j < inputNumbers.size(); j++) {
+                if (i != j) {
+                    String a = inputNumbers.get(i);
+                    String b = inputNumbers.get(j);
+
+                    constructedInputStringsOfAllCombinations.add(a + System.lineSeparator() + b);
+                    constructedInputStringsOfAllCombinations.add(b + System.lineSeparator() + a);
+                }
+            }
+        }
+
+        long largestMagnitude = constructedInputStringsOfAllCombinations.stream()
+                .mapToLong(Day18::magnitudeOfSum)
+                .max()
+                .getAsLong();
+
+        return largestMagnitude;
     }
 
-    String calculateSum(String input) {
+    static String calculateSum(String input) {
         Queue<String> inputNumbers = readInput(input);
+        return calculateSum(inputNumbers);
+    }
+
+    static String calculateSum(Queue<String> inputNumbers) {
         String result = inputNumbers.remove();
         while (inputNumbers.size() > 0) {
             String second = inputNumbers.remove();
@@ -156,7 +182,7 @@ public class Day18 implements ISolvableDay {
         return number;
     }
 
-    private Queue<String> readInput(String input) {
+    private static Queue<String> readInput(String input) {
         Queue<String> snailfishNumbers = new LinkedList<>();
         try (Scanner scanner = new Scanner(input)) {
             while (scanner.hasNextLine()) {

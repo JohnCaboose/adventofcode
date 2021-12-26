@@ -197,21 +197,21 @@ public class Day18Test {
     @Test
     void part1Solver_WHEN_realInput_THEN_outputMatchesValidatedAnswer() {
         Assertions.assertTimeoutPreemptively(Duration.ofSeconds(FULL_SOLUTION_TIMEOUT), () -> {
-            assertEquals(-1, sut.partOneSolver(INPUT));
+            assertEquals(4289, sut.partOneSolver(INPUT));
         });
     }
 
     @Test
     void part2Solver_WHEN_exampleInput_THEN_outputMatchesExampleOutput() {
         Assertions.assertTimeoutPreemptively(Duration.ofSeconds(FULL_SOLUTION_TIMEOUT), () -> {
-            assertEquals(-1, sut.partTwoSolver(EXAMPLE));
+            assertEquals(3993, sut.partTwoSolver(EXAMPLE));
         });
     }
 
     @Test
     void part2Solver_WHEN_realInput_THEN_outputMatchesValidatedAnswer() {
         Assertions.assertTimeoutPreemptively(Duration.ofSeconds(FULL_SOLUTION_TIMEOUT), () -> {
-            assertEquals(-1, sut.partTwoSolver(INPUT));
+            assertEquals(4807, sut.partTwoSolver(INPUT));
         });
     }
 
