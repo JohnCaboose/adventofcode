@@ -24,7 +24,7 @@ public class Day20 implements ISolvableDay {
         return litPixels;
     }
 
-    private long solve(String input, int amountOfEnhancementsToPerform) {
+    private static long solve(String input, int amountOfEnhancementsToPerform) {
         List<Boolean> algorithmList = new ArrayList<>();
         ExtendedMap<Coordinate, Boolean> relevantPixels = new ExtendedHashMap<>();
 
@@ -36,8 +36,8 @@ public class Day20 implements ISolvableDay {
         return litPixels;
     }
 
-    private void enhance(List<Boolean> algorithmList, ExtendedMap<Coordinate, Boolean> relevantPixels,
-                         int amountOfEnhancementsToPerform) {
+    private static void enhance(List<Boolean> algorithmList, ExtendedMap<Coordinate, Boolean> relevantPixels,
+                                int amountOfEnhancementsToPerform) {
         boolean allOffBecomeOn = algorithmList.get(0);
         boolean allOnBecomeOff = !algorithmList.get(algorithmList.size() - 1);
 
@@ -57,7 +57,7 @@ public class Day20 implements ISolvableDay {
         }
     }
 
-    private void readInput(String input, List<Boolean> algorithmMap, ExtendedMap<Coordinate, Boolean> relevantPixels, int amountOfEnhancementsToPerform) {
+    private static void readInput(String input, List<Boolean> algorithmMap, ExtendedMap<Coordinate, Boolean> relevantPixels, int amountOfEnhancementsToPerform) {
         try (Scanner scanner = new Scanner(input)) {
             String algorithmString = scanner.nextLine();
 
