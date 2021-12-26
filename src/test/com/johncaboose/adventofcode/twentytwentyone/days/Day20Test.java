@@ -19,17 +19,17 @@ public class Day20Test {
 
     @Test
     void part1Solver_WHEN_realInput_THEN_outputMatchesValidatedAnswer() {
-        assertEquals(-1, sut.partOneSolver(INPUT));
+        assertEquals(5583, sut.partOneSolver(INPUT));
     }
 
     @Test
     void part2Solver_WHEN_exampleInput_THEN_outputMatchesExampleOutput() {
-        assertEquals(-1, sut.partTwoSolver(EXAMPLE));
+        assertEquals(3351, sut.partTwoSolver(EXAMPLE));
     }
 
     @Test
     void part2Solver_WHEN_realInput_THEN_outputMatchesValidatedAnswer() {
-        assertEquals(-1, sut.partTwoSolver(INPUT));
+        assertEquals(19592, sut.partTwoSolver(INPUT));
     }
 
 }

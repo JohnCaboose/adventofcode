@@ -22,14 +22,18 @@ public record Coordinate(int x, int y) {
         this(other.x, other.y);
     }
 
+    /**
+     * @return list of neighbour coordinates, not including the diagonal neighbours.
+     */
     public List<Coordinate> neighbours() {
         return List.of(
-                new Coordinate(x - 1, y), //up
-                new Coordinate(x + 1, y), //down
-                new Coordinate(x, y - 1), //left
-                new Coordinate(x, y + 1)  //right
+                new Coordinate(x - 1, y),
+                new Coordinate(x + 1, y),
+                new Coordinate(x, y - 1),
+                new Coordinate(x, y + 1)
         );
     }
+
 
     @Override
     public String toString() {
