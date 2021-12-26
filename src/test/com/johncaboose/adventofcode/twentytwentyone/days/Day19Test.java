@@ -13,7 +13,7 @@ public class Day19Test {
 
     @Test
     void part1Solver_WHEN_exampleInput_THEN_outputMatchesExampleOutput() {
-        assertEquals(-1, sut.partOneSolver(EXAMPLE));
+        assertEquals(79, sut.partOneSolver(EXAMPLE));
     }
 
 

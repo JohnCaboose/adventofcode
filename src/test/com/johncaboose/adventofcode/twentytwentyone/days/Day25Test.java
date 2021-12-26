@@ -4,16 +4,16 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class Day20Test {
+public class Day25Test {
 
-    private static final String EXAMPLE = ProblemInput.DAY_20_EXAMPLE;
-    private static final String INPUT = ProblemInput.DAY_20_INPUT;
+    private static final String EXAMPLE = ProblemInput.DAY_25_EXAMPLE;
+    private static final String INPUT = ProblemInput.DAY_25_INPUT;
 
-    private ISolvableDay sut = new Day20();
+    private ISolvableDay sut = new Day25();
 
     @Test
     void part1Solver_WHEN_exampleInput_THEN_outputMatchesExampleOutput() {
-        assertEquals(35, sut.partOneSolver(EXAMPLE));
+        assertEquals(-1, sut.partOneSolver(EXAMPLE));
     }
 
 
