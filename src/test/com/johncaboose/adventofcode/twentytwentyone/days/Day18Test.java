@@ -64,6 +64,15 @@ public class Day18Test {
 
     @Test
     @Order(1)
+    void explode_WHEN_exampleInput6_THEN_outputMatchesExampleOutput() {
+        String example = "[[[[0,7],4],[[7,8],[0,[6,7]]]],[1,1]]";
+        String expected = "[[[[0,7],4],[[7,8],[6,0]]],[8,1]]";
+
+        assertEquals(expected, sut.explode(example));
+    }
+
+    @Test
+    @Order(1)
     void split_WHEN_exampleInput1_THEN_outputMatchesExampleOutput() {
         String example = "[[[[0,7],4],[15,[0,13]]],[1,1]]";
         String expected = "[[[[0,7],4],[[7,8],[0,13]]],[1,1]]";

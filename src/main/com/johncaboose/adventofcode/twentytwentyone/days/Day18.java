@@ -1,5 +1,6 @@
 package com.johncaboose.adventofcode.twentytwentyone.days;
 
+
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Scanner;
@@ -18,7 +19,6 @@ public class Day18 implements ISolvableDay {
     private static final Pattern PAIR_OF_LITERALS_PATTERN = Pattern.compile("\\[[0-9]+,[0-9]+]");
     private static final char LEFT_BRACKET = '[';
     private static final char RIGHT_BRACKET = ']';
-
 
     @Override
     public long partOneSolver(String input) {
@@ -49,10 +49,13 @@ public class Day18 implements ISolvableDay {
     }
 
     static String reduce(String number) {
+        //System.out.println("Reducing:");
+        //System.out.println(number);
         String reduced = number;
         while (true) {
             String interim = explode(reduced);
             if (!reduced.equals(interim)) {
+                //System.out.println(interim);
                 reduced = interim;
                 //number exploded, see if any more explosions needed
                 continue;
@@ -63,10 +66,12 @@ public class Day18 implements ISolvableDay {
                 // number was neither exploded nor split -> number is reduced
                 break;
             } else {
+                //System.out.println(interim);
                 reduced = interim;
             }
 
         }
+
         return reduced;
     }
 
@@ -144,7 +149,7 @@ public class Day18 implements ISolvableDay {
             String literalToSplit = matcher.group(0);
             long literalValue = Long.valueOf(literalToSplit);
             long newLeft = literalValue / 2; // half, round down
-            long newRight = newLeft == literalValue ? newLeft : newLeft + 1; // half, round up
+            long newRight = newLeft * 2 == literalValue ? newLeft : newLeft + 1; // half, round up
             String splitNumber = matcher.replaceFirst("[" + newLeft + "," + newRight + "]");
             return splitNumber;
         }
