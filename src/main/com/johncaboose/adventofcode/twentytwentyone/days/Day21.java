@@ -107,17 +107,26 @@ public class Day21 implements ISolvableDay {
 
     @Override
     public long partTwoSolver(String input) {
-        int winThreshold = 21;
         Map<Integer, Long> universesPerSteps = new HashMap<>();
         universesPerSteps.put(3, 1L);
         universesPerSteps.put(4, 3L);
         universesPerSteps.put(5, 6L);
         universesPerSteps.put(6, 7L);
-        universesPerSteps.put(7, 6l);
+        universesPerSteps.put(7, 6L);
         universesPerSteps.put(8, 3L);
         universesPerSteps.put(9, 1L);
 
+        for (int winThreshold = 1; winThreshold < 21; winThreshold++) {
+            solvePart2(input, universesPerSteps, winThreshold);
+        }
 
+        int winThreshold = 21;
+
+        long solution = solvePart2(input, universesPerSteps, winThreshold);
+        return solution;
+    }
+
+    private long solvePart2(String input, Map<Integer, Long> universesPerSteps, int winThreshold) {
         int player1StartPos = getPlayerStartingPosition("1", input);
         Map<Universe, Long> player1Universes = startUniverse(player1StartPos);
 
@@ -127,16 +136,15 @@ public class Day21 implements ISolvableDay {
         long player1Wins = 0;
         long player2Wins = 0;
 
-        for (int n = 1; n <= winThreshold + 1; n++) {
-            player1Universes = calculateUniversesAtStep(player1Universes, universesPerSteps);
-            player2Universes = calculateUniversesAtStep(player2Universes, universesPerSteps);
-
-            // See how many wins we have, removing all of those universes including overlap
+        while (!player1Universes.isEmpty() && !player2Universes.isEmpty()) {
+            player1Universes = calculateUniversesAtStep(player1Universes, player2Universes, universesPerSteps);
             player1Wins += universesWithPlayerWins(player1Universes, player2Universes, winThreshold);
+
+            player2Universes = calculateUniversesAtStep(player2Universes, player1Universes, universesPerSteps);
             player2Wins += universesWithPlayerWins(player2Universes, player1Universes, winThreshold);
+
         }
-
-
+        System.out.println("win score: %2d, p1 wins: %20d, p2 wins: %20d".formatted(winThreshold, player1Wins, player2Wins)); //TODO remove
         return Math.max(player1Wins, player2Wins);
     }
 
@@ -146,7 +154,7 @@ public class Day21 implements ISolvableDay {
         return universes;
     }
 
-    private static Map<Universe, Long> calculateUniversesAtStep(Map<Universe, Long> lastRound, Map<Integer, Long> universesPerSteps) {
+    private static Map<Universe, Long> calculateUniversesAtStep(Map<Universe, Long> lastRound, Map<Universe, Long> otherPlayerUniverses, Map<Integer, Long> universesPerSteps) {
         Map<Universe, Long> currentRound = new HashMap<>();
 
         // This whole thing should be possible to parallelize, if I can be bothered
@@ -155,7 +163,7 @@ public class Day21 implements ISolvableDay {
 
             for (Entry<Integer, Long> universesForStep : universesPerSteps.entrySet()) {
                 // Calculate the result universe based on amount of steps to take and initial universe
-                int indexOfCurrentPosition = POSSIBLE_POSITIONS.indexOf(initialUniverse.pos());
+                int indexOfCurrentPosition = POSSIBLE_POSITIONS.indexOf(initialUniverse.position());
                 int indexOfNewPosition = (indexOfCurrentPosition + universesForStep.getKey()) % POSSIBLE_POSITIONS.size();
                 int resultPosition = POSSIBLE_POSITIONS.get(indexOfNewPosition);
                 int resultScore = initialUniverse.score() + resultPosition;
@@ -167,6 +175,15 @@ public class Day21 implements ISolvableDay {
                 currentRound.put(resultUniverse, totalResultUniverses);
             }
 
+        }
+
+        // For every way there is for the current player to get their universes, the other person can exist in all of their universes
+        long amountOfOtherUniverses = otherPlayerUniverses.values()
+                .stream()
+                .mapToLong(l -> l)
+                .sum();
+        for (Entry<Universe, Long> entry : currentRound.entrySet()) {
+            entry.setValue(entry.getValue() * amountOfOtherUniverses);
         }
 
         return currentRound;
@@ -191,16 +208,10 @@ public class Day21 implements ISolvableDay {
             winningPlayerUniverses.remove(key);
         }
 
-        // Remove the universes that the winning player have won from the losing player
-        // Even if that universe score has reached threshold, we assume that the winning player has priority for the win
-        losingPlayerUniverses.entrySet()
-                .forEach(entry -> entry.setValue(entry.getValue() - amountOfUniversesThatAreFinished));
-        losingPlayerUniverses.values().removeIf(amount -> amount < 1);
-
         return amountOfUniversesThatAreFinished;
     }
 
-    private record Universe(int score, int pos) {
+    private record Universe(int score, int position) {
 
     }
 
