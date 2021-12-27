@@ -8362,7 +8362,13 @@ public class ProblemInput {
     public static final String DAY_21_INPUT = """
             Player 1 starting position: 7
             Player 2 starting position: 2""";
-    public static final String DAY_22_EXAMPLE = """
+
+    public static final String DAY_22_EXAMPLE_1 = """
+            on x=10..12,y=10..12,z=10..12
+            on x=11..13,y=11..13,z=11..13
+            off x=9..11,y=9..11,z=9..11
+            on x=10..10,y=10..10,z=10..10""";
+    public static final String DAY_22_EXAMPLE_2 = """
             on x=-20..26,y=-36..17,z=-47..7
             on x=-20..33,y=-21..23,z=-26..28
             on x=-22..28,y=-29..23,z=-38..16
