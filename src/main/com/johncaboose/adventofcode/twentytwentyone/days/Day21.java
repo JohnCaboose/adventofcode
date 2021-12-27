@@ -4,6 +4,7 @@ import java.util.*;
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class Day21 implements ISolvableDay {
 
@@ -116,17 +117,8 @@ public class Day21 implements ISolvableDay {
         universesPerSteps.put(8, 3L);
         universesPerSteps.put(9, 1L);
 
-        for (int winThreshold = 1; winThreshold < 21; winThreshold++) {
-            solvePart2(input, universesPerSteps, winThreshold);
-        }
-
         int winThreshold = 21;
 
-        long solution = solvePart2(input, universesPerSteps, winThreshold);
-        return solution;
-    }
-
-    private long solvePart2(String input, Map<Integer, Long> universesPerSteps, int winThreshold) {
         int player1StartPos = getPlayerStartingPosition("1", input);
         Map<Universe, Long> player1Universes = startUniverse(player1StartPos);
 
@@ -144,8 +136,8 @@ public class Day21 implements ISolvableDay {
             player2Wins += universesWithPlayerWins(player2Universes, player1Universes, winThreshold);
 
         }
-        System.out.println("win score: %2d, p1 wins: %20d, p2 wins: %20d".formatted(winThreshold, player1Wins, player2Wins)); //TODO remove
-        return Math.max(player1Wins, player2Wins);
+        long solution = Math.max(player1Wins, player2Wins);
+        return solution;
     }
 
     private static Map<Universe, Long> startUniverse(int startingPos) {
@@ -177,38 +169,36 @@ public class Day21 implements ISolvableDay {
 
         }
 
-        // For every way there is for the current player to get their universes, the other person can exist in all of their universes
-        long amountOfOtherUniverses = otherPlayerUniverses.values()
-                .stream()
-                .mapToLong(l -> l)
-                .sum();
-        for (Entry<Universe, Long> entry : currentRound.entrySet()) {
-            entry.setValue(entry.getValue() * amountOfOtherUniverses);
-        }
 
         return currentRound;
     }
 
-    private static long universesWithPlayerWins(Map<Universe, Long> winningPlayerUniverses,
-                                                Map<Universe, Long> losingPlayerUniverses, int winThreshold) {
-        List<Entry<Universe, Long>> winningPlayerEntries = winningPlayerUniverses.entrySet()
+    private static long universesWithPlayerWins(Map<Universe, Long> lastActivePlayerUniverses,
+                                                Map<Universe, Long> otherPlayerUniverses, int winThreshold) {
+
+        Map<Universe, Long> winningUniverses = lastActivePlayerUniverses.entrySet()
                 .stream()
                 .filter(entry -> entry.getKey().score >= winThreshold)
-                .toList();
+                .collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue()));
 
-        long amountOfUniversesThatAreFinished = winningPlayerEntries.stream()
-                .mapToLong(entry -> entry.getValue())
+        long winningUniverseCount = winningUniverses.values()
+                .stream()
+                .mapToLong(l -> l)
                 .sum();
 
-        List<Universe> finishedUniverses = winningPlayerEntries.stream()
-                .map(entry -> entry.getKey())
-                .toList();
-
-        for (Universe key : finishedUniverses) {
-            winningPlayerUniverses.remove(key);
+        //Remove universes that are wins from the
+        for (Universe key : winningUniverses.keySet()) {
+            lastActivePlayerUniverses.remove(key);
         }
 
-        return amountOfUniversesThatAreFinished;
+        // For every universe the active player can win, there is a certain amount of ways the other player can lose
+        long amountOfOtherUniverses = otherPlayerUniverses.values()
+                .stream()
+                .mapToLong(l -> l)
+                .sum();
+
+        long amountOfWins = winningUniverseCount * amountOfOtherUniverses;
+        return amountOfWins;
     }
 
     private record Universe(int score, int position) {
