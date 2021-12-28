@@ -1,6 +1,6 @@
 package com.johncaboose.adventofcode.twentytwentyone.days;
 
-import com.johncaboose.adventofcode.twentytwentyone.shared.Coordinate;
+import com.johncaboose.adventofcode.shared.Coordinate;
 
 import java.util.*;
 import java.util.Map.Entry;
@@ -215,7 +215,7 @@ public class Day15 implements ISolvableDay {
                     }
                 }
             }
-            
+
             settledNodes.add(currentNode);
 
             if (currentNode.getCoordinate().equals(targetCoordinate)) {

@@ -1,7 +1,7 @@
 package com.johncaboose.adventofcode.twentytwentyone.days;
 
-import com.johncaboose.adventofcode.twentytwentyone.shared.ExtendedHashMap;
-import com.johncaboose.adventofcode.twentytwentyone.shared.ExtendedMap;
+import com.johncaboose.adventofcode.shared.ExtendedHashMap;
+import com.johncaboose.adventofcode.shared.ExtendedMap;
 
 import java.util.*;
 

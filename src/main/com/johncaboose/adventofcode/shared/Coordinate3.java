@@ -1,4 +1,4 @@
-package com.johncaboose.adventofcode.twentytwentyone.shared;
+package com.johncaboose.adventofcode.shared;
 
 public record Coordinate3(int x, int y, int z) {
 
@@ -11,11 +11,20 @@ public record Coordinate3(int x, int y, int z) {
         this(coordinateString.split(SEPARATOR_STRING)[0], coordinateString.split(SEPARATOR_STRING)[1], coordinateString.split(SEPARATOR_STRING)[2]);
     }
 
+    /**
+     * @param x string representation of the value for the x-axis
+     * @param y string representation of the value for the y-axis
+     * @param z string representation of the value for the z-axis
+     */
     public Coordinate3(String x, String y, String z) {
         this(Integer.parseInt(x), Integer.parseInt(y), Integer.parseInt(z));
     }
 
-
+    /**
+     * Constructs an exact copy of
+     *
+     * @param other
+     */
     public Coordinate3(Coordinate3 other) {
         this(other.x, other.y, other.z);
     }

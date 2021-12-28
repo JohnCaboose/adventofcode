@@ -1,6 +1,6 @@
 package com.johncaboose.adventofcode.twentytwentyone.days;
 
-import com.johncaboose.adventofcode.twentytwentyone.shared.Coordinate;
+import com.johncaboose.adventofcode.shared.Coordinate;
 
 import java.util.HashSet;
 import java.util.Set;

@@ -1,4 +1,4 @@
-package com.johncaboose.adventofcode.twentytwentyone.shared;
+package com.johncaboose.adventofcode.shared;
 
 import java.util.List;
 
