@@ -29,25 +29,14 @@ public class Day22 implements ISolvableDay {
     }
 
     private static long solve(String input, Optional<Interval> initializationProcedureArea) {
-        List<RebootStep> rebootSteps = readInstructions(input);
-        Set<Cuboid> reactorCore = new HashSet<>();
+        List<RebootStep> remainingSteps = readInstructions(input);
 
-
-        for (int i = 0; i < rebootSteps.size(); i++) {
-            RebootStep step = rebootSteps.get(i);
-            Set<Cuboid> newReactorCore;
-            if (initializationProcedureArea.isPresent()) {
-                newReactorCore = step.execute(reactorCore, initializationProcedureArea.get());
-            } else {
-                newReactorCore = step.execute(reactorCore);
-            }
-            reactorCore = newReactorCore;
-            System.out.println("Handled operation i=%2d/%d. ReactorCore size=%d.".formatted(i, rebootSteps.size(), reactorCore.size()));
+        long turnedOnCubes = 0;
+        while (remainingSteps.size() > 0) {
+            RebootStep currentStep = remainingSteps.remove(0);
+            turnedOnCubes += currentStep.execute(remainingSteps, initializationProcedureArea);
+            System.out.println("Remaining steps: %3d, turned on cubes: %d".formatted(remainingSteps.size(), turnedOnCubes));
         }
-
-        long turnedOnCubes = reactorCore.stream()
-                .mapToLong(Cuboid::size)
-                .sum();
 
         return turnedOnCubes;
     }
@@ -132,7 +121,7 @@ public class Day22 implements ISolvableDay {
          * @return set of sub-cuboids that contains all the cubes in this cuboid, except for those that are shared with otherCuboids.
          * In the case where no overlap exists, the set returned is equivalent to Set.of(this).
          */
-        public Set<Cuboid> subCuboidsWithoutOverlap(Set<Cuboid> otherCuboids) {
+        public Set<Cuboid> subCuboidsWithoutOverlap(Collection<Cuboid> otherCuboids) {
             Queue<Cuboid> cuboidsToDivide = new ArrayDeque<>();
             cuboidsToDivide.add(this);
             for (Cuboid otherCuboid : otherCuboids) {
@@ -152,14 +141,12 @@ public class Day22 implements ISolvableDay {
          * @return list of sub-cuboids contains all the cubes in this cuboid, except for those that are shared with otherCuboid.
          * In the case where no overlap exists, the list returned is equivalent to List.of(this).
          */
-        public Set<Cuboid> subCuboidsWithoutOverlap(Cuboid otherCuboid) {
+        public Collection<Cuboid> subCuboidsWithoutOverlap(Cuboid otherCuboid) {
             if (this.completelyInside(otherCuboid)) {
-
                 // This sub-cuboid is completely inside otherCuboid and shall be removed
-                return Set.of();
+                return List.of();
 
             } else if (shouldSplitAlongAxis(xInterval, otherCuboid.xInterval)) {
-
                 //There is overlap in the X axis and we need to split this sub-cuboid further
                 Couple<Interval, Interval> subIntervals = this.xInterval.split(otherCuboid.xInterval());
 
@@ -169,7 +156,6 @@ public class Day22 implements ISolvableDay {
                 return subCuboidsWithoutOverlap(firstSubCuboid, secondSubCuboid, otherCuboid);
 
             } else if (shouldSplitAlongAxis(yInterval, otherCuboid.yInterval)) {
-
                 //There is overlap in the Y axis and we need to split this sub-cuboid further
                 Couple<Interval, Interval> subIntervals = this.yInterval.split(otherCuboid.yInterval());
 
@@ -178,8 +164,7 @@ public class Day22 implements ISolvableDay {
 
                 return subCuboidsWithoutOverlap(firstSubCuboid, secondSubCuboid, otherCuboid);
 
-            } else if (this.zInterval.overlaps(otherCuboid.zInterval) && !this.zInterval.completelyInside(otherCuboid.zInterval)) {
-
+            } else if (shouldSplitAlongAxis(zInterval, otherCuboid.zInterval)) {
                 //There is overlap in the Z axis and we need to split this sub-cuboid further
                 Couple<Interval, Interval> subIntervals = this.zInterval.split(otherCuboid.zInterval());
 
@@ -187,10 +172,11 @@ public class Day22 implements ISolvableDay {
                 Cuboid secondSubCuboid = new Cuboid(this.xInterval, this.yInterval, subIntervals.second());
 
                 return subCuboidsWithoutOverlap(firstSubCuboid, secondSubCuboid, otherCuboid);
-            } else {
 
+            } else {
                 // This sub-cuboid is completely outside otherCuboid and shall be kept
-                return Set.of(this);
+                return List.of(this);
+
             }
         }
 
@@ -198,71 +184,69 @@ public class Day22 implements ISolvableDay {
             return axisInterval.overlaps(otherInterval) && !axisInterval.completelyInside(otherInterval);
         }
 
-        private static Set<Cuboid> subCuboidsWithoutOverlap(Cuboid firstSubCuboid, Cuboid secondSubCuboid, Cuboid otherCuboid) {
-            Set<Cuboid> result = firstSubCuboid.subCuboidsWithoutOverlap(otherCuboid);
-            Set<Cuboid> secondResult = secondSubCuboid.subCuboidsWithoutOverlap(otherCuboid);
+        private static Collection<Cuboid> subCuboidsWithoutOverlap(Cuboid firstSubCuboid, Cuboid secondSubCuboid, Cuboid otherCuboid) {
+            Collection<Cuboid> result = firstSubCuboid.subCuboidsWithoutOverlap(otherCuboid);
+            Collection<Cuboid> secondResult = secondSubCuboid.subCuboidsWithoutOverlap(otherCuboid);
 
-            return Stream.concat(result.stream(), secondResult.stream()).collect(Collectors.toSet());
+            return Stream.concat(result.stream(), secondResult.stream()).collect(Collectors.toList());
         }
 
         @Override
         public String toString() {
-            return "x=" + xInterval +
-                    ",y=" + yInterval +
-                    ",z=" + zInterval;
+            return "x=" + xInterval + ",y=" + yInterval + ",z=" + zInterval;
         }
     }
 
     private record RebootStep(RebootStepInstruction instruction, Cuboid instructionCuboid) {
 
-        public Set<Cuboid> execute(Set<Cuboid> reactorCore) {
-            return execute(reactorCore, instructionCuboid);
-        }
-
-        public Set<Cuboid> execute(Set<Cuboid> reactorCore, Interval limit) {
-            Optional<Cuboid> constrainedInstructionCuboid = instructionCuboid.constrainedTo(limit);
-            if (constrainedInstructionCuboid.isPresent()) {
-                return execute(reactorCore, constrainedInstructionCuboid.get());
+        public long execute(List<RebootStep> remainingSteps, Optional<Interval> limit) {
+            if (limit.isPresent()) {
+                return execute(remainingSteps, limit.get());
             } else {
-                // instruction is a NOP as we don't care about the areas it affects
-                return reactorCore;
+                return execute(remainingSteps, this.instructionCuboid);
             }
         }
 
-        public Set<Cuboid> execute(Set<Cuboid> reactorCore, Cuboid intervalToUse) {
-            Set<Cuboid> postExecutionReactorCore = new HashSet<>(reactorCore);
+        public long execute(List<RebootStep> remainingSteps, Interval limit) {
+            Optional<Cuboid> constrainedInstructionCuboid = instructionCuboid.constrainedTo(limit);
+            if (constrainedInstructionCuboid.isPresent()) {
+                return execute(remainingSteps, constrainedInstructionCuboid.get());
+            } else {
+                // instruction is a NOP as we don't care about the areas it affects
+                return 0;
+            }
+        }
+
+        private long execute(List<RebootStep> remainingSteps, Cuboid intervalToUse) {
+            Set<Cuboid> stepReactorCore = new HashSet<>();
 
             switch (instruction) {
-                case ON -> turnOn(postExecutionReactorCore, intervalToUse);
-                case OFF -> turnOff(postExecutionReactorCore, intervalToUse);
+                case ON -> turnOn(stepReactorCore, remainingSteps, intervalToUse);
+                case OFF -> {
+                    //NOP as we never turn on anything we're supposed to later turn off
+                }
                 default -> throw new UnsupportedOperationException("Unknown instruction");
             }
 
-            return postExecutionReactorCore;
+            long turnedOnCubes = stepReactorCore.stream()
+                    .mapToLong(Cuboid::size)
+                    .sum();
 
+            return turnedOnCubes;
         }
 
-        private static void turnOn(Set<Cuboid> reactorCore, Cuboid cuboidToTurnOn) {
-            Set<Cuboid> cuboidsToTurnOn = cuboidToTurnOn.subCuboidsWithoutOverlap(reactorCore);
-            reactorCore.addAll(cuboidsToTurnOn);
-        }
-
-        private static void turnOff(Set<Cuboid> reactorCore, Cuboid cuboidToTurnOff) {
-            Set<Cuboid> resultingReactorCore = new HashSet<>();
-            for (Cuboid cuboid : reactorCore) {
-                Set<Cuboid> subCuboidsNotTurnedOff = cuboid.subCuboidsWithoutOverlap(cuboidToTurnOff);
-                resultingReactorCore.addAll(subCuboidsNotTurnedOff);
-            }
-            reactorCore.clear();
-            reactorCore.addAll(resultingReactorCore);
+        private static void turnOn(Collection<Cuboid> reactorCore, List<RebootStep> remainingSteps, Cuboid cuboidToTurnOn) {
+            // This way only the final state of each cube will ever be added to the reactorCore
+            Collection<Cuboid> remainingCuboids = remainingSteps.stream()
+                    .map(RebootStep::instructionCuboid)
+                    .toList();
+            Collection<Cuboid> subCuboidsToTurnOn = cuboidToTurnOn.subCuboidsWithoutOverlap(remainingCuboids);
+            reactorCore.addAll(subCuboidsToTurnOn);
         }
 
         @Override
         public String toString() {
-            return "RebootStep{" +
-                    "instruction=" + instruction +
-                    ", " + instructionCuboid +
-                    '}';
+            return "RebootStep{" + "instruction=" + instruction + ", " + instructionCuboid + '}';
         }
     }
 }
