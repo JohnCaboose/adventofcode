@@ -35,7 +35,6 @@ public class Day22 implements ISolvableDay {
         while (remainingSteps.size() > 0) {
             RebootStep currentStep = remainingSteps.remove(0);
             turnedOnCubes += currentStep.execute(remainingSteps, initializationProcedureArea);
-            System.out.println("Remaining steps: %3d, turned on cubes: %d".formatted(remainingSteps.size(), turnedOnCubes));
         }
 
         return turnedOnCubes;
@@ -121,7 +120,7 @@ public class Day22 implements ISolvableDay {
          * @return set of sub-cuboids that contains all the cubes in this cuboid, except for those that are shared with otherCuboids.
          * In the case where no overlap exists, the set returned is equivalent to Set.of(this).
          */
-        public Set<Cuboid> subCuboidsWithoutOverlap(Collection<Cuboid> otherCuboids) {
+        public Collection<Cuboid> subCuboidsWithoutOverlap(Collection<Cuboid> otherCuboids) {
             Queue<Cuboid> cuboidsToDivide = new ArrayDeque<>();
             cuboidsToDivide.add(this);
             for (Cuboid otherCuboid : otherCuboids) {
@@ -133,7 +132,7 @@ public class Day22 implements ISolvableDay {
                 cuboidsToDivide = iterationResult;
             }
 
-            return new HashSet<>(cuboidsToDivide.stream().toList());
+            return cuboidsToDivide.stream().toList();
         }
 
         /**
