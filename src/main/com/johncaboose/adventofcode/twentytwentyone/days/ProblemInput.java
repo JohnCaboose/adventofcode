@@ -8885,18 +8885,7 @@ public class ProblemInput {
             ###A#D#B#D###
               #B#C#A#C#
               #########""";
-    public static final String DAY_24_EXAMPLE = """
-            inp w
-            add z w
-            mod z 2
-            div w 2
-            add y w
-            mod y 2
-            div w 2
-            add x w
-            mod x 2
-            div w 2
-            mod w 2""";
+   
     public static final String DAY_24_INPUT = """
             inp w
             mul x 0
