@@ -2,6 +2,7 @@ package com.johncaboose.adventofcode.twentytwentyone.days;
 
 import com.johncaboose.adventofcode.shared.AbstractGrid;
 import com.johncaboose.adventofcode.shared.Coordinate;
+import com.johncaboose.adventofcode.shared.IntegerGrid;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -20,19 +21,18 @@ public class Day11 implements ISolvableDay {
     @Override
     public long partTwoSolver(String input) {
         OctopusGrid octopusGrid = new OctopusGrid(input);
-        int stepCount = 0;
         while (true) {
-            stepCount++;
             long amountOfFlashes = octopusGrid.step(1);
             if (amountOfFlashes == octopusGrid.size()) {
                 break;
             }
         }
-        return stepCount;
+        return octopusGrid.getStepsTaken();
     }
 
+    private static class OctopusGrid extends IntegerGrid {
 
-    private static class OctopusGrid extends AbstractGrid<Integer> {
+        private long stepsTaken = 0;
 
         public OctopusGrid(AbstractGrid<? extends Integer> other) {
             super(other);
@@ -42,11 +42,9 @@ public class Day11 implements ISolvableDay {
             super(input);
         }
 
-        @Override
-        public Integer valueOf(char character) {
-            return Character.getNumericValue(character);
+        public long getStepsTaken() {
+            return stepsTaken;
         }
-
 
         public void increment() {
             for (Map.Entry<Coordinate, Integer> entry : grid.entrySet()) {
@@ -122,6 +120,7 @@ public class Day11 implements ISolvableDay {
                     amountOfFlashes += flash();
                 }
             }
+            stepsTaken++;
             return amountOfFlashes;
         }
     }

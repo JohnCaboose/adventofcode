@@ -77,7 +77,7 @@ public abstract class AbstractGrid<T> {
             for (int x = 0; x <= lastX; x++) {
                 sb.append(stringOf(grid.get(new Coordinate(x, y))));
             }
-            sb.append("\n");
+            sb.append(System.lineSeparator());
         }
         return sb.toString();
     }

@@ -1,6 +1,7 @@
 package com.johncaboose.adventofcode.twentytwentyone.days;
 
 import com.johncaboose.adventofcode.shared.Coordinate;
+import com.johncaboose.adventofcode.shared.IntegerGrid;
 
 import java.util.*;
 import java.util.Map.Entry;
@@ -32,29 +33,11 @@ public class Day15 implements ISolvableDay {
         return destinationNode.getDistance();
     }
 
-    private static class Cavern {
+    private static class Cavern extends IntegerGrid {
         private static final int SIZE_INCREASE_FACTOR = 5;
-        private final HashMap<Coordinate, Integer> grid = new HashMap<>();
-        private int lastX = 0;
-        private int lastY = 0;
 
         public Cavern(String input) {
-            try (Scanner scanner = new Scanner(input)) {
-                int x = 0;
-
-                while (scanner.hasNextLine()) {
-                    lastX = x;
-                    String line = scanner.nextLine();
-                    for (int y = 0; y < line.length(); y++) {
-                        lastY = y;
-                        int value = Character.getNumericValue(line.charAt(y));
-                        grid.put(new Coordinate(x, y), value);
-                    }
-
-                    x++;
-                }
-
-            }
+            super(input);
         }
 
         public void adjustRiskLevelsAndSize() {
@@ -114,17 +97,6 @@ public class Day15 implements ISolvableDay {
             return graph;
         }
 
-        @Override
-        public String toString() {
-            StringBuilder result = new StringBuilder();
-            for (int x = 0; x <= lastX; x++) {
-                for (int y = 0; y <= lastY; y++) {
-                    result.append(grid.get(new Coordinate(x, y)));
-                }
-                result.append(System.lineSeparator());
-            }
-            return result.toString();
-        }
     }
 
     private static class Graph {
@@ -146,12 +118,12 @@ public class Day15 implements ISolvableDay {
         private int distance = Integer.MAX_VALUE;
         private Map<Node, Integer> adjacentNodes = new HashMap<>();
 
-        public void addDestination(Node destination, int distance) {
-            adjacentNodes.put(destination, distance);
-        }
-
         public Node(Coordinate coordinate) {
             this.coordinate = coordinate;
+        }
+
+        public void addDestination(Node destination, int distance) {
+            adjacentNodes.put(destination, distance);
         }
 
         public Coordinate getCoordinate() {
