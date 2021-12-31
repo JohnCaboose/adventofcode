@@ -1,15 +1,19 @@
 package com.johncaboose.adventofcode.twentytwentyone.days;
 
+import com.johncaboose.adventofcode.shared.AbstractGrid;
 import com.johncaboose.adventofcode.shared.Coordinate;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 public class Day11 implements ISolvableDay {
 
     @Override
     public long partOneSolver(String input) {
         OctopusGrid octopusGrid = new OctopusGrid(input);
-        long amountOfFlashes = step(octopusGrid, 100);
+        long amountOfFlashes = octopusGrid.step(100);
         return amountOfFlashes;
     }
 
@@ -19,45 +23,30 @@ public class Day11 implements ISolvableDay {
         int stepCount = 0;
         while (true) {
             stepCount++;
-            long amountOfFlashes = step(octopusGrid, 1);
-            if (amountOfFlashes == octopusGrid.grid.size()) {
+            long amountOfFlashes = octopusGrid.step(1);
+            if (amountOfFlashes == octopusGrid.size()) {
                 break;
             }
         }
         return stepCount;
     }
 
-    private static class OctopusGrid {
-        private final HashMap<Coordinate, Integer> grid = new HashMap<>();
-        private int lastX = 0;
-        private int lastY = 0;
 
-        public OctopusGrid(OctopusGrid other) {
-            other.grid.entrySet().stream().forEach(entry -> {
-                grid.put(new Coordinate(entry.getKey()), entry.getValue());
-            });
-            lastX = other.lastX;
-            lastY = other.lastY;
+    private static class OctopusGrid extends AbstractGrid<Integer> {
+
+        public OctopusGrid(AbstractGrid<? extends Integer> other) {
+            super(other);
         }
 
         public OctopusGrid(String input) {
-            try (Scanner scanner = new Scanner(input)) {
-                int x = 0;
-
-                while (scanner.hasNextLine()) {
-                    lastX = x;
-                    String line = scanner.nextLine();
-                    for (int y = 0; y < line.length(); y++) {
-                        lastY = y;
-                        int value = Character.getNumericValue(line.charAt(y));
-                        grid.put(new Coordinate(x, y), value);
-                    }
-
-                    x++;
-                }
-
-            }
+            super(input);
         }
+
+        @Override
+        public Integer valueOf(char character) {
+            return Character.getNumericValue(character);
+        }
+
 
         public void increment() {
             for (Map.Entry<Coordinate, Integer> entry : grid.entrySet()) {
@@ -80,7 +69,6 @@ public class Day11 implements ISolvableDay {
                         // Ignore the same coordinate
                     } else {
                         neighbourCoordinates.add(new Coordinate(coordinate.x() + x, coordinate.y() + y));
-
                     }
                 }
             }
@@ -125,29 +113,18 @@ public class Day11 implements ISolvableDay {
             return amountOfFlashes;
         }
 
-        @Override
-        public String toString() {
-            StringBuilder sb = new StringBuilder();
-            for (int x = 0; x <= lastX; x++) {
-                for (int y = 0; y <= lastY; y++) {
-                    sb.append(Integer.toHexString(grid.get(new Coordinate(x, y))));
+
+        private long step(int amountOfSteps) {
+            long amountOfFlashes = 0;
+            for (int i = 0; i < amountOfSteps; i++) {
+                increment();
+                while (canFlash()) {
+                    amountOfFlashes += flash();
                 }
-                sb.append("\n");
             }
-            return sb.toString();
+            return amountOfFlashes;
         }
-
     }
 
-    private long step(OctopusGrid octopusGrid, int amountOfSteps) {
-        long amountOfFlashes = 0;
-        for (int i = 0; i < amountOfSteps; i++) {
-            octopusGrid.increment();
-            while (octopusGrid.canFlash()) {
-                amountOfFlashes += octopusGrid.flash();
-            }
-        }
-        return amountOfFlashes;
-    }
 
 }
