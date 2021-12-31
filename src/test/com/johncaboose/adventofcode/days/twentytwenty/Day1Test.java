@@ -17,7 +17,6 @@ class Day1Test {
         assertEquals(514579, sut.partOneSolver(EXAMPLE));
     }
 
-
     @Test
     void part1Solver_WHEN_realInput_THEN_outputMatchesValidatedAnswer() {
         assertEquals(980499, sut.partOneSolver(INPUT));
