@@ -3,11 +3,11 @@
     <module name="adventofcode" />
     <extension name="coverage">
       <pattern>
-        <option name="PATTERN" value="johncaboose.adventofcode.twentytwentyone.*" />
+        <option name="PATTERN" value="com.johncaboose.adventofcode.days.twentytwentyone.*" />
         <option name="ENABLED" value="true" />
       </pattern>
     </extension>
-    <option name="PACKAGE_NAME" value="com.johncaboose.adventofcode.twentytwentyone" />
+    <option name="PACKAGE_NAME" value="com.johncaboose.adventofcode.days.twentytwentyone" />
     <option name="MAIN_CLASS_NAME" value="" />
     <option name="METHOD_NAME" value="" />
     <option name="TEST_OBJECT" value="package" />
