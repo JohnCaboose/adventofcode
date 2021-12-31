@@ -13,9 +13,8 @@ public class Day25Test {
 
     @Test
     void part1Solver_WHEN_exampleInput_THEN_outputMatchesExampleOutput() {
-        assertEquals(-1, sut.partOneSolver(EXAMPLE));
+        assertEquals(58, sut.partOneSolver(EXAMPLE));
     }
-
 
     @Test
     void part1Solver_WHEN_realInput_THEN_outputMatchesValidatedAnswer() {
