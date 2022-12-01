@@ -10,7 +10,7 @@ class Day1Test {
     private static final String EXAMPLE = ProblemInput.DAY_1_EXAMPLE;
     private static final String INPUT = ProblemInput.DAY_1_INPUT;
 
-    private ISolvableDay sut = new Day1();
+    private final ISolvableDay sut = new Day1();
 
     @Test
     void part1Solver_WHEN_exampleInput_THEN_outputMatchesExampleOutput() {
@@ -25,12 +25,12 @@ class Day1Test {
 
     @Test
     void part2Solver_WHEN_exampleInput_THEN_outputMatchesExampleOutput() {
-        assertEquals(-1, sut.partTwoSolver(EXAMPLE));
+        assertEquals(45000, sut.partTwoSolver(EXAMPLE));
     }
 
     @Test
     void part2Solver_WHEN_realInput_THEN_outputMatchesValidatedAnswer() {
-        assertEquals(-1, sut.partTwoSolver(INPUT));
+        assertEquals(204639, sut.partTwoSolver(INPUT));
     }
 
 }

@@ -8,7 +8,7 @@ class Day${DAY_NAME}Test {
     private static final String EXAMPLE = ProblemInput.DAY_${DAY_NAME}_EXAMPLE;
     private static final String INPUT = ProblemInput.DAY_${DAY_NAME}_INPUT;
 
-    private ISolvableDay sut = new Day${DAY_NAME}();
+    private final ISolvableDay sut = new Day${DAY_NAME}();
 
     @Test
     void part1Solver_WHEN_exampleInput_THEN_outputMatchesExampleOutput() {
