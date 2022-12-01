@@ -126,6 +126,7 @@ class Day5 implements ISolvableDay {
     private long solve(String input, boolean includeDiagonal) {
         List<LineSegment> lineSegments = readAllLineSegments(input);
 
+        @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
         ExtendedMap<Coordinate, Counter> allVentCoordinates = new ExtendedHashMap<>();
 
         lineSegments.stream()

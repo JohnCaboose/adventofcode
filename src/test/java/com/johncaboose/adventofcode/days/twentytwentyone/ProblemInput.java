@@ -1,5 +1,6 @@
 package com.johncaboose.adventofcode.days.twentytwentyone;
 
+@SuppressWarnings("unused")
 class ProblemInput {
 
     public static final String DAY_1_EXAMPLE = """

@@ -23,15 +23,6 @@ class Day6 implements ISolvableDay {
         return calculateFishPopulation(allFish, days);
     }
 
-    private static String listToString(List<Long> list) {
-        StringBuilder sb = new StringBuilder();
-        for (long l : list) {
-            sb.append(l);
-            sb.append(",");
-        }
-        return sb.substring(0, sb.length() - 1);
-    }
-
     private long calculateFishPopulation(List<Long> allFish, long days) {
 
         List<Long> currentAmountPerAge = new ArrayList<>();

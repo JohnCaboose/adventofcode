@@ -115,9 +115,10 @@ class Day22 implements ISolvableDay {
         }
 
         /**
-         * @param otherCuboids
-         * @return set of sub-cuboids that contains all the cubes in this cuboid, except for those that are shared with
-         * otherCuboids. In the case where no overlap exists, the set returned is equivalent to Set.of(this).
+         * @param otherCuboids the other cuboid to compare this to.
+         * @return Sub-cuboids that contains all the cubes in this cuboid, except for those that are shared with
+         * otherCuboids. In the case where no overlap exists, the collection returned is equivalent to a collection
+         * containing this as its only element.
          */
         public Collection<Cuboid> subCuboidsWithoutOverlap(Collection<Cuboid> otherCuboids) {
             Queue<Cuboid> cuboidsToDivide = new ArrayDeque<>();
@@ -135,9 +136,10 @@ class Day22 implements ISolvableDay {
         }
 
         /**
-         * @param otherCuboid
-         * @return list of sub-cuboids contains all the cubes in this cuboid, except for those that are shared with
-         * otherCuboid. In the case where no overlap exists, the list returned is equivalent to List.of(this).
+         * @param otherCuboid the other cuboid to compare this to.
+         * @return collection of sub-cuboids contains all the cubes in this cuboid, except for those that are shared
+         * with otherCuboid. In the case where no overlap exists, the collection returned a collection that contains
+         * this as its only element.
          */
         public Collection<Cuboid> subCuboidsWithoutOverlap(Cuboid otherCuboid) {
             if (this.completelyInside(otherCuboid)) {

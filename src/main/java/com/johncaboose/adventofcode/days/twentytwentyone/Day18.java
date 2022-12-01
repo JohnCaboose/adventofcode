@@ -74,13 +74,10 @@ class Day18 implements ISolvableDay {
     }
 
     static String reduce(String number) {
-        //System.out.println("Reducing:");
-        //System.out.println(number);
         String reduced = number;
         while (true) {
             String interim = explode(reduced);
             if (!reduced.equals(interim)) {
-                //System.out.println(interim);
                 reduced = interim;
                 //number exploded, see if any more explosions needed
                 continue;
@@ -91,7 +88,6 @@ class Day18 implements ISolvableDay {
                 // number was neither exploded nor split -> number is reduced
                 break;
             } else {
-                //System.out.println(interim);
                 reduced = interim;
             }
 
@@ -151,14 +147,10 @@ class Day18 implements ISolvableDay {
         char[] chars = reduced.toCharArray();
         for (int i = 0; i < chars.length; i++) {
             switch (chars[i]) {
-                case LEFT_BRACKET:
-                    level++;
-                    break;
-                case RIGHT_BRACKET:
-                    level--;
-                    break;
-                default:
-                    break;
+                case LEFT_BRACKET -> level++;
+                case RIGHT_BRACKET -> level--;
+                default -> {
+                }
             }
             if (level == 5) {
                 indexWhereExplodingLiteralBegins = i;
@@ -201,14 +193,15 @@ class Day18 implements ISolvableDay {
     private static SnailfishElement readSnailfishElement(Scanner scanner) {
         String literalValue = scanner.findWithinHorizon(LITERAL_PATTERN, 1);
         if (literalValue != null) {
+            StringBuilder literalValueBuilder = new StringBuilder(literalValue);
             //Find any more numbers part of this literal
             String found = "";
             while (found != null) {
-                literalValue += found;
+                literalValueBuilder.append(found);
                 found = scanner.findWithinHorizon(LITERAL_PATTERN, 1);
             }
 
-            return new SnailfishLiteral(Long.parseLong(literalValue));
+            return new SnailfishLiteral(Long.parseLong(literalValueBuilder.toString()));
         }
 
         scanner.skip(LEFT_BRACKET_PATTERN);
@@ -224,22 +217,11 @@ class Day18 implements ISolvableDay {
     }
 
 
-    private static class SnailfishNumber implements SnailfishElement {
-        private final SnailfishElement leftSide;
-        private final SnailfishElement rightSide;
-
-
-        public SnailfishNumber(SnailfishElement leftSide, SnailfishElement rightSide) {
-            this.leftSide = leftSide;
-            this.rightSide = rightSide;
-        }
-
-
+    private record SnailfishNumber(SnailfishElement leftSide, SnailfishElement rightSide) implements SnailfishElement {
         @Override
         public long getMagnitude() {
             return (3 * leftSide.getMagnitude()) + (2 * rightSide.getMagnitude());
         }
-
 
         @Override
         public String toString() {
@@ -247,13 +229,7 @@ class Day18 implements ISolvableDay {
         }
     }
 
-    private static class SnailfishLiteral implements SnailfishElement {
-        private final long literalValue;
-
-        public SnailfishLiteral(long literalValue) {
-            this.literalValue = literalValue;
-        }
-
+    private record SnailfishLiteral(long literalValue) implements SnailfishElement {
         @Override
         public long getMagnitude() {
             return literalValue;

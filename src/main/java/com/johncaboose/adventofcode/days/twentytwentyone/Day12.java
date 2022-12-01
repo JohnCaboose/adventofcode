@@ -102,6 +102,7 @@ class Day12 implements ISolvableDay {
     }
 
     private static class CaveNetwork {
+        @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
         final ExtendedMap<String, List<Cave>> adjacencyMap = new ExtendedHashMap<>();
 
         public void addConnection(String firstCaveName, String secondCaveName) {

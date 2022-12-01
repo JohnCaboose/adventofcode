@@ -56,9 +56,8 @@ class Day11 implements ISolvableDay {
             List<Coordinate> neighbourCoordinates = new ArrayList<>();
             for (int x = -1; x <= 1; x++) {
                 for (int y = -1; y <= 1; y++) {
-                    if (x == 0 && y == 0) {
-                        // Ignore the same coordinate
-                    } else {
+                    // Ignore the same coordinate!
+                    if (!(x == 0 && y == 0)) {
                         neighbourCoordinates.add(new Coordinate(coordinate.x() + x, coordinate.y() + y));
                     }
                 }

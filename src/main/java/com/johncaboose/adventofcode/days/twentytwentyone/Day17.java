@@ -63,7 +63,7 @@ class Day17 implements ISolvableDay {
                                 Set<Velocity> validVelocities
     ) {
 
-        int minimumXRequiredToReachTarget = getMinimumXRequiredToReachTarget(Day17.START_COORDINATE, topLeft);
+        int minimumXRequiredToReachTarget = getMinimumXRequiredToReachTarget(topLeft);
 
         int highestYFound = Integer.MIN_VALUE;
 
@@ -100,10 +100,10 @@ class Day17 implements ISolvableDay {
         return highestYFound;
     }
 
-    private static int getMinimumXRequiredToReachTarget(Coordinate startCoordinate, Coordinate topLeft) {
+    private static int getMinimumXRequiredToReachTarget(Coordinate topLeft) {
         int minimumXRequiredToReachTarget = Integer.MIN_VALUE;
         for (int x = 0; minimumXRequiredToReachTarget == Integer.MIN_VALUE; x++) {
-            Coordinate currentCoordinate = startCoordinate;
+            Coordinate currentCoordinate = Day17.START_COORDINATE;
             Velocity velocity = new Velocity(x, 0);
             do {
                 currentCoordinate = velocity.step(currentCoordinate);
@@ -137,7 +137,11 @@ class Day17 implements ISolvableDay {
     private static Set<Coordinate> readTargetArea(String input) {
         Pattern pattern = Pattern.compile(".*x=(.*)\\.\\.(.*), y=(.*)\\.\\.(.*)");
         Matcher matcher = pattern.matcher(input);
-        matcher.matches();
+        boolean matched = matcher.matches();
+
+        if (!matched) {
+            throw new IllegalArgumentException("Could not read input, formatted illegally!");
+        }
 
         int startX = Integer.parseInt(matcher.group(1));
         int endX = Integer.parseInt(matcher.group(2));
@@ -186,5 +190,6 @@ class Day17 implements ISolvableDay {
         public int getY() {
             return y;
         }
+
     }
 }

@@ -48,16 +48,16 @@ public abstract class AbstractGrid<T> {
     /**
      * Convert the character representation of the content to T
      *
-     * @param character
-     * @return
+     * @param character the character to convert
+     * @return the value of the character as an instance of T
      */
     public abstract T valueOf(char character);
 
     /**
      * Convert the content to its character representation
      *
-     * @param content
-     * @return
+     * @param content the instance of T to convert
+     * @return the string representation of the content
      */
     public String stringOf(T content) {
         return content.toString();

@@ -15,7 +15,7 @@ class Day25 implements ISolvableDay {
     public long partOneSolver(String input) {
         CucumberGrid cucumberGrid = new CucumberGrid(input);
 
-        boolean movementPerformed = false;
+        boolean movementPerformed;
         do {
             movementPerformed = cucumberGrid.step();
         } while (movementPerformed);
@@ -31,10 +31,6 @@ class Day25 implements ISolvableDay {
     private static class CucumberGrid extends AbstractGrid<RegionContent> {
 
         private long stepsTaken = 0;
-
-        public CucumberGrid(AbstractGrid<? extends RegionContent> other) {
-            super(other);
-        }
 
         public CucumberGrid(String input) {
             super(input);

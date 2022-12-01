@@ -120,25 +120,4 @@ class Day20 implements ISolvableDay {
         return algorithmList.get(indexInAlgorithmList);
     }
 
-    private static String relevantPixelsAsString(Map<Coordinate, Boolean> relevantPixels) {
-        int minX = relevantPixels.keySet().stream().mapToInt(Coordinate::x).min().orElse(0);
-        int maxX = relevantPixels.keySet().stream().mapToInt(Coordinate::x).max().orElse(0);
-        int minY = relevantPixels.keySet().stream().mapToInt(Coordinate::y).min().orElse(0);
-        int maxY = relevantPixels.keySet().stream().mapToInt(Coordinate::y).max().orElse(0);
-
-        StringBuilder sb = new StringBuilder();
-        for (int y = minY; y <= maxY; y++) {
-            if (y > minY) {
-                sb.append(System.lineSeparator());
-            }
-            for (int x = minX; x <= maxX; x++) {
-                boolean pixelOn = relevantPixels.getOrDefault(new Coordinate(x, y), false);
-                sb.append(pixelOn ? '#' : '.');
-            }
-
-        }
-
-        return sb.toString();
-    }
-
 }

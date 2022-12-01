@@ -21,9 +21,9 @@ public record Coordinate3(int x, int y, int z) {
     }
 
     /**
-     * Constructs an exact copy of
+     * Constructs an deep copy of the provided Coordinate3.
      *
-     * @param other
+     * @param other the Coordinate3 to copy the values from to create this new object.
      */
     public Coordinate3(Coordinate3 other) {
         this(other.x, other.y, other.z);

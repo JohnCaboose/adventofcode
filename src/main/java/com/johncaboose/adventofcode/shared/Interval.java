@@ -63,7 +63,8 @@ public record Interval(int startInclusive, int endInclusive) {
      *
      * @param otherInterval the other interval to compare with
      * @return the two sub-intervals that make up this interval, where only one of them shares values with otherInterval
-     * @throws IllegalArgumentException
+     * @throws IllegalArgumentException if impossible to split because of complete overlap, no overlap, or any other
+     *                                  unknown reason.
      */
     public Couple<Interval, Interval> split(Interval otherInterval) {
         if (completelyInside(otherInterval)) {
@@ -100,7 +101,7 @@ public record Interval(int startInclusive, int endInclusive) {
     /**
      * @param clampInterval the interval that shall be used as limits for the clamping
      * @return the sub-interval of this interval that completely fits inside clampInterval
-     * @throws IllegalArgumentException
+     * @throws IllegalArgumentException if there is no overlap between this and the clampInterval.
      */
     public Interval clamped(Interval clampInterval) {
         if (!this.overlaps(clampInterval)) {

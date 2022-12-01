@@ -12,8 +12,8 @@ class Day2 implements ISolvableDay {
     public long partOneSolver(String input) {
         List<MovementStep> movementSteps = populateList(input);
 
-        int horizontalPosition = 0;
-        int verticalDepth = 0;
+        long horizontalPosition = 0;
+        long verticalDepth = 0;
 
         for (MovementStep step : movementSteps) {
             if (step.axis.equals(Axis.HORIZONTAL)) {
@@ -32,9 +32,9 @@ class Day2 implements ISolvableDay {
     public long partTwoSolver(String input) {
         List<MovementStep> movementSteps = populateList(input);
 
-        int horizontalPosition = 0;
-        int verticalDepth = 0;
-        int aim = 0;
+        long horizontalPosition = 0;
+        long verticalDepth = 0;
+        long aim = 0;
 
         for (MovementStep step : movementSteps) {
             if (step.axis.equals(Axis.HORIZONTAL)) {

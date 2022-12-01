@@ -207,7 +207,10 @@ class Day21 implements ISolvableDay {
     private static int getPlayerStartingPosition(String playerName, String input) {
         Matcher matcher = Pattern.compile("Player " + playerName + " starting position: ([0-9]+)")
                 .matcher(input);
-        matcher.find();
+        boolean found = matcher.find();
+        if (!found) {
+            throw new IllegalArgumentException("Could not find the starting position of the player");
+        }
         return Integer.parseInt(matcher.group(1));
     }
 }

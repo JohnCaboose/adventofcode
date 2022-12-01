@@ -22,16 +22,14 @@ class Day4 implements ISolvableDay {
     }
 
     private interface ISumable {
+        @SuppressWarnings("unused")
         int getUnmarkedNumberSum();
     }
 
-    private static class BingoBoard implements IBingoable {
-        final List<BingoableSequence> boardSequences;
-
-        public BingoBoard(List<BingoableSequence> boardSequences) {
+    private record BingoBoard(List<BingoableSequence> boardSequences) implements IBingoable {
+        private BingoBoard(List<BingoableSequence> boardSequences) {
             this.boardSequences = new ArrayList<>(boardSequences);
         }
-
 
         @Override
         public boolean hasBingo() {

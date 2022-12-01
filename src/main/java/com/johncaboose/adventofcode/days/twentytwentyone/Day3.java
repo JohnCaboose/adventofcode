@@ -72,7 +72,7 @@ class Day3 implements ISolvableDay {
      * @param useMostCommonBit         uses the most common bit if true, uses the least common bit if false
      * @param prioritizeOnesOverZeroes uses the numbers with a One at the position if zero and one occur the same amount
      *                                 of times when true
-     * @return
+     * @return the rating found from candidates, or -1 if failed
      */
     private long findRating(List<Long> candidates, int position, boolean useMostCommonBit, boolean prioritizeOnesOverZeroes) {
         if (candidates.size() == 1) {

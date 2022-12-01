@@ -31,6 +31,9 @@ class Day15 implements ISolvableDay {
         Node startNode = graph.getNode(startCoordinate);
 
         Node destinationNode = calculateShortestPathFromSource(startNode, cavern.getDestinationCoordinate());
+        if (destinationNode == null) {
+            return Long.MAX_VALUE; // Could not find path
+        }
         return destinationNode.getDistance();
     }
 

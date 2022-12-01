@@ -103,8 +103,5 @@ class Day3 implements ISolvableDay {
             return false;
         }
 
-        public int getTreesHit() {
-            return treesHit;
-        }
     }
 }

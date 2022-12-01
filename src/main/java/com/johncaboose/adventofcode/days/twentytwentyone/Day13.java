@@ -17,9 +17,6 @@ class Day13 implements ISolvableDay {
         HashSet<Coordinate> result = new HashSet<>(coordinates);
         fold(result, foldingInstructions.get(0));
 
-        String originalPaper = paperString(coordinates);
-        String paper = paperString(result);
-
         return result.size();
     }
 
@@ -33,33 +30,7 @@ class Day13 implements ISolvableDay {
             fold(coordinates, instruction);
         }
 
-        String paper = paperString(coordinates);
-
         return coordinates.size();
-    }
-
-    private String paperString(Set<Coordinate> coordinates) {
-        StringBuilder sb = new StringBuilder();
-        int maxX = coordinates.stream()
-                .mapToInt(Coordinate::x)
-                .max()
-                .orElseThrow();
-        int maxY = coordinates.stream()
-                .mapToInt(Coordinate::y)
-                .max()
-                .orElseThrow();
-
-        for (int y = 0; y <= maxY; y++) {
-            for (int x = 0; x <= maxX; x++) {
-                if (coordinates.contains(new Coordinate(x, y))) {
-                    sb.append("#");
-                } else {
-                    sb.append(".");
-                }
-            }
-            sb.append(System.lineSeparator());
-        }
-        return sb.toString();
     }
 
     private static void fold(Set<Coordinate> coordinates, FoldingInstruction foldingInstruction) {
