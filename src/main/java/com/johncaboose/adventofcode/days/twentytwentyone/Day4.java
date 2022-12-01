@@ -26,7 +26,7 @@ class Day4 implements ISolvableDay {
     }
 
     private static class BingoBoard implements IBingoable {
-        List<BingoableSequence> boardSequences;
+        final List<BingoableSequence> boardSequences;
 
         public BingoBoard(List<BingoableSequence> boardSequences) {
             this.boardSequences = new ArrayList<>(boardSequences);
@@ -60,13 +60,13 @@ class Day4 implements ISolvableDay {
         @Override
         public String toString() {
             return "BingoBoard{" +
-                   "boardSequences=" + boardSequences +
-                   '}';
+                    "boardSequences=" + boardSequences +
+                    '}';
         }
     }
 
     private static class BingoableSequence implements IBingoable, ISumable {
-        private List<BoardNumber> numberSequence = new ArrayList<>();
+        private final List<BoardNumber> numberSequence = new ArrayList<>();
 
         public void addNumber(BoardNumber boardNumber) {
             numberSequence.add(boardNumber);
@@ -94,8 +94,8 @@ class Day4 implements ISolvableDay {
         @Override
         public String toString() {
             return "BingoableSequence{" +
-                   "numberSequence=" + numberSequence +
-                   '}';
+                    "numberSequence=" + numberSequence +
+                    '}';
         }
     }
 
@@ -123,9 +123,9 @@ class Day4 implements ISolvableDay {
         @Override
         public String toString() {
             return "BoardNumber{" +
-                   "number=" + number +
-                   ", marked=" + marked +
-                   '}';
+                    "number=" + number +
+                    ", marked=" + marked +
+                    '}';
         }
     }
 

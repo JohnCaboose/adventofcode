@@ -26,13 +26,11 @@ class Day9 implements ISolvableDay {
         List<Coordinate> lowPoints = lowPoints(heightMap);
         List<Basin> basins = basins(heightMap, lowPoints);
 
-        int product = basins.stream()
+        return basins.stream()
                 .map(Basin::size)
                 .sorted(Collections.reverseOrder())
                 .limit(3)
-                .reduce(1, Math::multiplyExact);
-
-        return product;
+                .reduce(1, Math::multiplyExact); // product
     }
 
 

@@ -28,8 +28,7 @@ class Day18 implements ISolvableDay {
     private static long magnitudeOfSum(String input) {
         String result = calculateSum(input);
         SnailfishElement finalResult = readInputNumber(result);
-        long magnitude = finalResult.getMagnitude();
-        return magnitude;
+        return finalResult.getMagnitude();
     }
 
     @Override
@@ -49,12 +48,10 @@ class Day18 implements ISolvableDay {
             }
         }
 
-        long largestMagnitude = constructedInputStringsOfAllCombinations.stream()
+        return constructedInputStringsOfAllCombinations.stream()
                 .mapToLong(Day18::magnitudeOfSum)
                 .max()
-                .getAsLong();
-
-        return largestMagnitude;
+                .orElse(Long.MIN_VALUE);
     }
 
     static String calculateSum(String input) {
@@ -119,30 +116,30 @@ class Day18 implements ISolvableDay {
 
             //First replace the exploded pair with the zero
             number = number.substring(0, indexWhereExplodingPairBegins) +
-                     "0" +
-                     number.substring(indexWhereExplodingPairBegins + match.length());
+                    "0" +
+                    number.substring(indexWhereExplodingPairBegins + match.length());
 
             // Add the rightLiteral to first number to the right of the exploded pair (if any)
             number = number.substring(0, indexWhereExplodingPairBegins + 1) +
-                     LITERAL_PATTERN.matcher(number.substring(indexWhereExplodingPairBegins + 1))
-                             .replaceFirst((matchResult) -> {
-                                 String found = matchResult.group();
-                                 long replacement = Long.valueOf(found) + rightLiteral;
-                                 return String.valueOf(replacement);
-                             });
+                    LITERAL_PATTERN.matcher(number.substring(indexWhereExplodingPairBegins + 1))
+                            .replaceFirst((matchResult) -> {
+                                String found = matchResult.group();
+                                long replacement = Long.parseLong(found) + rightLiteral;
+                                return String.valueOf(replacement);
+                            });
 
             // Add the leftLiteral to the first number to the left of the exploded pair (if any)
             number = LAST_LITERAL_PATTERN.matcher(number.substring(0, indexWhereExplodingPairBegins))
-                             .replaceFirst((matchResult -> {
-                                 String found = matchResult.group(1);
-                                 long replacementLong = Long.valueOf(found) + leftLiteral;
-                                 String replacement = String.valueOf(replacementLong);
-                                 replacement = matchResult.group(0)
-                                                       .substring(0, matchResult.group(0).length() - found.length())
-                                               + replacement;
-                                 return replacement;
-                             }))
-                     + number.substring(indexWhereExplodingPairBegins);
+                    .replaceFirst((matchResult -> {
+                        String found = matchResult.group(1);
+                        long replacementLong = Long.parseLong(found) + leftLiteral;
+                        String replacement = String.valueOf(replacementLong);
+                        replacement = matchResult.group(0)
+                                .substring(0, matchResult.group(0).length() - found.length())
+                                + replacement;
+                        return replacement;
+                    }))
+                    + number.substring(indexWhereExplodingPairBegins);
 
         }
         return number;
@@ -176,11 +173,10 @@ class Day18 implements ISolvableDay {
         Matcher matcher = TEN_OR_HIGHER_LITERAL_PATTERN.matcher(number);
         if (matcher.find()) {
             String literalToSplit = matcher.group(0);
-            long literalValue = Long.valueOf(literalToSplit);
+            long literalValue = Long.parseLong(literalToSplit);
             long newLeft = literalValue / 2; // half, round down
             long newRight = newLeft * 2 == literalValue ? newLeft : newLeft + 1; // half, round up
-            String splitNumber = matcher.replaceFirst("[" + newLeft + "," + newRight + "]");
-            return splitNumber;
+            return matcher.replaceFirst("[" + newLeft + "," + newRight + "]");
         }
         return number;
     }
@@ -223,15 +219,14 @@ class Day18 implements ISolvableDay {
 
         scanner.skip(RIGHT_BRACKET_PATTERN);
 
-        SnailfishElement returnValue = new SnailfishNumber(leftSide, rightSide);
-        return returnValue;
+        return new SnailfishNumber(leftSide, rightSide);
 
     }
 
 
     private static class SnailfishNumber implements SnailfishElement {
-        private SnailfishElement leftSide;
-        private SnailfishElement rightSide;
+        private final SnailfishElement leftSide;
+        private final SnailfishElement rightSide;
 
 
         public SnailfishNumber(SnailfishElement leftSide, SnailfishElement rightSide) {
@@ -253,7 +248,7 @@ class Day18 implements ISolvableDay {
     }
 
     private static class SnailfishLiteral implements SnailfishElement {
-        private long literalValue;
+        private final long literalValue;
 
         public SnailfishLiteral(long literalValue) {
             this.literalValue = literalValue;

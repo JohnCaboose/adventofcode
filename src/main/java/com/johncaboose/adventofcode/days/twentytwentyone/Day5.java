@@ -5,10 +5,7 @@ import com.johncaboose.adventofcode.shared.ExtendedHashMap;
 import com.johncaboose.adventofcode.shared.ExtendedMap;
 import com.johncaboose.adventofcode.shared.ISolvableDay;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -135,12 +132,10 @@ class Day5 implements ISolvableDay {
                 .flatMap(lineSegment -> lineSegment.allCoordinates(includeDiagonal).stream())
                 .forEach(coordinate -> allVentCoordinates.getOrStoreDefault(coordinate, new Counter()).increment());
 
-        long overlappingPoints = allVentCoordinates.entrySet()
+        return allVentCoordinates.entrySet()
                 .stream()
                 .filter(entry -> entry.getValue().getCount() > 1)
-                .map(entry -> entry.getKey())
-                .count();
-
-        return overlappingPoints;
+                .map(Map.Entry::getKey)
+                .count(); // overlapping points
     }
 }

@@ -70,7 +70,6 @@ class Day12 implements ISolvableDay {
                     allPaths, new StringBuilder(currentPath));
         }
 
-        return;
     }
 
 
@@ -78,7 +77,7 @@ class Day12 implements ISolvableDay {
         SMALL,
         LARGE,
         START,
-        END;
+        END
     }
 
     private record Cave(String name, CaveType caveType) {
@@ -102,8 +101,8 @@ class Day12 implements ISolvableDay {
 
     }
 
-    private class CaveNetwork {
-        ExtendedMap<String, List<Cave>> adjacencyMap = new ExtendedHashMap<>();
+    private static class CaveNetwork {
+        final ExtendedMap<String, List<Cave>> adjacencyMap = new ExtendedHashMap<>();
 
         public void addConnection(String firstCaveName, String secondCaveName) {
             List<Cave> availableCavesFromFirst = adjacencyMap.getOrStoreDefault(firstCaveName, new ArrayList<>());

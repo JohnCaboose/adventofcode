@@ -9,15 +9,13 @@ class Day10 implements ISolvableDay {
     @Override
     public long partOneSolver(String input) {
         List<Long> allLineScores = getAllLineScores(input, ScoringType.ILLEGAL_CHARACTERS);
-        long sum = sum(allLineScores);
-        return sum;
+        return sum(allLineScores);
     }
 
     @Override
     public long partTwoSolver(String input) {
         List<Long> allLineScores = getAllLineScores(input, ScoringType.INCOMPLETE_LINES);
-        long median = median(allLineScores);
-        return median;
+        return median(allLineScores);
     }
 
     private List<Long> getAllLineScores(String input, ScoringType scoringType) {
@@ -35,9 +33,8 @@ class Day10 implements ISolvableDay {
     }
 
     private long sum(Collection<Long> numbers) {
-        long sum = numbers.stream()
+        return numbers.stream()
                 .reduce(0L, Long::sum);
-        return sum;
     }
 
     private long median(Collection<Long> numbers) {

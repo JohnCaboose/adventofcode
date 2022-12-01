@@ -44,8 +44,7 @@ class Day3 implements ISolvableDay {
         long bitMask = getBitMask(amountOfBitsInUse);
         long epsilonRate = (~gammaRate) & bitMask;
 
-        long powerConsumption = gammaRate * epsilonRate;
-        return powerConsumption;
+        return gammaRate * epsilonRate; // power consumption
     }
 
 
@@ -59,10 +58,9 @@ class Day3 implements ISolvableDay {
         int amountOfBitsInUse = getAmountOfBitsInUse(input);
         //The first position
         int startingPosition = amountOfBitsInUse - 1;
-        long oxygenGeneratorRating = findRating(new ArrayList<Long>(numbers), startingPosition, true, true);
-        long co2ScrubberRating = findRating(new ArrayList<Long>(numbers), startingPosition, false, false);
-        long lifeSupportRating = oxygenGeneratorRating * co2ScrubberRating;
-        return lifeSupportRating;
+        long oxygenGeneratorRating = findRating(new ArrayList<>(numbers), startingPosition, true, true);
+        long co2ScrubberRating = findRating(new ArrayList<>(numbers), startingPosition, false, false);
+        return oxygenGeneratorRating * co2ScrubberRating;
     }
 
     /**
@@ -119,9 +117,8 @@ class Day3 implements ISolvableDay {
     private int getAmountOfBitsInUse(String input) {
         //We don't know the length, but we know they're all the same
         try (Scanner scanner = new Scanner(input)) {
-            int amountOfBitsInUse = scanner.nextLine().length();
 
-            return amountOfBitsInUse;
+            return scanner.nextLine().length();
         }
     }
 

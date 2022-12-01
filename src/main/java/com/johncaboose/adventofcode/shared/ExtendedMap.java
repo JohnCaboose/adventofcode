@@ -11,10 +11,10 @@ public interface ExtendedMap<K, V> extends Map<K, V> {
      * @param defaultValue
      * @return
      */
-    default V getOrStoreDefault(Object key, V defaultValue) {
+    default V getOrStoreDefault(K key, V defaultValue) {
         V returnValue = Map.super.getOrDefault(key, defaultValue);
         if (get(key) == null) {
-            this.put((K) key, returnValue);
+            this.put(key, returnValue);
         }
         return returnValue;
     }

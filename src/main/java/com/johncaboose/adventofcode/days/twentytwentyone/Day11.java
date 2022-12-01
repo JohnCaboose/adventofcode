@@ -1,6 +1,5 @@
 package com.johncaboose.adventofcode.days.twentytwentyone;
 
-import com.johncaboose.adventofcode.shared.AbstractGrid;
 import com.johncaboose.adventofcode.shared.Coordinate;
 import com.johncaboose.adventofcode.shared.ISolvableDay;
 import com.johncaboose.adventofcode.shared.IntegerGrid;
@@ -15,8 +14,7 @@ class Day11 implements ISolvableDay {
     @Override
     public long partOneSolver(String input) {
         OctopusGrid octopusGrid = new OctopusGrid(input);
-        long amountOfFlashes = octopusGrid.step(100);
-        return amountOfFlashes;
+        return octopusGrid.step(100); // amount of flashes
     }
 
     @Override
@@ -35,10 +33,6 @@ class Day11 implements ISolvableDay {
 
         private long stepsTaken = 0;
 
-        public OctopusGrid(AbstractGrid<? extends Integer> other) {
-            super(other);
-        }
-
         public OctopusGrid(String input) {
             super(input);
         }
@@ -48,9 +42,7 @@ class Day11 implements ISolvableDay {
         }
 
         public void increment() {
-            for (Map.Entry<Coordinate, Integer> entry : grid.entrySet()) {
-                grid.put(entry.getKey(), entry.getValue() + 1);
-            }
+            grid.replaceAll((k, v) -> v + 1);
         }
 
         private void increment(Collection<Coordinate> coordinates) {
@@ -72,14 +64,12 @@ class Day11 implements ISolvableDay {
                 }
             }
 
-            List<Coordinate> nonZeroNeighbours = neighbourCoordinates.stream()
+            return neighbourCoordinates.stream()
                     .filter(c -> {
                         Integer currentValue = grid.get(c);
                         return currentValue != null && currentValue > 0;
                     })
                     .toList();
-
-            return nonZeroNeighbours;
         }
 
 
@@ -93,7 +83,7 @@ class Day11 implements ISolvableDay {
             List<Coordinate> flashReadyCoordinates = grid.entrySet()
                     .stream()
                     .filter(entry -> entry.getValue() > 9)
-                    .map(entry -> entry.getKey())
+                    .map(Map.Entry::getKey)
                     .toList();
 
             for (Coordinate coordinate : flashReadyCoordinates) {
@@ -108,8 +98,7 @@ class Day11 implements ISolvableDay {
 
             increment(neighboursToIncrement);
 
-            int amountOfFlashes = flashReadyCoordinates.size();
-            return amountOfFlashes;
+            return flashReadyCoordinates.size();
         }
 
 

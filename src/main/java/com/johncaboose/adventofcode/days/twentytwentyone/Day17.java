@@ -15,16 +15,13 @@ class Day17 implements ISolvableDay {
     @Override
     public long partOneSolver(String input) {
         Set<Velocity> validVelocities = new HashSet<>();
-        int highestY = highestY(input, validVelocities);
-
-        return highestY;
+        return highestY(input, validVelocities);
     }
 
     @Override
     public long partTwoSolver(String input) {
         Set<Velocity> validVelocities = new HashSet<>();
-        int highestY = highestY(input, validVelocities);
-
+        highestY(input, validVelocities);
         return validVelocities.size();
     }
 
@@ -33,40 +30,40 @@ class Day17 implements ISolvableDay {
         Coordinate topLeft = getTopLeftCoordinate(targetArea);
         Coordinate bottomRight = getBottomRightCoordinate(targetArea);
 
-        int highestY = highestY(START_COORDINATE, targetArea, topLeft, bottomRight, validVelocities);
-        return highestY;
+        return highestY(targetArea, topLeft, bottomRight, validVelocities);
     }
 
     private static Coordinate getTopLeftCoordinate(Set<Coordinate> targetArea) {
         int x = targetArea.stream()
                 .mapToInt(Coordinate::x)
                 .min()
-                .getAsInt();
+                .orElseThrow();
         int y = targetArea.stream()
                 .mapToInt(Coordinate::y)
                 .max()
-                .getAsInt();
-        Coordinate topLeft = new Coordinate(x, y);
-        return topLeft;
+                .orElseThrow();
+        return new Coordinate(x, y);
     }
 
     private static Coordinate getBottomRightCoordinate(Set<Coordinate> targetArea) {
         int x = targetArea.stream()
                 .mapToInt(Coordinate::x)
                 .max()
-                .getAsInt();
+                .orElseThrow();
         int y = targetArea.stream()
                 .mapToInt(Coordinate::y)
                 .min()
-                .getAsInt();
-        Coordinate bottomRight = new Coordinate(x, y);
-        return bottomRight;
+                .orElseThrow();
+        return new Coordinate(x, y);
     }
 
-    private static int highestY(Coordinate startCoordinate, Set<Coordinate> targetArea,
-                                Coordinate topLeft, Coordinate bottomRight, Set<Velocity> validVelocities) {
+    private static int highestY(Set<Coordinate> targetArea,
+                                Coordinate topLeft,
+                                Coordinate bottomRight,
+                                Set<Velocity> validVelocities
+    ) {
 
-        int minimumXRequiredToReachTarget = getMinimumXRequiredToReachTarget(startCoordinate, topLeft);
+        int minimumXRequiredToReachTarget = getMinimumXRequiredToReachTarget(Day17.START_COORDINATE, topLeft);
 
         int highestYFound = Integer.MIN_VALUE;
 
@@ -75,7 +72,7 @@ class Day17 implements ISolvableDay {
 
             for (int x = minimumXRequiredToReachTarget; x <= bottomRight.x(); x++) {
                 Velocity velocity = new Velocity(x, y);
-                Coordinate currentCoordinate = startCoordinate;
+                Coordinate currentCoordinate = Day17.START_COORDINATE;
                 int highestYForThisStartVelocity = Integer.MIN_VALUE;
                 boolean wasInsideTargetArea = false;
                 while (!passedTargetArea(currentCoordinate, bottomRight)) {
@@ -120,8 +117,7 @@ class Day17 implements ISolvableDay {
     }
 
     private static boolean insideTargetArea(Set<Coordinate> targetArea, Coordinate currentCoordinate) {
-        boolean inside = targetArea.contains(currentCoordinate);
-        return inside;
+        return targetArea.contains(currentCoordinate);
     }
 
     private static boolean passedTargetArea(Coordinate currentCoordinate, Coordinate bottomRight) {
@@ -130,13 +126,11 @@ class Day17 implements ISolvableDay {
     }
 
     private static boolean passedTargetAreaX(Coordinate currentCoordinate, Coordinate bottomRight) {
-        boolean hasGonePastInX = currentCoordinate.x() > bottomRight.x();
-        return hasGonePastInX;
+        return currentCoordinate.x() > bottomRight.x();
     }
 
     private static boolean reachedTargetAreaX(Coordinate currentCoordinate, Coordinate topLeft) {
-        boolean hasReachedTargetAreaX = currentCoordinate.x() >= topLeft.x();
-        return hasReachedTargetAreaX;
+        return currentCoordinate.x() >= topLeft.x();
     }
 
 

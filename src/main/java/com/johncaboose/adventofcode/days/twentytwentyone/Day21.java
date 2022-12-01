@@ -36,8 +36,7 @@ class Day21 implements ISolvableDay {
                 player.movePlayer(stepsToTake);
                 if (player.getScore() >= winThreshold) {
                     Player nextPlayer = players.get((i + 1) % players.size());
-                    long finalScore = nextPlayer.getScore() * dice.getTimesThrown();
-                    return finalScore;
+                    return nextPlayer.getScore() * dice.getTimesThrown(); //final score
                 }
             }
         }
@@ -71,9 +70,9 @@ class Day21 implements ISolvableDay {
         @Override
         public String toString() {
             return "Player{" +
-                   "position=" + getPosition() +
-                   ", score=" + getScore() +
-                   '}';
+                    "position=" + getPosition() +
+                    ", score=" + getScore() +
+                    '}';
         }
     }
 
@@ -131,15 +130,14 @@ class Day21 implements ISolvableDay {
         long player2Wins = 0;
 
         while (!player1Universes.isEmpty() && !player2Universes.isEmpty()) {
-            player1Universes = calculateUniversesAtStep(player1Universes, player2Universes, universesPerSteps);
+            player1Universes = calculateUniversesAtStep(player1Universes, universesPerSteps);
             player1Wins += universesWithPlayerWins(player1Universes, player2Universes, winThreshold);
 
-            player2Universes = calculateUniversesAtStep(player2Universes, player1Universes, universesPerSteps);
+            player2Universes = calculateUniversesAtStep(player2Universes, universesPerSteps);
             player2Wins += universesWithPlayerWins(player2Universes, player1Universes, winThreshold);
 
         }
-        long solution = Math.max(player1Wins, player2Wins);
-        return solution;
+        return Math.max(player1Wins, player2Wins);
     }
 
     private static Map<Universe, Long> startUniverse(int startingPos) {
@@ -148,7 +146,7 @@ class Day21 implements ISolvableDay {
         return universes;
     }
 
-    private static Map<Universe, Long> calculateUniversesAtStep(Map<Universe, Long> lastRound, Map<Universe, Long> otherPlayerUniverses, Map<Integer, Long> universesPerSteps) {
+    private static Map<Universe, Long> calculateUniversesAtStep(Map<Universe, Long> lastRound, Map<Integer, Long> universesPerSteps) {
         Map<Universe, Long> currentRound = new HashMap<>();
 
         // This whole thing should be possible to parallelize, if I can be bothered
@@ -181,7 +179,7 @@ class Day21 implements ISolvableDay {
         Map<Universe, Long> winningUniverses = lastActivePlayerUniverses.entrySet()
                 .stream()
                 .filter(entry -> entry.getKey().score >= winThreshold)
-                .collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue()));
+                .collect(Collectors.toMap(Entry::getKey, Entry::getValue));
 
         long winningUniverseCount = winningUniverses.values()
                 .stream()
@@ -199,8 +197,7 @@ class Day21 implements ISolvableDay {
                 .mapToLong(l -> l)
                 .sum();
 
-        long amountOfWins = winningUniverseCount * amountOfOtherUniverses;
-        return amountOfWins;
+        return winningUniverseCount * amountOfOtherUniverses;
     }
 
     private record Universe(int score, int position) {
@@ -211,7 +208,6 @@ class Day21 implements ISolvableDay {
         Matcher matcher = Pattern.compile("Player " + playerName + " starting position: ([0-9]+)")
                 .matcher(input);
         matcher.find();
-        int startingPosition = Integer.parseInt(matcher.group(1));
-        return startingPosition;
+        return Integer.parseInt(matcher.group(1));
     }
 }

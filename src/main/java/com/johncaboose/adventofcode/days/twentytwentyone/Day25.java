@@ -64,8 +64,7 @@ class Day25 implements ISolvableDay {
             });
 
             // Construct mid move result, where all east-bound have moved but no south-bound
-            Map<Coordinate, RegionContent> midMoveResult = new HashMap<>();
-            midMoveResult.putAll(nextState);
+            Map<Coordinate, RegionContent> midMoveResult = new HashMap<>(nextState);
             grid.forEach((coordinate, content) -> {
                 if (content.equals(RegionContent.SOUTH_CUCUMBER)) {
                     midMoveResult.put(coordinate, content);

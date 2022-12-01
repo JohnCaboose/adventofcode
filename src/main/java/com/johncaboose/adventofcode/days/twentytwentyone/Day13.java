@@ -41,13 +41,13 @@ class Day13 implements ISolvableDay {
     private String paperString(Set<Coordinate> coordinates) {
         StringBuilder sb = new StringBuilder();
         int maxX = coordinates.stream()
-                .mapToInt(coordinate -> coordinate.x())
+                .mapToInt(Coordinate::x)
                 .max()
-                .getAsInt();
+                .orElseThrow();
         int maxY = coordinates.stream()
-                .mapToInt(coordinate -> coordinate.y())
+                .mapToInt(Coordinate::y)
                 .max()
-                .getAsInt();
+                .orElseThrow();
 
         for (int y = 0; y <= maxY; y++) {
             for (int x = 0; x <= maxX; x++) {
@@ -119,7 +119,7 @@ class Day13 implements ISolvableDay {
 
     private enum Axis {
         X,
-        Y;
+        Y
     }
 
     private record FoldingInstruction(Axis axis, int foldAlong) {

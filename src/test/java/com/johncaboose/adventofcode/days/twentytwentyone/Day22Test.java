@@ -16,7 +16,7 @@ public class Day22Test {
     private static final String EXAMPLE_3 = ProblemInput.DAY_22_EXAMPLE_3;
     private static final String INPUT = ProblemInput.DAY_22_INPUT;
 
-    private ISolvableDay sut = new Day22();
+    private final ISolvableDay sut = new Day22();
 
     @Test
     @Order(1)
@@ -45,6 +45,7 @@ public class Day22Test {
     @Test
     @Order(3)
     void part2Solver_WHEN_realInput_THEN_outputMatchesValidatedAnswer() {
+        //Warning: Test takes two minutes on m1 macbook air
         assertEquals(1182153534186233L, sut.partTwoSolver(INPUT));
     }
 

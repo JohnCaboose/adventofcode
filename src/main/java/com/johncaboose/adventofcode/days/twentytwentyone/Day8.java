@@ -74,9 +74,7 @@ class Day8 implements ISolvableDay {
             outputNumbers.append(mapping.get(sortedString(s)));
         }
 
-        int value = Integer.parseInt(outputNumbers.toString());
-
-        return value;
+        return Integer.parseInt(outputNumbers.toString());
     }
 
     private static Map<String, Integer> mappingOfSignalPatternsToNumbers(List<String> signalPatterns, Map<String, Integer> appearancesPerLetter) {
@@ -91,7 +89,7 @@ class Day8 implements ISolvableDay {
                 .filter(s -> s.length() == 2)
                 .map(s -> s.replace(f, ""))
                 .findFirst()
-                .get();
+                .orElseThrow();
 
         // a, the other letter that appears 8 times that isn't c
         String a = letterWithSameAppearancesAsOthers(appearancesPerLetter, 8, c);
@@ -100,17 +98,17 @@ class Day8 implements ISolvableDay {
         String length4Sequence = signalPatterns.stream()
                 .filter(s -> s.length() == 4)
                 .findFirst()
-                .get();
+                .orElseThrow();
         String g = letterWithSameAppearancesAsOthers(appearancesPerLetter, 7, length4Sequence);
 
         // d, the other letter that exists 7 times but isn't g
         String d = letterWithSameAppearancesAsOthers(appearancesPerLetter, 7, g);
 
 
-        return mappingOfSignalPatternsToNumbers(signalPatterns, a, b, c, d, e, f, g);
+        return mappingOfSignalPatternsToNumbers(a, b, c, d, e, f, g);
     }
 
-    private static Map<String, Integer> mappingOfSignalPatternsToNumbers(List<String> signalPatterns, String a, String b, String c, String d, String e, String f, String g) {
+    private static Map<String, Integer> mappingOfSignalPatternsToNumbers(String a, String b, String c, String d, String e, String f, String g) {
         String zero = a + b + c + e + f + g;
         String one = c + f;
         String two = a + c + d + e + g;
@@ -139,14 +137,6 @@ class Day8 implements ISolvableDay {
         return String.valueOf(charArray);
     }
 
-    private static boolean sameCharactersInString(String a, String b) {
-        char[] first = a.toCharArray();
-        char[] second = b.toCharArray();
-        Arrays.sort(first);
-        Arrays.sort(second);
-        return Arrays.equals(first, second);
-    }
-
     private static String letterWithUniqueAppearances(Map<String, Integer> appearancesPerLetter, int appearances) {
         return letterWithSameAppearancesAsOthers(appearancesPerLetter, appearances, "");
     }
@@ -164,7 +154,7 @@ class Day8 implements ISolvableDay {
                 .filter(entry -> entry.getValue() == appearances)
                 .filter(s -> !exclude.contains(s.getKey()))
                 .findFirst()
-                .get()
+                .orElseThrow()
                 .getKey();
     }
 

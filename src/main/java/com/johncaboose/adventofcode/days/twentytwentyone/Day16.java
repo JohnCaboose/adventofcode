@@ -9,11 +9,9 @@ import java.util.Scanner;
 class Day16 implements ISolvableDay {
     private static final int PACKET_VERSION_LENGTH = 3;
     private static final int TYPE_ID_LENGTH = 3;
-    private static final int HEADER_LENGTH = PACKET_VERSION_LENGTH + TYPE_ID_LENGTH;
 
     private static final int GROUP_PREFIX_LENGTH = 1;
     private static final int GROUP_CONTENT_LENGTH = 4;
-    private static final int GROUP_LENGTH = GROUP_PREFIX_LENGTH + GROUP_CONTENT_LENGTH;
 
     private static final int LITERAL_VALUE_TYPE_ID = 4;
 
@@ -45,11 +43,9 @@ class Day16 implements ISolvableDay {
         int typeId = readInteger(binaryString, cursor, TYPE_ID_LENGTH);
 
 
-        Packet packet = typeId == LITERAL_VALUE_TYPE_ID ?
+        return typeId == LITERAL_VALUE_TYPE_ID ?
                 readLiteralValuePacket(packetVersion, typeId, binaryString, cursor) :
                 readOperatorPacket(packetVersion, typeId, binaryString, cursor);
-
-        return packet;
     }
 
     private Packet readOperatorPacket(int packetVersion, int typeId, String binaryString, Cursor cursor) {
@@ -69,22 +65,20 @@ class Day16 implements ISolvableDay {
             }
 
         }
-        Packet packet = new Packet(packetVersion, typeId, subPackets);
-        return packet;
+        return new Packet(packetVersion, typeId, subPackets);
     }
 
     private Packet readLiteralValuePacket(int packetVersion, int typeId, String binaryString, Cursor cursor) {
-        String binaryLiteral = "";
+        StringBuilder binaryLiteral = new StringBuilder();
         while (true) {
             String bit = readBitString(binaryString, cursor, GROUP_PREFIX_LENGTH);
-            binaryLiteral += readBitString(binaryString, cursor, GROUP_CONTENT_LENGTH);
+            binaryLiteral.append(readBitString(binaryString, cursor, GROUP_CONTENT_LENGTH));
             if (bit.equals("0")) {
                 break;
             }
         }
-        long literalValue = Long.parseLong(binaryLiteral, 2);
-        Packet packet = new Packet(packetVersion, typeId, literalValue);
-        return packet;
+        long literalValue = Long.parseLong(binaryLiteral.toString(), 2);
+        return new Packet(packetVersion, typeId, literalValue);
     }
 
 
@@ -114,22 +108,21 @@ class Day16 implements ISolvableDay {
         }
 
         public long result() {
-            long result = switch (typeId) {
+
+            return switch (typeId) {
                 case SUM_TYPE_ID -> subPackets.stream().mapToLong(Packet::result).sum();
                 case PRODUCT_TYPE_ID -> subPackets.stream()
                         .mapToLong(Packet::result)
                         .reduce(Math::multiplyExact)
-                        .getAsLong();
-                case MINIMUM_TYPE_ID -> subPackets.stream().mapToLong(Packet::result).min().getAsLong();
-                case MAXIMUM_TYPE_ID -> subPackets.stream().mapToLong(Packet::result).max().getAsLong();
+                        .orElseThrow();
+                case MINIMUM_TYPE_ID -> subPackets.stream().mapToLong(Packet::result).min().orElseThrow();
+                case MAXIMUM_TYPE_ID -> subPackets.stream().mapToLong(Packet::result).max().orElseThrow();
                 case GREATER_THAN_TYPE_ID -> subPackets.get(0).result() > subPackets.get(1).result() ? 1 : 0;
                 case LESS_THAN_TYPE_ID -> subPackets.get(0).result() < subPackets.get(1).result() ? 1 : 0;
                 case EQUAL_TO_TYPE_ID -> subPackets.get(0).result() == subPackets.get(1).result() ? 1 : 0;
                 case LITERAL_VALUE_TYPE_ID -> literalValue;
                 default -> 0L;
             };
-
-            return result;
         }
 
 
@@ -159,8 +152,7 @@ class Day16 implements ISolvableDay {
     private static String binaryString(String input) {
         try (Scanner scanner = new Scanner(input)) {
             String hex = scanner.nextLine();
-            String binary = hexToBin(hex);
-            return binary;
+            return hexToBin(hex);
         }
     }
 

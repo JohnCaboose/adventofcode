@@ -26,7 +26,10 @@ class Day7 implements ISolvableDay {
 
     private long calculateMinimumFuelSpent(List<Long> initialPositions, boolean fuelCostIncreasesWithEachStep) {
         long minimumFuelSpent = Long.MAX_VALUE;
-        Long maximumInitialPosition = initialPositions.stream().max(Long::compareTo).get();
+        long maximumInitialPosition = initialPositions.stream()
+                .mapToLong(Long::longValue)
+                .max()
+                .orElse(0);
         for (long i = 0; i < maximumInitialPosition; i++) {
             long fuelSpent = fuelSpentToMoveTo(i, new ArrayList<>(initialPositions), fuelCostIncreasesWithEachStep);
             if (fuelSpent < minimumFuelSpent) {

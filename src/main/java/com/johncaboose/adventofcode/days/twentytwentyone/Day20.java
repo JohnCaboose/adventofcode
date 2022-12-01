@@ -14,15 +14,13 @@ class Day20 implements ISolvableDay {
     @Override
     public long partOneSolver(String input) {
         int amountOfEnhancementsToPerform = 2;
-        long litPixels = solve(input, amountOfEnhancementsToPerform);
-        return litPixels;
+        return solve(input, amountOfEnhancementsToPerform);
     }
 
     @Override
     public long partTwoSolver(String input) {
         int amountOfEnhancementsToPerform = 50;
-        long litPixels = solve(input, amountOfEnhancementsToPerform);
-        return litPixels;
+        return solve(input, amountOfEnhancementsToPerform);
     }
 
     private static long solve(String input, int amountOfEnhancementsToPerform) {
@@ -33,8 +31,7 @@ class Day20 implements ISolvableDay {
 
         enhance(algorithmList, relevantPixels, amountOfEnhancementsToPerform);
 
-        long litPixels = relevantPixels.values().stream().filter(Boolean::booleanValue).count();
-        return litPixels;
+        return relevantPixels.values().stream().filter(Boolean::booleanValue).count();
     }
 
     private static void enhance(List<Boolean> algorithmList, ExtendedMap<Coordinate, Boolean> relevantPixels,
@@ -44,8 +41,8 @@ class Day20 implements ISolvableDay {
 
 
         for (int i = 0; i < amountOfEnhancementsToPerform; i++) {
-            boolean nonRelevantPixelsOn = (allOffBecomeOn && allOffBecomeOn && i % 2 == 1) ||
-                                          (allOffBecomeOn && !allOnBecomeOff && i > 0);
+            boolean nonRelevantPixelsOn = (allOffBecomeOn && i % 2 == 1) ||
+                    (allOffBecomeOn && !allOnBecomeOff && i > 0);
 
             ExtendedMap<Coordinate, Boolean> enhancedRelevantPixels = new ExtendedHashMap<>();
             for (Coordinate coordinate : relevantPixels.keySet()) {
@@ -113,15 +110,14 @@ class Day20 implements ISolvableDay {
         }
         //Now convert those booleans to the integer they represent
         int indexInAlgorithmList = 0;
-        for (int i = 0; i < coordinatePixelsOn.size(); i++) {
+        for (Boolean pixelOn : coordinatePixelsOn) {
             indexInAlgorithmList = indexInAlgorithmList << 1;
-            indexInAlgorithmList = indexInAlgorithmList | (coordinatePixelsOn.get(i) ? 1 : 0);
+            indexInAlgorithmList = indexInAlgorithmList | (pixelOn ? 1 : 0);
         }
 
         //Find out the new value of centerCoordinate pixel after enhancing it
-        boolean on = algorithmList.get(indexInAlgorithmList);
 
-        return on;
+        return algorithmList.get(indexInAlgorithmList);
     }
 
     private static String relevantPixelsAsString(Map<Coordinate, Boolean> relevantPixels) {

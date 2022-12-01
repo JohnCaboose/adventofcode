@@ -68,8 +68,7 @@ class Day22 implements ISolvableDay {
         Interval zInterval = getNextInterval(matcher);
 
         // create and add RebootStep
-        RebootStep step = new RebootStep(instruction, new Cuboid(xInterval, yInterval, zInterval));
-        return step;
+        return new RebootStep(instruction, new Cuboid(xInterval, yInterval, zInterval));
     }
 
     private enum RebootStepInstruction {
@@ -81,16 +80,15 @@ class Day22 implements ISolvableDay {
         if (!matcher.find()) {
             throw new IllegalArgumentException("Interval not found");
         }
-        Interval interval = new Interval(matcher.group(1), matcher.group(2));
-        return interval;
+        return new Interval(matcher.group(1), matcher.group(2));
     }
 
     private record Cuboid(Interval xInterval, Interval yInterval, Interval zInterval) {
 
         public boolean overlaps(Cuboid otherCuboid) {
             return xInterval.overlaps(otherCuboid.xInterval) &&
-                   yInterval.overlaps(otherCuboid.yInterval) &&
-                   zInterval.overlaps(otherCuboid.zInterval);
+                    yInterval.overlaps(otherCuboid.yInterval) &&
+                    zInterval.overlaps(otherCuboid.zInterval);
         }
 
         public Optional<Cuboid> constrainedTo(Interval cuboidIntervalForAllAxes) {
@@ -112,8 +110,8 @@ class Day22 implements ISolvableDay {
 
         private boolean completelyInside(Cuboid otherCuboid) {
             return xInterval.completelyInside(otherCuboid.xInterval) &&
-                   yInterval.completelyInside(otherCuboid.yInterval) &&
-                   zInterval.completelyInside(otherCuboid.zInterval);
+                    yInterval.completelyInside(otherCuboid.yInterval) &&
+                    zInterval.completelyInside(otherCuboid.zInterval);
         }
 
         /**
@@ -200,21 +198,15 @@ class Day22 implements ISolvableDay {
     private record RebootStep(RebootStepInstruction instruction, Cuboid instructionCuboid) {
 
         public long execute(List<RebootStep> remainingSteps, Optional<Interval> limit) {
-            if (limit.isPresent()) {
-                return execute(remainingSteps, limit.get());
-            } else {
-                return execute(remainingSteps, this.instructionCuboid);
-            }
+            return limit.map(interval -> execute(remainingSteps, interval))
+                    .orElseGet(() -> execute(remainingSteps, this.instructionCuboid));
         }
 
         public long execute(List<RebootStep> remainingSteps, Interval limit) {
             Optional<Cuboid> constrainedInstructionCuboid = instructionCuboid.constrainedTo(limit);
-            if (constrainedInstructionCuboid.isPresent()) {
-                return execute(remainingSteps, constrainedInstructionCuboid.get());
-            } else {
-                // instruction is a NOP as we don't care about the areas it affects
-                return 0;
-            }
+
+            return constrainedInstructionCuboid.map(cuboid -> execute(remainingSteps, cuboid))
+                    .orElse(0L); // instruction is a NOP as we don't care about the areas it affects
         }
 
         private long execute(List<RebootStep> remainingSteps, Cuboid intervalToUse) {
@@ -228,11 +220,9 @@ class Day22 implements ISolvableDay {
                 default -> throw new UnsupportedOperationException("Unknown instruction");
             }
 
-            long turnedOnCubes = stepReactorCore.stream()
+            return stepReactorCore.stream()
                     .mapToLong(Cuboid::size)
                     .sum();
-
-            return turnedOnCubes;
         }
 
         private static void turnOn(Collection<Cuboid> reactorCore, List<RebootStep> remainingSteps, Cuboid cuboidToTurnOn) {

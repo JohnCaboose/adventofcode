@@ -69,7 +69,7 @@ class Day3 implements ISolvableDay {
         }
     }
 
-    private class TreeGrid extends AbstractGrid<MapContent> {
+    private static class TreeGrid extends AbstractGrid<MapContent> {
         private Coordinate currentPosition = new Coordinate(0, 0);
         private int treesHit = 0;
 

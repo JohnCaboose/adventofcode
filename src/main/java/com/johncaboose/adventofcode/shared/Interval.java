@@ -1,14 +1,14 @@
 package com.johncaboose.adventofcode.shared;
 
 /**
- * Represents an integer interval, with inclusive start and end values. Assumes that the start value is
- * less than or equal to the end value.
+ * Represents an integer interval, with inclusive start and end values. Assumes that the start value is less than or
+ * equal to the end value.
  */
 public record Interval(int startInclusive, int endInclusive) {
 
     /**
-     * Constructs an interval with the specified start and end points, both inclusive. Assumes that
-     * startInclusive less than or equal to endInclusive.
+     * Constructs an interval with the specified start and end points, both inclusive. Assumes that startInclusive less
+     * than or equal to endInclusive.
      *
      * @param startInclusive lowest value contained inside the interval
      * @param endInclusive   highest value contained inside the interval
@@ -22,10 +22,10 @@ public record Interval(int startInclusive, int endInclusive) {
     }
 
     /**
-     * Returns true if this interval contains the specified value. More formally, returns true where
-     * (startInclusive >= value <= endInclusive).
+     * Returns true if this interval contains the specified value. More formally, returns true where (startInclusive >=
+     * value <= endInclusive).
      *
-     * @param value
+     * @param value value to check
      * @return true if specified value is inside this interval, otherwise false
      */
     public boolean contains(int value) {
@@ -35,7 +35,7 @@ public record Interval(int startInclusive, int endInclusive) {
     /**
      * Returns true if this interval contains any value that specified interval also contains.
      *
-     * @param otherInterval
+     * @param otherInterval the other interval to compare with
      * @return true if any value in otherInterval can also be found inside this interval
      */
     public boolean overlaps(Interval otherInterval) {
@@ -48,7 +48,7 @@ public record Interval(int startInclusive, int endInclusive) {
     /**
      * Returns true if this interval only contains values that the specified interval also contains.
      *
-     * @param otherInterval
+     * @param otherInterval the other interval to compare with
      * @return true if this interval only contains values that can also be found in otherInterval
      */
     public boolean completelyInside(Interval otherInterval) {
@@ -61,7 +61,7 @@ public record Interval(int startInclusive, int endInclusive) {
      * no overlap between this interval and the specified interval, or if it is not possible to split this interval so
      * the previously described conditions are met.
      *
-     * @param otherInterval
+     * @param otherInterval the other interval to compare with
      * @return the two sub-intervals that make up this interval, where only one of them shares values with otherInterval
      * @throws IllegalArgumentException
      */
@@ -98,7 +98,7 @@ public record Interval(int startInclusive, int endInclusive) {
     }
 
     /**
-     * @param clampInterval
+     * @param clampInterval the interval that shall be used as limits for the clamping
      * @return the sub-interval of this interval that completely fits inside clampInterval
      * @throws IllegalArgumentException
      */

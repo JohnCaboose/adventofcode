@@ -101,7 +101,7 @@ class Day15 implements ISolvableDay {
     }
 
     private static class Graph {
-        private HashMap<Coordinate, Node> nodes = new HashMap<>();
+        private final HashMap<Coordinate, Node> nodes = new HashMap<>();
 
         public void addNode(Node node) {
             nodes.put(node.coordinate, node);
@@ -115,9 +115,9 @@ class Day15 implements ISolvableDay {
 
     private static class Node implements Comparable<Node> {
 
-        private Coordinate coordinate;
+        private final Coordinate coordinate;
         private int distance = Integer.MAX_VALUE;
-        private Map<Node, Integer> adjacentNodes = new HashMap<>();
+        private final Map<Node, Integer> adjacentNodes = new HashMap<>();
 
         public Node(Coordinate coordinate) {
             this.coordinate = coordinate;

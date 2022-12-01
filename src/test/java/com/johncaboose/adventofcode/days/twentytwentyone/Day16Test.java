@@ -16,7 +16,7 @@ public class Day16Test {
     private static final String PART_TWO_EXAMPLE = "9C0141080250320F1802104A08";
     private static final String INPUT = ProblemInput.DAY_16_INPUT;
 
-    private ISolvableDay sut = new Day16();
+    private final ISolvableDay sut = new Day16();
 
     @Test
     void part1Solver_WHEN_example1Input_THEN_outputMatchesExampleOutput() {

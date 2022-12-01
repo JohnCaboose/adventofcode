@@ -13,15 +13,13 @@ class Day14 implements ISolvableDay {
     @Override
     public long partOneSolver(String input) {
         int steps = 10;
-        long solution = solve(input, steps);
-        return solution;
+        return solve(input, steps);
     }
 
     @Override
     public long partTwoSolver(String input) {
         int steps = 40;
-        long solution = solve(input, steps);
-        return solution;
+        return solve(input, steps);
     }
 
     private long solve(String input, int steps) {

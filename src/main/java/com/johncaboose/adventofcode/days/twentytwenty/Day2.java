@@ -45,7 +45,7 @@ class Day2 implements ISolvableDay {
 
             boolean firstEquals = characterToFind.equals(password.substring(lowerBound, lowerBound + 1));
             boolean secondEquals = characterToFind.equals(password.substring(upperBound, upperBound + 1));
-            return (firstEquals || secondEquals) && (firstEquals != secondEquals);
+            return firstEquals != secondEquals;
 
         } else {
             int characterAmountInPassword = password.length() - password.replaceAll(characterToFind, "").length();

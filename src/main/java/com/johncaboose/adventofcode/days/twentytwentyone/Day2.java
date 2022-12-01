@@ -25,9 +25,7 @@ class Day2 implements ISolvableDay {
 
         }
 
-        int product = horizontalPosition * verticalDepth;
-
-        return product;
+        return horizontalPosition * verticalDepth;
     }
 
     @Override
@@ -50,9 +48,7 @@ class Day2 implements ISolvableDay {
 
         }
 
-        int product = horizontalPosition * verticalDepth;
-
-        return product;
+        return horizontalPosition * verticalDepth;
     }
 
 
