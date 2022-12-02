@@ -30,7 +30,7 @@ class Day2Test {
 
     @Test
     void part2Solver_WHEN_realInput_THEN_outputMatchesValidatedAnswer() {
-        assertEquals(-1, sut.partTwoSolver(INPUT));
+        assertEquals(13889, sut.partTwoSolver(INPUT));
     }
 
 }
