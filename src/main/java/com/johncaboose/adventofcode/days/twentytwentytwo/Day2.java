@@ -32,11 +32,7 @@ class Day2 implements ISolvableDay {
 
         while (scanner.hasNextLine()) {
             String line = scanner.nextLine();
-            if (partTwo) {
-                rounds.add(Round.createPart2(line));
-            } else {
-                rounds.add(Round.createPart1(line));
-            }
+            rounds.add(Round.create(line, partTwo));
         }
 
         return rounds;
@@ -52,17 +48,25 @@ class Day2 implements ISolvableDay {
         private Round(Move theirs, Move mine) {
             this.theirs = theirs;
             this.mine = mine;
-            this.outcome = calculateOutcome();
+            this.outcome = Outcome.fromMoves(this.theirs, this.mine);
         }
 
         private Round(Move theirs, Outcome wantedOutcome) {
             this.theirs = theirs;
             this.outcome = wantedOutcome;
-            this.mine = calculateMove();
+            this.mine = calculateMyMove();
         }
 
-        public static Round createPart1(String inputLine) {
+        public static Round create(String inputLine, boolean partTwo) {
+            return partTwo ? createPart2(inputLine) : createPart1(inputLine);
+        }
+
+        private static Round createPart1(String inputLine) {
             return new Round(Move.fromLetter(firstLetter(inputLine)), Move.fromLetter(secondLetter(inputLine)));
+        }
+
+        public static Round createPart2(String inputLine) {
+            return new Round(Move.fromLetter(firstLetter(inputLine)), Outcome.fromLetter(secondLetter(inputLine)));
         }
 
         private static String firstLetter(String inputLine) {
@@ -73,36 +77,11 @@ class Day2 implements ISolvableDay {
             return inputLine.substring(2, 3);
         }
 
-
-        public static Round createPart2(String inputLine) {
-            return new Round(Move.fromLetter(firstLetter(inputLine)), Outcome.fromLetter(secondLetter(inputLine)));
-        }
-
         public long score() {
-            return mine.moveSubscore() + outcomeSubscore();
+            return mine.score() + outcome.score();
         }
 
-        private long outcomeSubscore() {
-            return switch (outcome) {
-                case WIN -> 6;
-                case DRAW -> 3;
-                case LOSS -> 0;
-            };
-        }
-
-        private Outcome calculateOutcome() {
-            if (mine.beats(theirs)) {
-                return Outcome.WIN;
-            }
-
-            if (mine.equals(theirs)) {
-                return Outcome.DRAW;
-            }
-
-            return Outcome.LOSS;
-        }
-
-        private Move calculateMove() {
+        private Move calculateMyMove() {
             return switch (outcome) {
                 case WIN -> Move.moveThatInputBeats(Move.moveThatInputBeats(theirs));
                 case DRAW -> theirs;
@@ -125,6 +104,26 @@ class Day2 implements ISolvableDay {
                 default -> throw new IllegalArgumentException("Illegal input:" + letter);
             };
         }
+
+        private static Outcome fromMoves(Move theirs, Move mine) {
+            if (mine.beats(theirs)) {
+                return Outcome.WIN;
+            }
+
+            if (mine.equals(theirs)) {
+                return Outcome.DRAW;
+            }
+
+            return Outcome.LOSS;
+        }
+
+        public long score() {
+            return switch (this) {
+                case WIN -> 6;
+                case DRAW -> 3;
+                case LOSS -> 0;
+            };
+        }
     }
 
     private enum Move {
@@ -141,7 +140,7 @@ class Day2 implements ISolvableDay {
             };
         }
 
-        public long moveSubscore() {
+        public long score() {
             return switch (this) {
                 case ROCK -> 1;
                 case PAPER -> 2;
