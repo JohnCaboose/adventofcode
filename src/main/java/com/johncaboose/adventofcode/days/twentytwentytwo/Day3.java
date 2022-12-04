@@ -3,7 +3,6 @@ package com.johncaboose.adventofcode.days.twentytwentytwo;
 import com.johncaboose.adventofcode.shared.ISolvableDay;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 class Day3 implements ISolvableDay {
 
@@ -25,7 +24,7 @@ class Day3 implements ISolvableDay {
     @Override
     public long partTwoSolver(String input) {
         List<Rucksack> rucksacks = createRucksacks(input);
-        List<List<Rucksack>> groups = groupedRucksacks(rucksacks);
+        List<List<Rucksack>> groups = groupRucksacks(rucksacks);
 
         return groups.stream()
                 // find the items found in all rucksacks in the group, for each group
@@ -42,43 +41,35 @@ class Day3 implements ISolvableDay {
         List<Rucksack> rucksacks = new ArrayList<>();
         Scanner scanner = new Scanner(input);
         while (scanner.hasNextLine()) {
-            rucksacks.add(createRucksack(scanner.nextLine()));
+            rucksacks.add(new Rucksack(scanner.nextLine()));
         }
         return rucksacks;
     }
 
-    private static Rucksack createRucksack(String line) {
-        String firstHalf = line.substring(0, line.length() / 2);
-        String secondHalf = line.substring(line.length() / 2);
-        return new Rucksack(createCompartment(firstHalf), createCompartment(secondHalf));
-    }
 
-    private static Set<Integer> createCompartment(String letters) {
-        return letters.codePoints()
-                .boxed()
-                .collect(Collectors.toSet());
-    }
+    private record Rucksack(List<Integer> codePoints) {
 
-    private record Rucksack(Set<Integer> firstCompartment, Set<Integer> secondCompartment) {
+        public Rucksack(String items) {
+            this(items.codePoints().boxed().toList());
+        }
 
         public Set<Integer> intersection() {
+            int size = codePoints.size();
+            List<Integer> firstCompartment = codePoints.subList(0, size / 2);
+            List<Integer> secondCompartment = codePoints.subList(size / 2, size);
+
             Set<Integer> intersection = new HashSet<>(firstCompartment);
             intersection.retainAll(secondCompartment);
             return intersection;
         }
 
-        public Set<Integer> union() {
-            Set<Integer> union = new HashSet<>(firstCompartment);
-            union.addAll(secondCompartment);
-            return union;
-        }
     }
 
     /**
      * @param rucksacks list of all rucksacks
      * @return list of all groups of rucksacks, three per group.
      */
-    private static List<List<Rucksack>> groupedRucksacks(List<Rucksack> rucksacks) {
+    private static List<List<Rucksack>> groupRucksacks(List<Rucksack> rucksacks) {
         List<List<Rucksack>> groups = new ArrayList<>();
         List<Rucksack> currentGroup = new ArrayList<>();
         for (int i = 0; i < rucksacks.size(); i++) {
@@ -91,23 +82,15 @@ class Day3 implements ISolvableDay {
         return groups;
     }
 
+
     /**
-     * @param group a group of rucksacks, size must be exactly 3
+     * @param group a group of rucksacks, size must be exactly 3 as per problem description
      * @return the intersection of integers contained in all rucksacks (regardless of compartment)
      */
     private static Set<Integer> intersection(List<Rucksack> group) {
-        if (group.size() != 3) {
-            throw new IllegalArgumentException("group must have 3 members");
-        }
-
-        List<Set<Integer>> rucksacksWithCombinedCompartments = group.stream()
-                .map(Rucksack::union)
-                .toList();
-
-        Set<Integer> intersection = new HashSet<>(rucksacksWithCombinedCompartments.get(0));
-        intersection.retainAll(rucksacksWithCombinedCompartments.get(1));
-        intersection.retainAll(rucksacksWithCombinedCompartments.get(2));
-
+        Set<Integer> intersection = new HashSet<>(group.get(0).codePoints());
+        intersection.retainAll(group.get(1).codePoints());
+        intersection.retainAll(group.get(2).codePoints());
         return intersection;
     }
 
