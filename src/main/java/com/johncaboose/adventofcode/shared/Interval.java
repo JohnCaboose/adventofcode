@@ -111,6 +111,18 @@ public record Interval(int startInclusive, int endInclusive) {
                 Math.min(clampInterval.endInclusive, this.endInclusive));
     }
 
+    /**
+     * @param interval string on the format start-end, for example 2-4 or 9-12.
+     * @return Interval representation of the interval with the start and end values (inclusive) provided by the string.
+     */
+    public static Interval fromString(String interval) {
+        String[] limits = interval.split("-");
+        if (limits.length != 2) {
+            throw new IllegalArgumentException("String not in correct format");
+        }
+        return new Interval(limits[0], limits[1]);
+    }
+
     @Override
     public String toString() {
         return startInclusive + ".." + endInclusive;
