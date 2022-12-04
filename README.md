@@ -26,7 +26,7 @@ I'm deliberately not including tests and code for these days to keep all tests p
 
 ## Some code snippets for my own use
 
-### Helpful when tests could otherwise run for an uncomfortably long amount of time
+Helpful when tests could otherwise run for an uncomfortably long amount of time
 
 ```
 Assertions.assertTimeoutPreemptively(Duration.ofSeconds(10), () -> {

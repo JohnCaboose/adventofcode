@@ -10,29 +10,29 @@ class Day2 implements ISolvableDay {
 
     @Override
     public long partOneSolver(String input) {
-        return solve(input, false);
+        return solve(input, true);
     }
 
     @Override
     public long partTwoSolver(String input) {
-        return solve(input, true);
+        return solve(input, false);
     }
 
-    private long solve(String input, boolean partTwo) {
-        List<Round> rounds = readInput(input, partTwo);
+    private long solve(String input, boolean partOne) {
+        List<Round> rounds = createRounds(input, partOne);
 
+        // Calculate game score which is the sum of the scores of each round
         return rounds.stream()
                 .mapToLong(Round::score)
                 .sum();
     }
 
-    private List<Round> readInput(String input, boolean partTwo) {
+    private List<Round> createRounds(String input, boolean isPartOne) {
         List<Round> rounds = new ArrayList<>();
-        Scanner scanner = new Scanner(input);
 
+        Scanner scanner = new Scanner(input);
         while (scanner.hasNextLine()) {
-            String line = scanner.nextLine();
-            rounds.add(Round.create(line, partTwo));
+            rounds.add(Round.create(scanner.nextLine(), isPartOne));
         }
 
         return rounds;
@@ -41,50 +41,36 @@ class Day2 implements ISolvableDay {
 
     private static class Round {
 
-        private final Move theirs;
         private final Move mine;
         private final Outcome outcome;
 
         private Round(Move theirs, Move mine) {
-            this.theirs = theirs;
             this.mine = mine;
-            this.outcome = Outcome.fromMoves(this.theirs, this.mine);
+            this.outcome = Outcome.fromMoves(theirs, mine);
         }
 
         private Round(Move theirs, Outcome wantedOutcome) {
-            this.theirs = theirs;
+            this.mine = calculateMyMove(wantedOutcome, theirs);
             this.outcome = wantedOutcome;
-            this.mine = calculateMyMove();
         }
 
-        public static Round create(String inputLine, boolean partTwo) {
-            return partTwo ? createPart2(inputLine) : createPart1(inputLine);
-        }
-
-        private static Round createPart1(String inputLine) {
-            return new Round(Move.fromLetter(firstLetter(inputLine)), Move.fromLetter(secondLetter(inputLine)));
-        }
-
-        public static Round createPart2(String inputLine) {
-            return new Round(Move.fromLetter(firstLetter(inputLine)), Outcome.fromLetter(secondLetter(inputLine)));
-        }
-
-        private static String firstLetter(String inputLine) {
-            return inputLine.substring(0, 1);
-        }
-
-        private static String secondLetter(String inputLine) {
-            return inputLine.substring(2, 3);
+        private static Round create(String inputLine, boolean isPartOne) {
+            var letters = inputLine.split(" ");
+            String firstLetter = letters[0];
+            String secondLetter = letters[1];
+            return isPartOne
+                    ? new Round(Move.fromLetter(firstLetter), Move.fromLetter(secondLetter))
+                    : new Round(Move.fromLetter(firstLetter), Outcome.fromLetter(secondLetter));
         }
 
         public long score() {
             return mine.score() + outcome.score();
         }
 
-        private Move calculateMyMove() {
+        private static Move calculateMyMove(Outcome outcome, Move theirs) {
             return switch (outcome) {
-                case WIN -> Move.moveThatInputBeats(Move.moveThatInputBeats(theirs));
                 case DRAW -> theirs;
+                case WIN -> Move.moveThatInputLosesTo(theirs);
                 case LOSS -> Move.moveThatInputBeats(theirs);
             };
         }
@@ -98,20 +84,20 @@ class Day2 implements ISolvableDay {
 
         public static Outcome fromLetter(String letter) {
             return switch (letter) {
-                case "Z" -> WIN;
-                case "Y" -> DRAW;
                 case "X" -> LOSS;
+                case "Y" -> DRAW;
+                case "Z" -> WIN;
                 default -> throw new IllegalArgumentException("Illegal input:" + letter);
             };
         }
 
         private static Outcome fromMoves(Move theirs, Move mine) {
-            if (mine.beats(theirs)) {
-                return Outcome.WIN;
+            if (mine == theirs) {
+                return Outcome.DRAW;
             }
 
-            if (mine.equals(theirs)) {
-                return Outcome.DRAW;
+            if (mine.beats(theirs)) {
+                return Outcome.WIN;
             }
 
             return Outcome.LOSS;
@@ -149,7 +135,7 @@ class Day2 implements ISolvableDay {
         }
 
         public boolean beats(Move otherMove) {
-            return moveThatInputBeats(this).equals(otherMove);
+            return otherMove == moveThatInputBeats(this);
         }
 
         public static Move moveThatInputBeats(Move input) {
@@ -157,6 +143,14 @@ class Day2 implements ISolvableDay {
                 case ROCK -> SCISSORS;
                 case PAPER -> ROCK;
                 case SCISSORS -> PAPER;
+            };
+        }
+
+        public static Move moveThatInputLosesTo(Move input) {
+            return switch (input) {
+                case ROCK -> PAPER;
+                case PAPER -> SCISSORS;
+                case SCISSORS -> ROCK;
             };
         }
     }

@@ -11,27 +11,39 @@ class Day1 implements ISolvableDay {
 
     @Override
     public long partOneSolver(String input) {
-        List<Long> knapsacks = knapsacks(input);
+        List<Long> knapsacks = caloriesPerKnapsack(input);
 
+        // Find knapsack with highest amount of calories
         return knapsacks.stream()
-                .max(Long::compareTo)
+                .mapToLong(Long::longValue)
+                .max() // find highest calorie count
                 .orElse(0L);
     }
 
     @Override
     public long partTwoSolver(String input) {
-        List<Long> knapsacks = knapsacks(input);
+        List<Long> knapsacks = caloriesPerKnapsack(input);
+
+        // Find sum of calories of the top 3 knapsacks
         return knapsacks.stream()
+                // Sort highest calorie count first
                 .sorted(Collections.reverseOrder())
                 .mapToLong(Long::longValue)
-                .limit(3) // max 3 knapsacks
+                .limit(3)
                 .sum();
     }
 
-    private List<Long> knapsacks(String input) {
+    /**
+     * Number of calories each elf is carrying in their knapsack
+     *
+     * @param input puzzle input
+     * @return each knapsack's calorie count as a list
+     */
+    private List<Long> caloriesPerKnapsack(String input) {
         List<Long> knapsacks = new ArrayList<>();
 
         Scanner scanner = new Scanner(input);
+        // Standard delimiter would break the if-else in the while-loop
         scanner.useDelimiter("\n");
         long currentGroupSum = 0;
         while (scanner.hasNextLine()) {
@@ -44,7 +56,6 @@ class Day1 implements ISolvableDay {
                 scanner.nextLine();
                 currentGroupSum = 0;
             }
-
         }
 
         return knapsacks;
