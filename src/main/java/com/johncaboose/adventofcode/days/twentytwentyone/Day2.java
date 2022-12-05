@@ -6,10 +6,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-class Day2 implements ISolvableDay {
+class Day2 implements ISolvableDay<Long> {
 
     @Override
-    public long partOneSolver(String input) {
+    public Long partOneSolver(String input) {
         List<MovementStep> movementSteps = populateList(input);
 
         long horizontalPosition = 0;
@@ -29,7 +29,7 @@ class Day2 implements ISolvableDay {
     }
 
     @Override
-    public long partTwoSolver(String input) {
+    public Long partTwoSolver(String input) {
         List<MovementStep> movementSteps = populateList(input);
 
         long horizontalPosition = 0;

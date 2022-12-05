@@ -5,14 +5,14 @@ import com.johncaboose.adventofcode.shared.Utils;
 
 import java.util.*;
 
-class Day3 implements ISolvableDay {
+class Day3 implements ISolvableDay<Long> {
 
 
     @Override
-    public long partOneSolver(String input) {
+    public Long partOneSolver(String input) {
         List<Long> numbers = Utils.populateListWithLongs(input, 2);
         if (numbers.size() == 0) {
-            return 0;
+            return 0L;
         }
 
         Map<Integer, Integer> amountOfOnesMinusZeroesPerBitPlacement = new HashMap<>();
@@ -49,10 +49,10 @@ class Day3 implements ISolvableDay {
 
 
     @Override
-    public long partTwoSolver(String input) {
+    public Long partTwoSolver(String input) {
         List<Long> numbers = Utils.populateListWithLongs(input, 2);
         if (numbers.size() == 0) {
-            return 0;
+            return 0L;
         }
 
         int amountOfBitsInUse = getAmountOfBitsInUse(input);

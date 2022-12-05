@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
-class Day4 implements ISolvableDay {
+class Day4 implements ISolvableDay<Long> {
 
     /**
      * This is the same as the number of columns
@@ -51,15 +51,15 @@ class Day4 implements ISolvableDay {
             return sum;
         }
 
-        public int getFinalScore(int lastDrawnNumber) {
-            return getUnmarkedNumberSum() * lastDrawnNumber;
+        public long getFinalScore(int lastDrawnNumber) {
+            return (long) getUnmarkedNumberSum() * lastDrawnNumber;
         }
 
         @Override
         public String toString() {
             return "BingoBoard{" +
-                    "boardSequences=" + boardSequences +
-                    '}';
+                   "boardSequences=" + boardSequences +
+                   '}';
         }
     }
 
@@ -92,8 +92,8 @@ class Day4 implements ISolvableDay {
         @Override
         public String toString() {
             return "BingoableSequence{" +
-                    "numberSequence=" + numberSequence +
-                    '}';
+                   "numberSequence=" + numberSequence +
+                   '}';
         }
     }
 
@@ -121,15 +121,15 @@ class Day4 implements ISolvableDay {
         @Override
         public String toString() {
             return "BoardNumber{" +
-                    "number=" + number +
-                    ", marked=" + marked +
-                    '}';
+                   "number=" + number +
+                   ", marked=" + marked +
+                   '}';
         }
     }
 
 
     @Override
-    public long partOneSolver(String input) {
+    public Long partOneSolver(String input) {
         List<Integer> drawSequence = new ArrayList<>();
         List<BingoBoard> allBoards = new ArrayList<>();
         ExtendedMap<Integer, BoardNumber> allBoardNumbers = new ExtendedHashMap<>();
@@ -153,7 +153,7 @@ class Day4 implements ISolvableDay {
         }
 
         //No bingo
-        return 0;
+        return 0L;
     }
 
     /**
@@ -213,7 +213,7 @@ class Day4 implements ISolvableDay {
 
 
     @Override
-    public long partTwoSolver(String input) {
+    public Long partTwoSolver(String input) {
         List<Integer> drawSequence = new ArrayList<>();
         List<BingoBoard> allBoards = new ArrayList<>();
         ExtendedMap<Integer, BoardNumber> allBoardNumbers = new ExtendedHashMap<>();
@@ -240,7 +240,7 @@ class Day4 implements ISolvableDay {
         }
 
         //No bingo
-        return 0;
+        return 0L;
     }
 
 

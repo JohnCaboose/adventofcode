@@ -7,9 +7,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-class Day1 implements ISolvableDay {
+class Day1 implements ISolvableDay<Long> {
     @Override
-    public long partOneSolver(String input) {
+    public Long partOneSolver(String input) {
         Set<Long> numbers = new HashSet<>(Utils.populateListWithLongs(input));
 
         long sum = 2020;
@@ -20,11 +20,11 @@ class Day1 implements ISolvableDay {
             }
         }
 
-        return 0;
+        return 0L;
     }
 
     @Override
-    public long partTwoSolver(String input) {
+    public Long partTwoSolver(String input) {
         List<Long> numbers = Utils.populateListWithLongs(input);
 
         for (int i = 0; i < numbers.size(); i++) {
@@ -33,7 +33,7 @@ class Day1 implements ISolvableDay {
                     if (i == j || i == k || j == k) {
                         continue;
                     }
-                    
+
                     if (numbers.get(i) + numbers.get(j) + numbers.get(k) == 2020) {
                         return numbers.get(i) * numbers.get(j) * numbers.get(k);
                     }
@@ -42,6 +42,6 @@ class Day1 implements ISolvableDay {
             }
         }
 
-        return 0;
+        return 0L;
     }
 }

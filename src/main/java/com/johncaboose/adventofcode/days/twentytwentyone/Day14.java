@@ -9,15 +9,15 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
-class Day14 implements ISolvableDay {
+class Day14 implements ISolvableDay<Long> {
     @Override
-    public long partOneSolver(String input) {
+    public Long partOneSolver(String input) {
         int steps = 10;
         return solve(input, steps);
     }
 
     @Override
-    public long partTwoSolver(String input) {
+    public Long partTwoSolver(String input) {
         int steps = 40;
         return solve(input, steps);
     }

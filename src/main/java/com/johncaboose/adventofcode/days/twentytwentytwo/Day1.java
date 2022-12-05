@@ -7,10 +7,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 
-class Day1 implements ISolvableDay {
+class Day1 implements ISolvableDay<Long> {
 
     @Override
-    public long partOneSolver(String input) {
+    public Long partOneSolver(String input) {
         List<Long> knapsacks = caloriesPerKnapsack(input);
 
         // Find knapsack with highest amount of calories
@@ -21,7 +21,7 @@ class Day1 implements ISolvableDay {
     }
 
     @Override
-    public long partTwoSolver(String input) {
+    public Long partTwoSolver(String input) {
         List<Long> knapsacks = caloriesPerKnapsack(input);
 
         // Find sum of calories of the top 3 knapsacks

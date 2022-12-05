@@ -9,7 +9,7 @@ public class Day24Test {
 
     private static final String INPUT = ProblemInput.DAY_24_INPUT;
 
-    private final ISolvableDay sut = new Day24();
+    private final ISolvableDay<Long> sut = new Day24();
 
 
     @Test

@@ -5,11 +5,11 @@ import com.johncaboose.adventofcode.shared.ISolvableDay;
 
 import java.util.*;
 
-class Day13 implements ISolvableDay {
+class Day13 implements ISolvableDay<Long> {
 
 
     @Override
-    public long partOneSolver(String input) {
+    public Long partOneSolver(String input) {
         Set<Coordinate> coordinates = new HashSet<>();
         List<FoldingInstruction> foldingInstructions = new ArrayList<>();
         populateListsFromInput(input, coordinates, foldingInstructions);
@@ -17,11 +17,11 @@ class Day13 implements ISolvableDay {
         HashSet<Coordinate> result = new HashSet<>(coordinates);
         fold(result, foldingInstructions.get(0));
 
-        return result.size();
+        return (long) result.size();
     }
 
     @Override
-    public long partTwoSolver(String input) {
+    public Long partTwoSolver(String input) {
         Set<Coordinate> coordinates = new HashSet<>();
         List<FoldingInstruction> foldingInstructions = new ArrayList<>();
         populateListsFromInput(input, coordinates, foldingInstructions);
@@ -30,7 +30,7 @@ class Day13 implements ISolvableDay {
             fold(coordinates, instruction);
         }
 
-        return coordinates.size();
+        return (long) coordinates.size();
     }
 
     private static void fold(Set<Coordinate> coordinates, FoldingInstruction foldingInstruction) {

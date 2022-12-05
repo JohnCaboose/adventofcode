@@ -7,10 +7,10 @@ import com.johncaboose.adventofcode.shared.ISolvableDay;
 
 import java.util.List;
 
-class Day3 implements ISolvableDay {
+class Day3 implements ISolvableDay<Long> {
 
     @Override
-    public long partOneSolver(String input) {
+    public Long partOneSolver(String input) {
         TreeGrid grid = new TreeGrid(input);
         int velocityDown = 1;
         int velocityRight = 3;
@@ -18,7 +18,7 @@ class Day3 implements ISolvableDay {
         return treesHit(grid, velocityDown, velocityRight);
     }
 
-    private int treesHit(TreeGrid grid, int velocityDown, int velocityRight) {
+    private long treesHit(TreeGrid grid, int velocityDown, int velocityRight) {
         boolean endHit = false;
         while (!endHit) {
             endHit = grid.step(velocityRight, velocityDown);
@@ -28,7 +28,7 @@ class Day3 implements ISolvableDay {
     }
 
     @Override
-    public long partTwoSolver(String input) {
+    public Long partTwoSolver(String input) {
         TreeGrid grid = new TreeGrid(input);
         long result = 1;
         List<Couple<Integer, Integer>> velocities = List.of(

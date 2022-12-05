@@ -8,24 +8,24 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-class Day17 implements ISolvableDay {
+class Day17 implements ISolvableDay<Long> {
 
     private static final Coordinate START_COORDINATE = new Coordinate(0, 0);
 
     @Override
-    public long partOneSolver(String input) {
+    public Long partOneSolver(String input) {
         Set<Velocity> validVelocities = new HashSet<>();
         return highestY(input, validVelocities);
     }
 
     @Override
-    public long partTwoSolver(String input) {
+    public Long partTwoSolver(String input) {
         Set<Velocity> validVelocities = new HashSet<>();
         highestY(input, validVelocities);
-        return validVelocities.size();
+        return (long) validVelocities.size();
     }
 
-    private static int highestY(String input, Set<Velocity> validVelocities) {
+    private static long highestY(String input, Set<Velocity> validVelocities) {
         Set<Coordinate> targetArea = readTargetArea(input);
         Coordinate topLeft = getTopLeftCoordinate(targetArea);
         Coordinate bottomRight = getBottomRightCoordinate(targetArea);

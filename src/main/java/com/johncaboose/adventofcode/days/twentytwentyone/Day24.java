@@ -7,17 +7,17 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-class Day24 implements ISolvableDay {
+class Day24 implements ISolvableDay<Long> {
 
     public static final int AMOUNT_OF_CONSTANTS = 14;
 
     @Override
-    public long partOneSolver(String input) {
+    public Long partOneSolver(String input) {
         return solve(input, false);
     }
 
     @Override
-    public long partTwoSolver(String input) {
+    public Long partTwoSolver(String input) {
         return solve(input, true);
     }
 

@@ -1,14 +1,14 @@
 import com.johncaboose.adventofcode.shared.ISolvableDay;
 
-class Day${DAY_NAME} implements ISolvableDay {
+class Day${DAY_NAME} implements ISolvableDay<${SOLUTION_CLASS}> {
 
     @Override
-    public long partOneSolver(String input) {
-        return 0;
+    public ${SOLUTION_CLASS} partOneSolver(String input) {
+        return null;
     }
 
     @Override
-    public long partTwoSolver(String input) {
-        return 0;
+    public ${SOLUTION_CLASS} partTwoSolver(String input) {
+        return null;
     }
 }

@@ -4,10 +4,10 @@ import com.johncaboose.adventofcode.shared.ISolvableDay;
 
 import java.util.*;
 
-class Day3 implements ISolvableDay {
+class Day3 implements ISolvableDay<Long> {
 
     @Override
-    public long partOneSolver(String input) {
+    public Long partOneSolver(String input) {
         List<Rucksack> rucksacks = createRucksacks(input);
 
         return rucksacks.stream()
@@ -22,7 +22,7 @@ class Day3 implements ISolvableDay {
     }
 
     @Override
-    public long partTwoSolver(String input) {
+    public Long partTwoSolver(String input) {
         List<Rucksack> rucksacks = createRucksacks(input);
         List<Group> groups = groupRucksacks(rucksacks);
 
@@ -106,7 +106,7 @@ class Day3 implements ISolvableDay {
             }
             currentGroup.add(rucksacks.get(i));
         }
-        
+
         return groups;
     }
 

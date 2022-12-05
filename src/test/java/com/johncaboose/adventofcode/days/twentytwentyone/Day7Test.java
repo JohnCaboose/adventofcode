@@ -10,7 +10,7 @@ public class Day7Test {
     private static final String EXAMPLE = ProblemInput.DAY_7_EXAMPLE;
     private static final String INPUT = ProblemInput.DAY_7_INPUT;
 
-    private final ISolvableDay sut = new Day7();
+    private final ISolvableDay<Long> sut = new Day7();
 
     @Test
     void part1Solver_WHEN_exampleInput_THEN_outputMatchesExampleOutput() {

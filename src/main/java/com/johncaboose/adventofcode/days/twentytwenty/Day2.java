@@ -6,14 +6,14 @@ import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
-class Day2 implements ISolvableDay {
+class Day2 implements ISolvableDay<Long> {
     @Override
-    public long partOneSolver(String input) {
+    public Long partOneSolver(String input) {
         return solve(input, false);
     }
 
     @Override
-    public long partTwoSolver(String input) {
+    public Long partTwoSolver(String input) {
         return solve(input, true);
     }
 

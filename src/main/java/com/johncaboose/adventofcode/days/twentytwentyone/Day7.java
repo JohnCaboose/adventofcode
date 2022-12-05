@@ -7,18 +7,18 @@ import java.util.List;
 
 import static com.johncaboose.adventofcode.shared.Utils.populateListWithCommaSeparatedLongs;
 
-class Day7 implements ISolvableDay {
+class Day7 implements ISolvableDay<Long> {
 
 
     @Override
-    public long partOneSolver(String input) {
+    public Long partOneSolver(String input) {
         List<Long> initialPositions = populateListWithCommaSeparatedLongs(input);
 
         return calculateMinimumFuelSpent(initialPositions, false);
     }
 
     @Override
-    public long partTwoSolver(String input) {
+    public Long partTwoSolver(String input) {
         List<Long> initialPositions = populateListWithCommaSeparatedLongs(input);
 
         return calculateMinimumFuelSpent(initialPositions, true);

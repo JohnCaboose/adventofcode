@@ -7,7 +7,7 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-class Day18 implements ISolvableDay {
+class Day18 implements ISolvableDay<Long> {
 
     private static final Pattern LITERAL_PATTERN = Pattern.compile("[0-9]+");
     private static final Pattern LAST_LITERAL_PATTERN = Pattern.compile(".*[^0-9]([0-9]+)");
@@ -21,7 +21,7 @@ class Day18 implements ISolvableDay {
     private static final char RIGHT_BRACKET = ']';
 
     @Override
-    public long partOneSolver(String input) {
+    public Long partOneSolver(String input) {
         return magnitudeOfSum(input);
     }
 
@@ -32,7 +32,7 @@ class Day18 implements ISolvableDay {
     }
 
     @Override
-    public long partTwoSolver(String input) {
+    public Long partTwoSolver(String input) {
         List<String> inputNumbers = new ArrayList<>(readInput(input));
         List<String> constructedInputStringsOfAllCombinations = new ArrayList<>();
 
@@ -112,30 +112,30 @@ class Day18 implements ISolvableDay {
 
             //First replace the exploded pair with the zero
             number = number.substring(0, indexWhereExplodingPairBegins) +
-                    "0" +
-                    number.substring(indexWhereExplodingPairBegins + match.length());
+                     "0" +
+                     number.substring(indexWhereExplodingPairBegins + match.length());
 
             // Add the rightLiteral to first number to the right of the exploded pair (if any)
             number = number.substring(0, indexWhereExplodingPairBegins + 1) +
-                    LITERAL_PATTERN.matcher(number.substring(indexWhereExplodingPairBegins + 1))
-                            .replaceFirst((matchResult) -> {
-                                String found = matchResult.group();
-                                long replacement = Long.parseLong(found) + rightLiteral;
-                                return String.valueOf(replacement);
-                            });
+                     LITERAL_PATTERN.matcher(number.substring(indexWhereExplodingPairBegins + 1))
+                             .replaceFirst((matchResult) -> {
+                                 String found = matchResult.group();
+                                 long replacement = Long.parseLong(found) + rightLiteral;
+                                 return String.valueOf(replacement);
+                             });
 
             // Add the leftLiteral to the first number to the left of the exploded pair (if any)
             number = LAST_LITERAL_PATTERN.matcher(number.substring(0, indexWhereExplodingPairBegins))
-                    .replaceFirst((matchResult -> {
-                        String found = matchResult.group(1);
-                        long replacementLong = Long.parseLong(found) + leftLiteral;
-                        String replacement = String.valueOf(replacementLong);
-                        replacement = matchResult.group(0)
-                                .substring(0, matchResult.group(0).length() - found.length())
-                                + replacement;
-                        return replacement;
-                    }))
-                    + number.substring(indexWhereExplodingPairBegins);
+                             .replaceFirst((matchResult -> {
+                                 String found = matchResult.group(1);
+                                 long replacementLong = Long.parseLong(found) + leftLiteral;
+                                 String replacement = String.valueOf(replacementLong);
+                                 replacement = matchResult.group(0)
+                                                       .substring(0, matchResult.group(0).length() - found.length())
+                                               + replacement;
+                                 return replacement;
+                             }))
+                     + number.substring(indexWhereExplodingPairBegins);
 
         }
         return number;

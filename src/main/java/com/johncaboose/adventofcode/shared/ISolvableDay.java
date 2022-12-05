@@ -1,8 +1,8 @@
 package com.johncaboose.adventofcode.shared;
 
-public interface ISolvableDay {
+public interface ISolvableDay<T> {
 
-    long partOneSolver(String input);
+    T partOneSolver(String input);
 
-    long partTwoSolver(String input);
+    T partTwoSolver(String input);
 }

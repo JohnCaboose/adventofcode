@@ -10,15 +10,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
-class Day20 implements ISolvableDay {
+class Day20 implements ISolvableDay<Long> {
     @Override
-    public long partOneSolver(String input) {
+    public Long partOneSolver(String input) {
         int amountOfEnhancementsToPerform = 2;
         return solve(input, amountOfEnhancementsToPerform);
     }
 
     @Override
-    public long partTwoSolver(String input) {
+    public Long partTwoSolver(String input) {
         int amountOfEnhancementsToPerform = 50;
         return solve(input, amountOfEnhancementsToPerform);
     }
@@ -42,7 +42,7 @@ class Day20 implements ISolvableDay {
 
         for (int i = 0; i < amountOfEnhancementsToPerform; i++) {
             boolean nonRelevantPixelsOn = (allOffBecomeOn && i % 2 == 1) ||
-                    (allOffBecomeOn && !allOnBecomeOff && i > 0);
+                                          (allOffBecomeOn && !allOnBecomeOff && i > 0);
 
             ExtendedMap<Coordinate, Boolean> enhancedRelevantPixels = new ExtendedHashMap<>();
             for (Coordinate coordinate : relevantPixels.keySet()) {

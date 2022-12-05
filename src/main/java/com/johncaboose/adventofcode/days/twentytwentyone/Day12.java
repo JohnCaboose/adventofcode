@@ -7,22 +7,22 @@ import com.johncaboose.adventofcode.shared.ISolvableDay;
 import java.util.*;
 
 
-class Day12 implements ISolvableDay {
+class Day12 implements ISolvableDay<Long> {
 
     public static final String START = "start";
     public static final String END = "end";
 
     @Override
-    public long partOneSolver(String input) {
+    public Long partOneSolver(String input) {
         return solveProblem(input, 1);
     }
 
     @Override
-    public long partTwoSolver(String input) {
+    public Long partTwoSolver(String input) {
         return solveProblem(input, 2);
     }
 
-    private int solveProblem(String input, int maxTraversalCount) {
+    private long solveProblem(String input, int maxTraversalCount) {
         CaveNetwork caveNetwork = constructCaveNetwork(input);
         List<String> allPaths = new ArrayList<>();
         possiblePathsToEnd(caveNetwork, new HashMap<>(), maxTraversalCount, new Cave(START),

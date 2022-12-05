@@ -9,16 +9,16 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-class Day11 implements ISolvableDay {
+class Day11 implements ISolvableDay<Long> {
 
     @Override
-    public long partOneSolver(String input) {
+    public Long partOneSolver(String input) {
         OctopusGrid octopusGrid = new OctopusGrid(input);
         return octopusGrid.step(100); // amount of flashes
     }
 
     @Override
-    public long partTwoSolver(String input) {
+    public Long partTwoSolver(String input) {
         OctopusGrid octopusGrid = new OctopusGrid(input);
         while (true) {
             long amountOfFlashes = octopusGrid.step(1);

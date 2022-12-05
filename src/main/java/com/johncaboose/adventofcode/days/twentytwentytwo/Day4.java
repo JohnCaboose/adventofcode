@@ -8,10 +8,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-class Day4 implements ISolvableDay {
+class Day4 implements ISolvableDay<Long> {
 
     @Override
-    public long partOneSolver(String input) {
+    public Long partOneSolver(String input) {
         List<Couple<Interval, Interval>> assignmentPairs = createAssignmentPairs(input);
         return assignmentPairs.stream()
                 .filter(Day4::oneIntervalCompletelyInsideOther)
@@ -19,7 +19,7 @@ class Day4 implements ISolvableDay {
     }
 
     @Override
-    public long partTwoSolver(String input) {
+    public Long partTwoSolver(String input) {
         List<Couple<Interval, Interval>> assignmentPairs = createAssignmentPairs(input);
         return assignmentPairs.stream()
                 .filter(pair -> pair.first().overlaps(pair.second()))

@@ -5,14 +5,14 @@ import com.johncaboose.adventofcode.shared.ISolvableDay;
 
 import java.util.*;
 
-class Day9 implements ISolvableDay {
+class Day9 implements ISolvableDay<Long> {
 
     @Override
-    public long partOneSolver(String input) {
+    public Long partOneSolver(String input) {
         HeightMap heightMap = constructHeightMap(input);
         List<Coordinate> lowPoints = lowPoints(heightMap);
 
-        int riskLevelSum = 0;
+        long riskLevelSum = 0;
         for (Coordinate coordinate : lowPoints) {
             riskLevelSum += heightMap.riskLevel(coordinate.x(), coordinate.y());
         }
@@ -21,7 +21,7 @@ class Day9 implements ISolvableDay {
     }
 
     @Override
-    public long partTwoSolver(String input) {
+    public Long partTwoSolver(String input) {
         HeightMap heightMap = constructHeightMap(input);
         List<Coordinate> lowPoints = lowPoints(heightMap);
         List<Basin> basins = basins(heightMap, lowPoints);
@@ -30,7 +30,7 @@ class Day9 implements ISolvableDay {
                 .map(Basin::size)
                 .sorted(Collections.reverseOrder())
                 .limit(3)
-                .reduce(1, Math::multiplyExact); // product
+                .reduce(1L, Math::multiplyExact); // product
     }
 
 
@@ -83,7 +83,7 @@ class Day9 implements ISolvableDay {
     }
 
     private record Basin(Collection<Coordinate> coordinates) {
-        public int size() {
+        public long size() {
             return coordinates.size();
         }
     }

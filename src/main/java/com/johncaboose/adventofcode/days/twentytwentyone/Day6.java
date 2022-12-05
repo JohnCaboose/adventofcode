@@ -6,18 +6,18 @@ import com.johncaboose.adventofcode.shared.Utils;
 import java.util.ArrayList;
 import java.util.List;
 
-class Day6 implements ISolvableDay {
+class Day6 implements ISolvableDay<Long> {
 
 
     @Override
-    public long partOneSolver(String input) {
+    public Long partOneSolver(String input) {
         long days = 80;
         List<Long> allFish = Utils.populateListWithCommaSeparatedLongs(input);
         return calculateFishPopulation(allFish, days);
     }
 
     @Override
-    public long partTwoSolver(String input) {
+    public Long partTwoSolver(String input) {
         long days = 256;
         List<Long> allFish = Utils.populateListWithCommaSeparatedLongs(input);
         return calculateFishPopulation(allFish, days);

@@ -7,14 +7,14 @@ import com.johncaboose.adventofcode.shared.IntegerGrid;
 import java.util.*;
 import java.util.Map.Entry;
 
-class Day15 implements ISolvableDay {
+class Day15 implements ISolvableDay<Long> {
     @Override
-    public long partOneSolver(String input) {
+    public Long partOneSolver(String input) {
         return solve(input, false);
     }
 
     @Override
-    public long partTwoSolver(String input) {
+    public Long partTwoSolver(String input) {
         return solve(input, true);
     }
 

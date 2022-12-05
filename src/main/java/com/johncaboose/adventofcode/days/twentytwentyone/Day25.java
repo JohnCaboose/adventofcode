@@ -10,9 +10,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-class Day25 implements ISolvableDay {
+class Day25 implements ISolvableDay<Long> {
     @Override
-    public long partOneSolver(String input) {
+    public Long partOneSolver(String input) {
         CucumberGrid cucumberGrid = new CucumberGrid(input);
 
         boolean movementPerformed;
@@ -24,8 +24,8 @@ class Day25 implements ISolvableDay {
     }
 
     @Override
-    public long partTwoSolver(String input) {
-        return 0;
+    public Long partTwoSolver(String input) {
+        return 0L;
     }
 
     private static class CucumberGrid extends AbstractGrid<RegionContent> {
@@ -51,7 +51,7 @@ class Day25 implements ISolvableDay {
 
             Set<Coordinate> untouchedCoordinates = new HashSet<>(grid.keySet());
 
-            // First move all east-bound
+            // First move all eastbound
             grid.forEach((coordinate, content) -> {
                 if (content.equals(RegionContent.EAST_CUCUMBER)) {
                     Coordinate nextCoordinate = new Coordinate((coordinate.x() + 1) % getXBoundExclusive(), coordinate.y());
@@ -59,7 +59,7 @@ class Day25 implements ISolvableDay {
                 }
             });
 
-            // Construct mid move result, where all east-bound have moved but no south-bound
+            // Construct mid-move result, where all eastbound have moved but no southbound
             Map<Coordinate, RegionContent> midMoveResult = new HashMap<>(nextState);
             grid.forEach((coordinate, content) -> {
                 if (content.equals(RegionContent.SOUTH_CUCUMBER)) {
@@ -80,7 +80,7 @@ class Day25 implements ISolvableDay {
             // Finally set all the other spaces to empty
             untouchedCoordinates.forEach(coordinate -> nextState.put(coordinate, RegionContent.EMPTY));
 
-            // Update state to its new... state
+            // Update state to the new... state
             grid.clear();
             grid.putAll(nextState);
 

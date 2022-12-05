@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-class Day16 implements ISolvableDay {
+class Day16 implements ISolvableDay<Long> {
     private static final int PACKET_VERSION_LENGTH = 3;
     private static final int TYPE_ID_LENGTH = 3;
 
@@ -17,7 +17,7 @@ class Day16 implements ISolvableDay {
 
 
     @Override
-    public long partOneSolver(String input) {
+    public Long partOneSolver(String input) {
         String binaryString = binaryString(input);
 
         Cursor cursor = new Cursor();
@@ -28,7 +28,7 @@ class Day16 implements ISolvableDay {
     }
 
     @Override
-    public long partTwoSolver(String input) {
+    public Long partTwoSolver(String input) {
         String binaryString = binaryString(input);
 
         Cursor cursor = new Cursor();
@@ -100,9 +100,9 @@ class Day16 implements ISolvableDay {
             this(packetVersion, typeId, subPackets, 0L);
         }
 
-        public int sumOfPacketAndSubPacketVersions() {
-            int subPacketsVersionSum = subPackets.stream()
-                    .mapToInt(Packet::sumOfPacketAndSubPacketVersions)
+        public long sumOfPacketAndSubPacketVersions() {
+            long subPacketsVersionSum = subPackets.stream()
+                    .mapToLong(Packet::sumOfPacketAndSubPacketVersions)
                     .sum();
             return packetVersion + subPacketsVersionSum;
         }

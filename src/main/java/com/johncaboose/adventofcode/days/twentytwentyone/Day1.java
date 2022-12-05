@@ -6,17 +6,17 @@ import com.johncaboose.adventofcode.shared.Utils;
 import java.util.ArrayList;
 import java.util.List;
 
-class Day1 implements ISolvableDay {
+class Day1 implements ISolvableDay<Long> {
 
 
     @Override
-    public long partOneSolver(String input) {
+    public Long partOneSolver(String input) {
         List<Long> depths = Utils.populateListWithLongs(input);
         return amountOfIncreases(depths);
     }
 
     @Override
-    public long partTwoSolver(String input) {
+    public Long partTwoSolver(String input) {
         List<Long> depths = Utils.populateListWithLongs(input);
         List<Long> slidingWindowOfDepths = new ArrayList<>();
         for (int i = 0; i < depths.size(); i++) {
@@ -28,7 +28,7 @@ class Day1 implements ISolvableDay {
         return amountOfIncreases(slidingWindowOfDepths);
     }
 
-    private int amountOfIncreases(List<Long> list) {
+    private long amountOfIncreases(List<Long> list) {
         if (list.size() < 2) {
             return 0;
         }

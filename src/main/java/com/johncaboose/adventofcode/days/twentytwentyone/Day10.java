@@ -4,16 +4,16 @@ import com.johncaboose.adventofcode.shared.ISolvableDay;
 
 import java.util.*;
 
-class Day10 implements ISolvableDay {
+class Day10 implements ISolvableDay<Long> {
 
     @Override
-    public long partOneSolver(String input) {
+    public Long partOneSolver(String input) {
         List<Long> allLineScores = getAllLineScores(input, ScoringType.ILLEGAL_CHARACTERS);
         return sum(allLineScores);
     }
 
     @Override
-    public long partTwoSolver(String input) {
+    public Long partTwoSolver(String input) {
         List<Long> allLineScores = getAllLineScores(input, ScoringType.INCOMPLETE_LINES);
         return median(allLineScores);
     }

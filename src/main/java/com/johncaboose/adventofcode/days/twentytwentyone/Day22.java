@@ -10,18 +10,18 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-class Day22 implements ISolvableDay {
+class Day22 implements ISolvableDay<Long> {
 
     private static final Pattern COORDINATE_INTERVAL_PATTERN = Pattern.compile("[xyz]=(-?[0-9]+)\\.\\.(-?[0-9]+)");
 
     @Override
-    public long partOneSolver(String input) {
+    public Long partOneSolver(String input) {
         Interval initializationProcedureArea = new Interval(-50, 50);
         return solve(input, Optional.of(initializationProcedureArea));
     }
 
     @Override
-    public long partTwoSolver(String input) {
+    public Long partTwoSolver(String input) {
         return solve(input);
     }
 
@@ -87,8 +87,8 @@ class Day22 implements ISolvableDay {
 
         public boolean overlaps(Cuboid otherCuboid) {
             return xInterval.overlaps(otherCuboid.xInterval) &&
-                    yInterval.overlaps(otherCuboid.yInterval) &&
-                    zInterval.overlaps(otherCuboid.zInterval);
+                   yInterval.overlaps(otherCuboid.yInterval) &&
+                   zInterval.overlaps(otherCuboid.zInterval);
         }
 
         public Optional<Cuboid> constrainedTo(Interval cuboidIntervalForAllAxes) {
@@ -110,8 +110,8 @@ class Day22 implements ISolvableDay {
 
         private boolean completelyInside(Cuboid otherCuboid) {
             return xInterval.completelyInside(otherCuboid.xInterval) &&
-                    yInterval.completelyInside(otherCuboid.yInterval) &&
-                    zInterval.completelyInside(otherCuboid.zInterval);
+                   yInterval.completelyInside(otherCuboid.yInterval) &&
+                   zInterval.completelyInside(otherCuboid.zInterval);
         }
 
         /**

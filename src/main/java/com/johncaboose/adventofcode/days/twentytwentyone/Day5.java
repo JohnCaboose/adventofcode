@@ -12,7 +12,7 @@ import java.util.stream.IntStream;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 
-class Day5 implements ISolvableDay {
+class Day5 implements ISolvableDay<Long> {
 
     private record LineSegment(Coordinate start, Coordinate end) {
 
@@ -114,12 +114,12 @@ class Day5 implements ISolvableDay {
     }
 
     @Override
-    public long partOneSolver(String input) {
+    public Long partOneSolver(String input) {
         return solve(input, false);
     }
 
     @Override
-    public long partTwoSolver(String input) {
+    public Long partTwoSolver(String input) {
         return solve(input, true);
     }
 

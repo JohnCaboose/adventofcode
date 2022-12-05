@@ -16,7 +16,7 @@ public class Day22Test {
     private static final String EXAMPLE_3 = ProblemInput.DAY_22_EXAMPLE_3;
     private static final String INPUT = ProblemInput.DAY_22_INPUT;
 
-    private final ISolvableDay sut = new Day22();
+    private final ISolvableDay<Long> sut = new Day22();
 
     @Test
     @Order(1)

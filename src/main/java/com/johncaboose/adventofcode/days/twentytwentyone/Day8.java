@@ -4,7 +4,7 @@ import com.johncaboose.adventofcode.shared.ISolvableDay;
 
 import java.util.*;
 
-class Day8 implements ISolvableDay {
+class Day8 implements ISolvableDay<Long> {
 
 
     // 1 = ..c..f. // length 2
@@ -25,7 +25,7 @@ class Day8 implements ISolvableDay {
     // f 9 times
 
     @Override
-    public long partOneSolver(String input) {
+    public Long partOneSolver(String input) {
         List<String> allDigits = getAllOutputDigits(input);
         List<Integer> lengthsToFilter = List.of(2, 3, 4, 7);
         return allDigits.stream()
@@ -34,7 +34,7 @@ class Day8 implements ISolvableDay {
     }
 
     @Override
-    public long partTwoSolver(String input) {
+    public Long partTwoSolver(String input) {
         List<Integer> outputValues = new ArrayList<>();
         try (Scanner scanner = new Scanner(input)) {
             while (scanner.hasNextLine()) {
@@ -50,7 +50,8 @@ class Day8 implements ISolvableDay {
         }
 
         return outputValues.stream()
-                .reduce(0, Integer::sum);
+                .mapToLong(Integer::longValue)
+                .sum();
     }
 
     private static List<String> collectDigits(String splitLinePart) {

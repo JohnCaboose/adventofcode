@@ -8,13 +8,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-class Day21 implements ISolvableDay {
+class Day21 implements ISolvableDay<Long> {
 
     private static final List<Integer> POSSIBLE_POSITIONS = List.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
 
 
     @Override
-    public long partOneSolver(String input) {
+    public Long partOneSolver(String input) {
         List<Player> players = new ArrayList<>();
         try (Scanner scanner = new Scanner(input)) {
             while (scanner.hasNextLine()) {
@@ -70,9 +70,9 @@ class Day21 implements ISolvableDay {
         @Override
         public String toString() {
             return "Player{" +
-                    "position=" + getPosition() +
-                    ", score=" + getScore() +
-                    '}';
+                   "position=" + getPosition() +
+                   ", score=" + getScore() +
+                   '}';
         }
     }
 
@@ -108,7 +108,7 @@ class Day21 implements ISolvableDay {
     }
 
     @Override
-    public long partTwoSolver(String input) {
+    public Long partTwoSolver(String input) {
         Map<Integer, Long> universesPerSteps = new HashMap<>();
         universesPerSteps.put(3, 1L);
         universesPerSteps.put(4, 3L);
