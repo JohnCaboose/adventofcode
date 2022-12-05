@@ -12,7 +12,7 @@ class Day3 implements ISolvableDay {
 
         return rucksacks.stream()
                 // find the items found in both compartments of each rucksack
-                .map(Rucksack::intersection)
+                .map(Rucksack::commonItems)
                 // find the priorities of all these items
                 .flatMap(Set::stream)
                 .map(Day3::priority)
@@ -24,11 +24,11 @@ class Day3 implements ISolvableDay {
     @Override
     public long partTwoSolver(String input) {
         List<Rucksack> rucksacks = createRucksacks(input);
-        List<List<Rucksack>> groups = groupRucksacks(rucksacks);
+        List<Group> groups = groupRucksacks(rucksacks);
 
         return groups.stream()
                 // find the items found in all rucksacks in the group, for each group
-                .map(Day3::intersection)
+                .map(Group::commonItems)
                 // find the priorities of all these items
                 .flatMap(Set::stream)
                 .map(Day3::priority)
@@ -53,7 +53,10 @@ class Day3 implements ISolvableDay {
             this(items.codePoints().boxed().toList());
         }
 
-        public Set<Integer> intersection() {
+        /**
+         * @return the set of items shared between the two compartments
+         */
+        public Set<Integer> commonItems() {
             int size = codePoints.size();
             List<Integer> firstCompartment = codePoints.subList(0, size / 2);
             List<Integer> secondCompartment = codePoints.subList(size / 2, size);
@@ -65,33 +68,46 @@ class Day3 implements ISolvableDay {
 
     }
 
+    private record Group(List<Rucksack> rucksacks) {
+
+        public void add(Rucksack rucksack) {
+            rucksacks.add(rucksack);
+        }
+
+        /**
+         * @return the intersection of codePoints contained in all rucksacks (regardless of compartment)
+         */
+        private Set<Integer> commonItems() {
+            if (rucksacks.size() != 3) {
+                throw new IllegalStateException("Group must contain 3 rucksacks");
+            }
+
+            Set<Integer> intersection = new HashSet<>(rucksacks.get(0).codePoints());
+            intersection.retainAll(rucksacks.get(1).codePoints());
+            intersection.retainAll(rucksacks.get(2).codePoints());
+            return intersection;
+        }
+    }
+
     /**
      * @param rucksacks list of all rucksacks
      * @return list of all groups of rucksacks, three per group.
      */
-    private static List<List<Rucksack>> groupRucksacks(List<Rucksack> rucksacks) {
-        List<List<Rucksack>> groups = new ArrayList<>();
-        List<Rucksack> currentGroup = new ArrayList<>();
+    private static List<Group> groupRucksacks(List<Rucksack> rucksacks) {
+        List<Group> groups = new ArrayList<>();
+
+        Group currentGroup = new Group(new ArrayList<>());
+        groups.add(currentGroup);
+
         for (int i = 0; i < rucksacks.size(); i++) {
-            if (i % 3 == 0) {
-                currentGroup = new ArrayList<>();
+            if (i > 0 && i % 3 == 0) {
+                currentGroup = new Group(new ArrayList<>());
                 groups.add(currentGroup);
             }
             currentGroup.add(rucksacks.get(i));
         }
+        
         return groups;
-    }
-
-
-    /**
-     * @param group a group of rucksacks, size must be exactly 3 as per problem description
-     * @return the intersection of integers contained in all rucksacks (regardless of compartment)
-     */
-    private static Set<Integer> intersection(List<Rucksack> group) {
-        Set<Integer> intersection = new HashSet<>(group.get(0).codePoints());
-        intersection.retainAll(group.get(1).codePoints());
-        intersection.retainAll(group.get(2).codePoints());
-        return intersection;
     }
 
     /**
