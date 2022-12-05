@@ -184,10 +184,13 @@ class Day4 implements ISolvableDay<Long> {
         ExtendedMap<Integer, BingoableSequence> columns = new ExtendedHashMap<>();
         while (scanner.hasNextInt()) {
             int currentNumber = scanner.nextInt();
-            BoardNumber currentBoardNumber = allBoardNumbers.getOrStoreDefault(currentNumber, new BoardNumber(currentNumber));
+            BoardNumber currentBoardNumber =
+                    allBoardNumbers.getOrStoreDefault(currentNumber, new BoardNumber(currentNumber));
 
-            BingoableSequence currentRow = rows.getOrStoreDefault(amountOfNumbersHandled / NUMBER_OF_ROWS, new BingoableSequence());
-            BingoableSequence currentColumn = columns.getOrStoreDefault(amountOfNumbersHandled % NUMBER_OF_ROWS, new BingoableSequence());
+            BingoableSequence currentRow =
+                    rows.getOrStoreDefault(amountOfNumbersHandled / NUMBER_OF_ROWS, BingoableSequence::new);
+            BingoableSequence currentColumn =
+                    columns.getOrStoreDefault(amountOfNumbersHandled % NUMBER_OF_ROWS, BingoableSequence::new);
 
             currentRow.addNumber(currentBoardNumber);
             currentColumn.addNumber(currentBoardNumber);

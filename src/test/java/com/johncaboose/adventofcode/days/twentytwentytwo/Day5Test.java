@@ -19,17 +19,17 @@ class Day5Test {
 
     @Test
     void part1Solver_WHEN_realInput_THEN_outputMatchesValidatedAnswer() {
-        assertEquals("", sut.partOneSolver(INPUT));
+        assertEquals("RNZLFZSJH", sut.partOneSolver(INPUT));
     }
 
     @Test
     void part2Solver_WHEN_exampleInput_THEN_outputMatchesExampleOutput() {
-        assertEquals("", sut.partTwoSolver(EXAMPLE));
+        assertEquals("MCD", sut.partTwoSolver(EXAMPLE));
     }
 
     @Test
     void part2Solver_WHEN_realInput_THEN_outputMatchesValidatedAnswer() {
-        assertEquals("", sut.partTwoSolver(INPUT));
+        assertEquals("CNSFCGJSM", sut.partTwoSolver(INPUT));
     }
 
 }

@@ -131,7 +131,7 @@ class Day5 implements ISolvableDay<Long> {
 
         lineSegments.stream()
                 .flatMap(lineSegment -> lineSegment.allCoordinates(includeDiagonal).stream())
-                .forEach(coordinate -> allVentCoordinates.getOrStoreDefault(coordinate, new Counter()).increment());
+                .forEach(coordinate -> allVentCoordinates.getOrStoreDefault(coordinate, Counter::new).increment());
 
         return allVentCoordinates.entrySet()
                 .stream()

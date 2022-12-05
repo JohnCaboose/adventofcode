@@ -106,8 +106,8 @@ class Day12 implements ISolvableDay<Long> {
         final ExtendedMap<String, List<Cave>> adjacencyMap = new ExtendedHashMap<>();
 
         public void addConnection(String firstCaveName, String secondCaveName) {
-            List<Cave> availableCavesFromFirst = adjacencyMap.getOrStoreDefault(firstCaveName, new ArrayList<>());
-            List<Cave> availableCavesFromSecond = adjacencyMap.getOrStoreDefault(secondCaveName, new ArrayList<>());
+            List<Cave> availableCavesFromFirst = adjacencyMap.getOrStoreDefault(firstCaveName, ArrayList::new);
+            List<Cave> availableCavesFromSecond = adjacencyMap.getOrStoreDefault(secondCaveName, ArrayList::new);
 
 
             Cave firstCave = new Cave(firstCaveName);
