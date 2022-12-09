@@ -8,6 +8,7 @@ import com.johncaboose.adventofcode.shared.Utils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 class Day8 implements ISolvableDay<Long> {
 
@@ -37,17 +38,15 @@ class Day8 implements ISolvableDay<Long> {
         }
 
         public List<ForestVector> allVectorsToCheck() {
+            List<ForestVector> rows = getRows();
+            List<ForestVector> columns = getColumns();
+            List<ForestVector> vectors = Stream.concat(rows.stream(), columns.stream()).toList();
 
-            List<ForestVector> all = new ArrayList<>(getRows());
-            all.addAll(getColumns());
-
-            List<ForestVector> reversed = all.stream()
+            List<ForestVector> reversed = vectors.stream()
                     .map(ForestVector::reverse)
                     .toList();
 
-            all.addAll(reversed);
-
-            return all;
+            return Stream.concat(vectors.stream(), reversed.stream()).toList();
         }
 
         private List<ForestVector> getRows() {
@@ -85,59 +84,70 @@ class Day8 implements ISolvableDay<Long> {
             }
 
             int treeHeight = grid.get(c);
-            long top = partScoreY(cy, 0, cx, treeHeight);
-            long bottom = partScoreY(cy, lastY, cx, treeHeight);
-            long left = partScoreX(cx, 0, cy, treeHeight);
-            long right = partScoreX(cx, lastX, cy, treeHeight);
+            long up = viewDistanceUp(c, treeHeight);
+            long down = viewDistanceDown(c, treeHeight);
+            long left = viewDistanceLeft(c, treeHeight);
+            long right = viewDistanceRight(c, treeHeight);
 
-            return top * bottom * left * right;
+            return up * down * left * right;
         }
 
-        private long partScoreX(int startX, int endX, int y, int treeHeight) {
-            boolean increases = startX < endX;
-            int modifier = increases ? 1 : -1;
-
+        private long viewDistanceUp(Coordinate c, int treeHeight) {
             long count = 0;
-            for (int x = startX; increases ? x <= endX : x >= endX; x += modifier) {
-                if (x == startX) {
-                    continue;
-                }
+            for (int y = c.y() - 1; y >= 0; y--) {
                 count++;
-                Coordinate c = new Coordinate(x, y);
-                if (grid.get(c) >= treeHeight) {
+                Coordinate coordinate = new Coordinate(c.x(), y);
+                if (grid.get(coordinate) >= treeHeight) {
                     //this is last visible
                     break;
                 }
             }
-
             return count;
         }
 
-        private long partScoreY(int startY, int endY, int x, int treeHeight) {
-            boolean increases = startY < endY;
-            int modifier = increases ? 1 : -1;
-
+        private long viewDistanceDown(Coordinate start, int treeHeight) {
             long count = 0;
-            for (int y = startY; increases ? y <= endY : y >= endY; y += modifier) {
-                if (y == startY) {
-                    continue;
-                }
+            for (int y = start.y() + 1; y <= lastY; y++) {
                 count++;
-                Coordinate c = new Coordinate(x, y);
-                if (grid.get(c) >= treeHeight) {
+                Coordinate coordinate = new Coordinate(start.x(), y);
+                if (grid.get(coordinate) >= treeHeight) {
                     //this is last visible
                     break;
                 }
             }
+            return count;
+        }
 
+        private long viewDistanceLeft(Coordinate start, int treeHeight) {
+            long count = 0;
+            for (int x = start.x() - 1; x >= 0; x--) {
+                count++;
+                Coordinate coordinate = new Coordinate(x, start.y());
+                if (grid.get(coordinate) >= treeHeight) {
+                    //this is last visible
+                    break;
+                }
+            }
+            return count;
+        }
+
+        private long viewDistanceRight(Coordinate start, int treeHeight) {
+            long count = 0;
+            for (int x = start.x() + 1; x <= lastX; x++) {
+                count++;
+                Coordinate coordinate = new Coordinate(x, start.y());
+                if (grid.get(coordinate) >= treeHeight) {
+                    //this is last visible
+                    break;
+                }
+            }
             return count;
         }
 
         public long maxViewingScore() {
-            Forest forest = this;
             return grid.keySet()
                     .stream()
-                    .mapToLong(forest::viewingScore)
+                    .mapToLong(this::viewingScore)
                     .max()
                     .orElse(-1);
         }
