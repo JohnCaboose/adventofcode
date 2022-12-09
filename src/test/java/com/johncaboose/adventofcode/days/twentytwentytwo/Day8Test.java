@@ -24,12 +24,12 @@ class Day8Test {
 
     @Test
     void part2Solver_WHEN_exampleInput_THEN_outputMatchesExampleOutput() {
-        assertEquals(-1, sut.partTwoSolver(EXAMPLE));
+        assertEquals(8, sut.partTwoSolver(EXAMPLE));
     }
 
     @Test
     void part2Solver_WHEN_realInput_THEN_outputMatchesValidatedAnswer() {
-        assertEquals(-1, sut.partTwoSolver(INPUT));
+        assertEquals(284648, sut.partTwoSolver(INPUT));
     }
 
 }

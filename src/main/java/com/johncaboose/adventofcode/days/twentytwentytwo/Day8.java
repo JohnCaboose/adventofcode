@@ -25,9 +25,10 @@ class Day8 implements ISolvableDay<Long> {
 
     @Override
     public Long partTwoSolver(String input) {
-        return null;
-    }
+        Forest forest = new Forest(input);
 
+        return forest.maxViewingScore();
+    }
 
     private static class Forest extends IntegerGrid {
 
@@ -75,9 +76,76 @@ class Day8 implements ISolvableDay<Long> {
             return vectors;
         }
 
+        public long viewingScore(Coordinate c) {
+            int cx = c.x();
+            int cy = c.y();
+            if (cx == 0 || cy == 0 || cx == lastX || cy == lastY) {
+                // At the edge the score is always 0
+                return 0;
+            }
+
+            int treeHeight = grid.get(c);
+            long top = partScoreY(cy, 0, cx, treeHeight);
+            long bottom = partScoreY(cy, lastY, cx, treeHeight);
+            long left = partScoreX(cx, 0, cy, treeHeight);
+            long right = partScoreX(cx, lastX, cy, treeHeight);
+
+            return top * bottom * left * right;
+        }
+
+        private long partScoreX(int startX, int endX, int y, int treeHeight) {
+            boolean increases = startX < endX;
+            int modifier = increases ? 1 : -1;
+
+            long count = 0;
+            for (int x = startX; increases ? x <= endX : x >= endX; x += modifier) {
+                if (x == startX) {
+                    continue;
+                }
+                count++;
+                Coordinate c = new Coordinate(x, y);
+                if (grid.get(c) >= treeHeight) {
+                    //this is last visible
+                    break;
+                }
+            }
+
+            return count;
+        }
+
+        private long partScoreY(int startY, int endY, int x, int treeHeight) {
+            boolean increases = startY < endY;
+            int modifier = increases ? 1 : -1;
+
+            long count = 0;
+            for (int y = startY; increases ? y <= endY : y >= endY; y += modifier) {
+                if (y == startY) {
+                    continue;
+                }
+                count++;
+                Coordinate c = new Coordinate(x, y);
+                if (grid.get(c) >= treeHeight) {
+                    //this is last visible
+                    break;
+                }
+            }
+
+            return count;
+        }
+
+        public long maxViewingScore() {
+            Forest forest = this;
+            return grid.keySet()
+                    .stream()
+                    .mapToLong(forest::viewingScore)
+                    .max()
+                    .orElse(-1);
+        }
+
     }
 
     private record Tree(Coordinate coordinate, Integer height) {
+
     }
 
     private record ForestVector(List<Tree> trees) {
@@ -100,7 +168,10 @@ class Day8 implements ISolvableDay<Long> {
 
         @Override
         public String toString() {
-            return trees.stream().map(Tree::height).map(String::valueOf).collect(Collectors.joining(""));
+            return trees.stream()
+                    .map(Tree::height)
+                    .map(String::valueOf)
+                    .collect(Collectors.joining(""));
         }
     }
 }
