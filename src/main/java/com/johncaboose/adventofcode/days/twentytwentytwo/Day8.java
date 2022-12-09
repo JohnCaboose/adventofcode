@@ -8,7 +8,6 @@ import com.johncaboose.adventofcode.shared.Utils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 class Day8 implements ISolvableDay<Long> {
 
@@ -16,12 +15,7 @@ class Day8 implements ISolvableDay<Long> {
     public Long partOneSolver(String input) {
         Forest forest = new Forest(input);
 
-        return forest.allVectorsToCheck()
-                .stream()
-                .map(ForestVector::visible)
-                .flatMap(List::stream)
-                .distinct()
-                .count();
+        return forest.visibleFromOutside();
     }
 
     @Override
@@ -37,16 +31,24 @@ class Day8 implements ISolvableDay<Long> {
             super(input);
         }
 
-        public List<ForestVector> allVectorsToCheck() {
+        public long visibleFromOutside() {
+            return allVectorsToCheck().stream()
+                    .map(ForestVector::visible)
+                    .flatMap(List::stream)
+                    .distinct()
+                    .count();
+        }
+
+        private List<ForestVector> allVectorsToCheck() {
             List<ForestVector> rows = getRows();
             List<ForestVector> columns = getColumns();
-            List<ForestVector> vectors = Stream.concat(rows.stream(), columns.stream()).toList();
+            List<ForestVector> vectors = Utils.concatLists(rows, columns);
 
             List<ForestVector> reversed = vectors.stream()
-                    .map(ForestVector::reverse)
+                    .map(forestVector -> new ForestVector(Utils.reversedShallowCopy(forestVector.trees)))
                     .toList();
 
-            return Stream.concat(vectors.stream(), reversed.stream()).toList();
+            return Utils.concatLists(vectors, reversed);
         }
 
         private List<ForestVector> getRows() {
@@ -75,7 +77,15 @@ class Day8 implements ISolvableDay<Long> {
             return vectors;
         }
 
-        public long viewingScore(Coordinate c) {
+        public long maxViewingScore() {
+            return grid.keySet()
+                    .stream()
+                    .mapToLong(this::viewingScore)
+                    .max()
+                    .orElse(-1);
+        }
+
+        private long viewingScore(Coordinate c) {
             int cx = c.x();
             int cy = c.y();
             if (cx == 0 || cy == 0 || cx == lastX || cy == lastY) {
@@ -144,14 +154,6 @@ class Day8 implements ISolvableDay<Long> {
             return count;
         }
 
-        public long maxViewingScore() {
-            return grid.keySet()
-                    .stream()
-                    .mapToLong(this::viewingScore)
-                    .max()
-                    .orElse(-1);
-        }
-
     }
 
     private record Tree(Coordinate coordinate, Integer height) {
@@ -170,10 +172,6 @@ class Day8 implements ISolvableDay<Long> {
                 }
             }
             return visible;
-        }
-
-        public ForestVector reverse() {
-            return new ForestVector(Utils.reversedShallowCopy(trees));
         }
 
         @Override

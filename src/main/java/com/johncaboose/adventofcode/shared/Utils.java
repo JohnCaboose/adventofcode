@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Stream;
 
 public class Utils {
 
@@ -39,5 +40,9 @@ public class Utils {
         var copy = new ArrayList<>(list);
         Collections.reverse(copy);
         return copy;
+    }
+
+    public static <T> List<T> concatLists(List<T> first, List<T> second) {
+        return Stream.concat(first.stream(), second.stream()).toList();
     }
 }
