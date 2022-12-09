@@ -1,6 +1,7 @@
 package com.johncaboose.adventofcode.shared;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 
@@ -34,4 +35,9 @@ public class Utils {
     }
 
 
+    public static <T> List<T> reversedShallowCopy(List<T> list) {
+        var copy = new ArrayList<>(list);
+        Collections.reverse(copy);
+        return copy;
+    }
 }

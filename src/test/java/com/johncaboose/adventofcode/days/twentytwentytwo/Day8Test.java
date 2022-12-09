@@ -1,23 +1,25 @@
-import org.junit.jupiter.api.Test;
+package com.johncaboose.adventofcode.days.twentytwentytwo;
+
 import com.johncaboose.adventofcode.shared.ISolvableDay;
+import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class Day${DAY_NAME}Test {
+class Day8Test {
 
-    private static final String EXAMPLE = ProblemInput.DAY_${DAY_NAME}_EXAMPLE;
-    private static final String INPUT = ProblemInput.DAY_${DAY_NAME}_INPUT;
+    private static final String EXAMPLE = ProblemInput.DAY_8_EXAMPLE;
+    private static final String INPUT = ProblemInput.DAY_8_INPUT;
 
-    private final ISolvableDay<${SOLUTION_CLASS}> sut = new Day${DAY_NAME}();
+    private final ISolvableDay<Long> sut = new Day8();
 
     @Test
     void part1Solver_WHEN_exampleInput_THEN_outputMatchesExampleOutput() {
-        assertEquals(-1, sut.partOneSolver(EXAMPLE));
+        assertEquals(21, sut.partOneSolver(EXAMPLE));
     }
 
     @Test
     void part1Solver_WHEN_realInput_THEN_outputMatchesValidatedAnswer() {
-        assertEquals(-1, sut.partOneSolver(INPUT));
+        assertEquals(1733, sut.partOneSolver(INPUT));
     }
 
     @Test

@@ -70,6 +70,7 @@ public abstract class AbstractGrid<T> {
         return grid.size();
     }
 
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
