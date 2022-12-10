@@ -36,17 +36,17 @@ class Day10Test {
         assertEquals(SCREEN_EXAMPLE.hashCode(), sut.partTwoSolver(EXAMPLE));
     }
 
-    private static final String SCREEN_ACTUAL = """
+    private static final String SCREEN_REAL = """
             ###..#..#..##...##...##..###..#..#.####.
-            #..#.#..#.#..#.#..#.#..#.#..#.#..#....#.
-            ###..#..#.#....#..#.#....###..#..#...#..
-            #..#.#..#.#....####.#....#..#.#..#..#...
+            #..#.#..#.#..#.#..#.#..#.#..#.#..#....##
+            ###..#..#.#....#..#.#....###..#..#...#.#
+            #..#.#..#.#....####.#....#..#.#..#..#..#
             #..#.#..#.#..#.#..#.#..#.#..#.#..#.#....
             ###...##...##..#..#..##..###...##..####.""";
 
     @Test
     void part2Solver_WHEN_realInput_THEN_outputMatchesValidatedAnswer() {
-        assertEquals(SCREEN_ACTUAL.hashCode(), sut.partTwoSolver(INPUT));
+        assertEquals(SCREEN_REAL.hashCode(), sut.partTwoSolver(INPUT));
     }
 
 }

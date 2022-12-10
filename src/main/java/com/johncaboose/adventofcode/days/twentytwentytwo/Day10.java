@@ -77,7 +77,7 @@ class Day10 implements ISolvableDay<Long> {
         public String toString() {
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < pixels.size(); i++) {
-                if (i % 40 == 0) {
+                if (i > 0 && i % 40 == 0) {
                     sb.append(System.lineSeparator());
                 }
                 sb.append(pixels.get(i) ? LIT_PIXEL : DARK_PIXEL);
