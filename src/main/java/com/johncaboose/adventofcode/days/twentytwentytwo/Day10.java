@@ -68,7 +68,8 @@ class Day10 implements ISolvableDay<Long> {
         private List<Boolean> pixels = new ArrayList<>();
 
         public void drawPixel(long cycle, long spriteStartPosition) {
-            long adjustedCycle = cycle % 40;
+            // Thanks to ResetEra member Tony B for the manipulation needed to adjust cycle correctly, fixing my bug
+            long adjustedCycle = ((cycle - 1) % 40) + 1;
             boolean lit = adjustedCycle >= spriteStartPosition && adjustedCycle <= spriteStartPosition + 2;
             pixels.add(lit);
         }
