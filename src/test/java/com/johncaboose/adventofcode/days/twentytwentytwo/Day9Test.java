@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class Day9Test {
 
     private static final String EXAMPLE = ProblemInput.DAY_9_EXAMPLE;
+    private static final String EXAMPLE_2 = ProblemInput.DAY_9_EXAMPLE_2;
     private static final String INPUT = ProblemInput.DAY_9_INPUT;
 
     private final ISolvableDay<Long> sut = new Day9();
@@ -24,12 +25,12 @@ class Day9Test {
 
     @Test
     void part2Solver_WHEN_exampleInput_THEN_outputMatchesExampleOutput() {
-        assertEquals(1, sut.partTwoSolver(EXAMPLE));
+        assertEquals(36, sut.partTwoSolver(EXAMPLE_2));
     }
 
     @Test
     void part2Solver_WHEN_realInput_THEN_outputMatchesValidatedAnswer() {
-        assertEquals(-1, sut.partTwoSolver(INPUT));
+        assertEquals(2369, sut.partTwoSolver(INPUT));
     }
 
 }
