@@ -10,20 +10,29 @@ class Day11 implements ISolvableDay<Long> {
 
     @Override
     public Long partOneSolver(String input) {
-        String[] monkeyStrings = input.split("\n\n");
+        return solve(input, true);
+    }
 
-        List<Monkey> monkeys = new ArrayList<>();
-        for (String monkey : monkeyStrings) {
-            //index of list is same as name of Monkey
-            monkeys.add(Monkey.parseInput(monkey, monkeys));
-        }
+    @Override
+    public Long partTwoSolver(String input) {
+        return solve(input, false);
+    }
 
-        for (int round = 0; round < 20; round++) {
+    private static Long solve(String input, boolean partOne) {
+        List<Monkey> monkeys = parseInput(input);
+
+        long totalFactorOfTestability = monkeys.stream()
+                .mapToLong(Monkey::divisibleByTestValue)
+                .reduce(1L, Math::multiplyExact);
+
+        long divideByAfterInspect = partOne ? 3 : totalFactorOfTestability;
+
+        int amountOfRounds = partOne ? 20 : 10000;
+        for (int round = 0; round < amountOfRounds; round++) {
             for (Monkey monkey : monkeys) {
-                monkey.performRound();
+                monkey.performRound(partOne, divideByAfterInspect);
             }
         }
-
 
         return monkeys.stream()
                 .map(Monkey::inspectedItems)
@@ -33,9 +42,15 @@ class Day11 implements ISolvableDay<Long> {
                 .reduce(1L, Math::multiplyExact);
     }
 
-    @Override
-    public Long partTwoSolver(String input) {
-        return null;
+    private static List<Monkey> parseInput(String input) {
+        String[] monkeyStrings = input.split("\n\n");
+
+        List<Monkey> monkeys = new ArrayList<>();
+        for (String monkey : monkeyStrings) {
+            //index of list is same as name of Monkey
+            monkeys.add(Monkey.parseInput(monkey, monkeys));
+        }
+        return monkeys;
     }
 
     private record Monkey(Deque<Long> items,
@@ -57,11 +72,15 @@ class Day11 implements ISolvableDay<Long> {
                     new AtomicLong(0));
         }
 
-
-        public void performRound() {
+        public void performRound(boolean partOne, long divideWorryLevel) {
             while (!items.isEmpty()) {
                 long worryLevel = items.removeFirst();
-                long newWorryLevel = inspect(worryLevel) / 3;
+                long newWorryLevel = inspect(worryLevel);
+                if (partOne) {
+                    newWorryLevel /= divideWorryLevel;
+                } else {
+                    newWorryLevel %= divideWorryLevel;
+                }
                 int destination = test(newWorryLevel);
                 allMonkeys.get(destination).items().addLast(newWorryLevel);
             }
@@ -95,10 +114,7 @@ class Day11 implements ISolvableDay<Long> {
                 case "+" -> Operator.ADD;
                 default -> throw new IllegalArgumentException();
             };
-            OperateOn operateOn = switch (operationStrings[1]) {
-                case "old" -> OperateOn.OLD;
-                default -> OperateOn.VALUE;
-            };
+            OperateOn operateOn = operationStrings[1].equals("old") ? OperateOn.OLD : OperateOn.VALUE;
             long operationValue = 0L;
             if (operateOn == OperateOn.VALUE) {
                 operationValue = Long.parseLong(operationStrings[1]);
@@ -146,8 +162,8 @@ class Day11 implements ISolvableDay<Long> {
 
         private long operate(long old, long value) {
             return switch (operator) {
-                case ADD -> old + value;
-                case MULTIPLY -> old * value;
+                case ADD -> Math.addExact(old, value);
+                case MULTIPLY -> Math.multiplyExact(old, value);
             };
         }
 
