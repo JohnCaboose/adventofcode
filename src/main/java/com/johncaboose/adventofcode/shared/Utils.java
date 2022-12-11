@@ -28,7 +28,7 @@ public class Utils {
     public static List<Long> populateListWithCommaSeparatedLongs(String input, int radix) {
         List<Long> list = new ArrayList<>();
         Scanner scanner = new Scanner(input);
-        scanner.useDelimiter(",");
+        scanner.useDelimiter("\\s?,\\s?");
         while (scanner.hasNextLong()) {
             list.add(scanner.nextLong(radix));
         }
