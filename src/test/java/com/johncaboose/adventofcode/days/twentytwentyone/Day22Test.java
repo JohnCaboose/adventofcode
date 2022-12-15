@@ -45,7 +45,7 @@ public class Day22Test {
     @Test
     @Order(3)
     void part2Solver_WHEN_realInput_THEN_outputMatchesValidatedAnswer() {
-        //Warning: Test takes two minutes on m1 macbook air
+        //TODO Consider re-working to faster solution than current ~2 minutes...
         assertEquals(1182153534186233L, sut.partTwoSolver(INPUT));
     }
 

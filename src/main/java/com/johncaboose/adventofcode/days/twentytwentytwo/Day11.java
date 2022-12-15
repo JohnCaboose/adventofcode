@@ -122,7 +122,7 @@ class Day11 implements ISolvableDay<Long> {
             Operation operation = new Operation(operateOn, operator, operationValue);
 
             //parse test
-            long testValue = Long.parseLong(scanner.nextLine().substring("  Test: divisible by ".length()));
+            long divisibleBy = Long.parseLong(scanner.nextLine().substring("  Test: divisible by ".length()));
             int trueDestination =
                     Integer.parseInt(scanner.nextLine().substring("    If true: throw to monkey ".length()));
             int falseDestination =
@@ -131,7 +131,7 @@ class Day11 implements ISolvableDay<Long> {
             return new Monkey(
                     startingItems,
                     operation,
-                    testValue,
+                    divisibleBy,
                     trueDestination,
                     falseDestination,
                     monkeys

@@ -40,8 +40,12 @@ class Day10 implements ISolvableDay<Long> {
         for (int i = 1; i <= 240; i++) {
             cpu.tick();
         }
-        System.out.print(cpu.getScreen().toString());
-        return (long) cpu.getScreen().toString().hashCode();
+
+        String solution = cpu.getScreen().toString();
+        System.out.println("2022 Day 10 Part 2 START");
+        System.out.print(solution);
+        System.out.println(System.lineSeparator() + "END");
+        return (long) solution.hashCode();
     }
 
     private enum Instruction {
