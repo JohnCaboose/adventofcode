@@ -5,146 +5,193 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.*;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 class Day13 implements ISolvableDay<Long> {
 
     private static final Logger logger = LogManager.getLogger(Day13.class);
-    private static final String NUMBER_PATTERN = "\\d+";
-    private static final String LEFT_BRACKET_PATTERN = "\\[";
-    private static final String RIGHT_BRACKET_PATTERN = "]";
-    private static final String COMMA_PATTERN = ",";
+    private static final String FIRST_DIVIDER = "[[2]]";
+    private static final String SECOND_DIVIDER = "[[6]]";
+    private static final PacketComparator PACKET_COMPARATOR = new PacketComparator();
 
     @Override
     public Long partOneSolver(String input) {
-        return solve(input);
+        Map<Integer, PacketPair> packetPairs = parseInput(input);
+        return (long) packetPairs.entrySet()
+                .stream()
+                .filter(e -> e.getValue().orderedCorrectly())
+                .mapToInt(Map.Entry::getKey)
+                .sum();
     }
 
     @Override
     public Long partTwoSolver(String input) {
-        return null;
-    }
-
-    private static long solve(String input) {
-        Map<Integer, PacketPair> packetPairs = parseInput(input);
-
-        return packetPairs.entrySet()
-                .stream()
-                .filter(e -> e.getValue().rightOrder())
-                .mapToInt(Map.Entry::getKey)
-                .sum();
+        List<PacketContent> packets = parseInputAndAddDividerPackets(input);
+        return findDecoderKey(packets);
     }
 
     private static Map<Integer, PacketPair> parseInput(String input) {
         String[] coupleStrings = input.split("\n\n");
         Map<Integer, PacketPair> map = new TreeMap<>();
         for (int i = 0; i < coupleStrings.length; i++) {
-            map.put(i + 1, parsePacketCouple(coupleStrings[i]));
+            map.put(i + 1, PacketPair.parsePacketCouple(coupleStrings[i]));
         }
         return map;
     }
 
-    private static PacketPair parsePacketCouple(String packetPair) {
-        String[] packets = packetPair.split("\n");
-        return new PacketPair(parsePacket(packets[0]), parsePacket(packets[1]));
-    }
+    private static List<PacketContent> parseInputAndAddDividerPackets(String input) {
+        input += "\n" + FIRST_DIVIDER;
+        input += "\n" + SECOND_DIVIDER;
 
-    private static PacketContent parsePacket(String line) {
-        Scanner scanner = new Scanner(line);
-        return parsePacketContent(scanner);
-    }
-
-    private static PacketContent parsePacketContent(Scanner scanner) {
-        scanner.useDelimiter("");
-        Deque<PacketContent> stack = new ArrayDeque<>();
-
-        while (scanner.hasNext()) {
-            if (scanner.hasNext(NUMBER_PATTERN)) {
-                String number = "";
-                do {
-                    number += scanner.next(NUMBER_PATTERN);
-
-                } while (scanner.hasNext(NUMBER_PATTERN));
-                int value = Integer.parseInt(number);
-                stack.peekFirst().list.add(new PacketContent(value));
+        Scanner scanner = new Scanner(input);
+        List<PacketContent> packets = new ArrayList<>();
+        while (scanner.hasNextLine()) {
+            String line = scanner.nextLine();
+            if (line.isBlank()) {
                 continue;
             }
-
-            if (scanner.hasNext(LEFT_BRACKET_PATTERN)) {
-                scanner.next(LEFT_BRACKET_PATTERN);
-                PacketContent content = new PacketContent(new ArrayList<>());
-                if (!stack.isEmpty()) {
-                    stack.peekFirst().list.add(content);
-                }
-                stack.addFirst(content);
-
-                continue;
-            }
-
-            if (scanner.hasNext(COMMA_PATTERN)) {
-                scanner.next(COMMA_PATTERN);
-                continue;
-            }
-
-            if (scanner.hasNext(RIGHT_BRACKET_PATTERN)) {
-                scanner.next(RIGHT_BRACKET_PATTERN);
-                if (stack.size() == 1) {
-                    return stack.removeFirst();
-                } else {
-                    stack.removeFirst();
-                    continue;
-                }
-            }
-            throw new IllegalArgumentException("Could not parse the line");
+            packets.add(PacketContent.parsePacket(line));
         }
-        throw new IllegalArgumentException("Could not parse the line");
+        return packets;
+    }
+
+    private static long findDecoderKey(List<PacketContent> packets) {
+        List<PacketContent> sortedPackets = packets.stream()
+                .sorted(PACKET_COMPARATOR)
+                .toList();
+
+        Map<Integer, PacketContent> indexedPackets = new TreeMap<>();
+        for (int i = 0; i < sortedPackets.size(); i++) {
+            indexedPackets.put(i + 1, sortedPackets.get(i));
+        }
+
+        List<String> dividers = List.of(FIRST_DIVIDER, SECOND_DIVIDER);
+        return indexedPackets.entrySet()
+                .stream()
+                // Filter out dividers
+                .filter(entry -> {
+                    String packetString = entry.getValue().toString();
+                    return dividers.contains(packetString);
+                })
+                // Map to their 1-indexed indices
+                .mapToInt(Map.Entry::getKey)
+                // Decoder key is indices multiplied together
+                .reduce(1, Math::multiplyExact);
     }
 
     private record PacketPair(PacketContent left, PacketContent right) {
-        public boolean rightOrder() {
-            return PacketContent.correctlyOrdered(left, right);
+        public boolean orderedCorrectly() {
+            return PacketContent.orderedCorrectly(left, right);
+        }
+
+        private static PacketPair parsePacketCouple(String packetPair) {
+            String[] packets = packetPair.split("\n");
+            return new PacketPair(PacketContent.parsePacket(packets[0]), PacketContent.parsePacket(packets[1]));
         }
     }
 
-    private static class PacketContent {
-        private final List<PacketContent> list;
-        private final Integer integer;
+    private record PacketContent(List<PacketContent> list, Integer integer) {
+        private static final Pattern LEFT_BRACKET_PATTERN = Pattern.compile("\\[");
+        private static final Pattern RIGHT_BRACKET_PATTERN = Pattern.compile("]");
+        private static final Pattern COMMA_PATTERN = Pattern.compile(",");
+        private static final Pattern NUMBER_PATTERN = Pattern.compile("\\d+");
 
         public PacketContent(int integer) {
-            list = null;
-            this.integer = integer;
+            this(null, integer);
         }
 
         public PacketContent(List<PacketContent> list) {
-            this.list = list;
-            integer = null;
+            this(list, null);
         }
 
-        public static boolean correctlyOrdered(PacketContent left, PacketContent right) {
+        public static boolean orderedCorrectly(PacketContent left, PacketContent right) {
             logger.debug("=== Pair check ===");
-            int comparison = compare(left, right);
+            int comparison = PACKET_COMPARATOR.compare(left, right);
+
             if (comparison < 0) {
                 logger.debug("CORRECT ORDER");
                 return true;
+            } else {
+                logger.debug("INCORRECT ORDER");
+                return false;
             }
-            logger.debug("INCORRECT ORDER");
-            return false;
         }
 
-        private static int compare(PacketContent left, PacketContent right) {
+        @Override
+        public String toString() {
+            if (list != null) {
+                return "[" + list.stream().map(PacketContent::toString).collect(Collectors.joining(",")) + "]";
+            }
+            if (integer != null) {
+                return String.valueOf(integer);
+            }
+            throw new IllegalStateException();
+        }
+
+        private static PacketContent parsePacket(String line) {
+            Scanner scanner = new Scanner(line);
+            scanner.useDelimiter("");
+            Deque<PacketContent> stack = new ArrayDeque<>();
+
+            while (scanner.hasNext()) {
+                if (scanner.hasNext(NUMBER_PATTERN)) {
+                    // There has to be a way of tokenizing better to skip loop, but whatever
+                    StringBuilder number = new StringBuilder();
+                    do {
+                        number.append(scanner.next(NUMBER_PATTERN));
+                    } while (scanner.hasNext(NUMBER_PATTERN));
+                    int value = Integer.parseInt(number.toString());
+                    Objects.requireNonNull(stack.peekFirst()).list.add(new PacketContent(value));
+                    continue;
+                }
+
+                if (scanner.hasNext(LEFT_BRACKET_PATTERN)) {
+                    scanner.next(LEFT_BRACKET_PATTERN);
+                    PacketContent content = new PacketContent(new ArrayList<>());
+                    if (!stack.isEmpty()) {
+                        stack.peekFirst().list.add(content);
+                    }
+                    stack.addFirst(content);
+                    continue;
+                }
+
+                if (scanner.hasNext(COMMA_PATTERN)) {
+                    scanner.next(COMMA_PATTERN);
+                    continue;
+                }
+
+                if (scanner.hasNext(RIGHT_BRACKET_PATTERN)) {
+                    scanner.next(RIGHT_BRACKET_PATTERN);
+                    if (stack.size() == 1) {
+                        return stack.removeFirst();
+                    } else {
+                        stack.removeFirst();
+                        continue;
+                    }
+                }
+                throw new IllegalArgumentException("Could not parse packet");
+            }
+            throw new IllegalArgumentException("Could not parse packet");
+        }
+    }
+
+    private static class PacketComparator implements Comparator<PacketContent> {
+
+        @Override
+        public int compare(PacketContent left, PacketContent right) {
             logger.debug("Compare {} vs {}", left, right);
             if (left.integer != null && right.integer != null) {
-                //COMPARE NUMBERS
+                logger.trace("Both are integers");
                 return compare(left.integer, right.integer);
             }
 
             if (left.list != null && right.list != null) {
-                //COMPARE LISTS
+                logger.trace("Both are lists");
                 return compare(left.list, right.list);
             }
 
-            //COMPARE MIXED LIST/NUMBER
-            logger.debug("Side type mismatch, convert and try again");
+            logger.debug("Mixed types; convert and retry comparison");
             if (left.integer != null) {
                 return compare(new PacketContent(List.of(left)), right);
             } else {
@@ -152,59 +199,41 @@ class Day13 implements ISolvableDay<Long> {
             }
         }
 
-        private static int compare(int left, int right) {
-            int comparison = left - right;
-
-            if (comparison > 0) {
+        private int compare(int left, int right) {
+            if (right < left) {
                 logger.debug("Right side is smaller, so inputs are not in the right order");
-            } else if (comparison < 0) {
+                return 1;
+            } else if (left < right) {
                 logger.debug("Left side is smaller, so inputs are in the right order");
+                return -1;
             } else {
                 logger.trace("Sides are same, continue checking");
+                return 0;
             }
-
-
-            return comparison;
         }
 
-        private static int compare(List<PacketContent> leftList, List<PacketContent> rightList) {
-            for (int i = 0; true; i++) {
-                if (i == leftList.size() && i < rightList.size()) {
+        private int compare(List<PacketContent> left, List<PacketContent> right) {
+            for (int i = 0; ; i++) {
+                if (i == left.size() && i < right.size()) {
                     logger.debug("Left side ran out of items, so inputs are in the right order");
-                    return Integer.MIN_VALUE;
+                    return -1;
                 }
 
-                if (i < leftList.size() && i == rightList.size()) {
+                if (i < left.size() && i == right.size()) {
                     logger.debug("Right side ran out of items, so inputs are not in the right order");
-                    return Integer.MAX_VALUE;
+                    return 1;
                 }
 
-                if (i == leftList.size() && i == rightList.size()) {
+                if (i == left.size() && i == right.size()) {
                     logger.trace("Ran out of items in both lists, continue checking...");
                     return 0;
                 }
 
-                int comparisonValue = compare(leftList.get(i), rightList.get(i));
+                int comparisonValue = compare(left.get(i), right.get(i));
                 if (comparisonValue != 0) {
                     return comparisonValue;
-                }
+                } // else continue...
             }
-        }
-
-        @Override
-        public String toString() {
-            if (list != null) {
-                return "[" +
-                        list.stream()
-                                .map(PacketContent::toString)
-                                .collect(Collectors.joining(COMMA_PATTERN))
-                        + "]";
-            }
-            if (integer != null) {
-                return String.valueOf(integer);
-            }
-
-            throw new IllegalStateException();
         }
     }
 

@@ -24,12 +24,12 @@ class Day13Test {
 
     @Test
     void part2Solver_WHEN_exampleInput_THEN_outputMatchesExampleOutput() {
-        assertEquals(-1, sut.partTwoSolver(EXAMPLE));
+        assertEquals(140, sut.partTwoSolver(EXAMPLE));
     }
 
     @Test
     void part2Solver_WHEN_realInput_THEN_outputMatchesValidatedAnswer() {
-        assertEquals(-1, sut.partTwoSolver(INPUT));
+        assertEquals(24921, sut.partTwoSolver(INPUT));
     }
 
 }
