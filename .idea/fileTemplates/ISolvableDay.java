@@ -1,6 +1,10 @@
 import com.johncaboose.adventofcode.shared.ISolvableDay;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-class Day${DAY_NAME} implements ISolvableDay<${SOLUTION_CLASS}> {
+class ${NAME} implements ISolvableDay<${SOLUTION_CLASS}> {
+
+    private static final Logger logger = LogManager.getLogger(${NAME}.class);
 
     @Override
     public ${SOLUTION_CLASS} partOneSolver(String input) {

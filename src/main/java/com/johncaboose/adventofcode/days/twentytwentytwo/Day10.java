@@ -1,10 +1,14 @@
 package com.johncaboose.adventofcode.days.twentytwentytwo;
 
 import com.johncaboose.adventofcode.shared.ISolvableDay;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.*;
 
 class Day10 implements ISolvableDay<Long> {
+
+    private static final Logger logger = LogManager.getLogger(Day10.class);
 
     private static final String LIT_PIXEL = "#";
     private static final String DARK_PIXEL = ".";
@@ -42,9 +46,7 @@ class Day10 implements ISolvableDay<Long> {
         }
 
         String solution = cpu.getScreen().toString();
-        System.out.println("2022 Day 10 Part 2 START");
-        System.out.print(solution);
-        System.out.println(System.lineSeparator() + "END");
+        logger.debug("Screen:\n{}", solution);
         return (long) solution.hashCode();
     }
 
