@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class Day16Test {
+class Day16Test {
 
     private static final String EXAMPLE_1 = "8A004A801A8002F478";
     private static final String EXAMPLE_2 = "620080001611562C8802118E34";

@@ -8,7 +8,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class Day18Test {
+class Day18Test {
 
     private static final String EXAMPLE = ProblemInput.DAY_18_EXAMPLE;
     private static final String INPUT = ProblemInput.DAY_18_INPUT;

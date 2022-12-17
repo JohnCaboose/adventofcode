@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class Day15Test {
+class Day15Test {
 
     private static final String EXAMPLE = ProblemInput.DAY_15_EXAMPLE;
     private static final String INPUT = ProblemInput.DAY_15_INPUT;
