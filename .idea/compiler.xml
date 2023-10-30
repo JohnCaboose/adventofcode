@@ -9,8 +9,5 @@
         <module name="adventofcode" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="adventofcode" target="17" />
-    </bytecodeTargetLevel>
   </component>
 </project>
