@@ -14,13 +14,17 @@ class Day4 implements ISolvableDay<Long> {
     public Long partOneSolver(String input) {
         List<Passport> passports = parseInput(input);
         return passports.stream()
-                .filter(Passport::isValid)
+                .filter(Passport::containsRequiredFields)
                 .count();
     }
 
     @Override
     public Long partTwoSolver(String input) {
-        return null;
+        List<Passport> passports = parseInput(input);
+        return passports.stream()
+                .filter(Passport::containsRequiredFields)
+                .filter(Passport::fieldsContainValidData)
+                .count();
     }
 
     private static List<Passport> parseInput(String input) {
@@ -56,6 +60,7 @@ class Day4 implements ISolvableDay<Long> {
 
 
     private enum PassportField {
+
         BIRTH_YEAR("byr"),
         ISSUE_YEAR("iyr"),
         EXPIRATION_YEAR("eyr"),
@@ -65,6 +70,9 @@ class Day4 implements ISolvableDay<Long> {
         PASSPORT_ID("pid"),
         COUNTRY_ID("cid");
 
+        private static final Set<String> VALID_EYE_COLORS = Set.of(
+                "amb", "blu", "brn", "gry", "grn", "hzl", "oth"
+        );
         private final String tag;
 
         PassportField(String tag) {
@@ -78,6 +86,55 @@ class Day4 implements ISolvableDay<Long> {
                 }
             }
             throw new IllegalArgumentException();
+        }
+
+        public boolean validData(String data) {
+            try {
+
+                switch (this) {
+                    case BIRTH_YEAR -> {
+                        int parsed = Integer.parseInt(data);
+                        return parsed >= 1920 && parsed <= 2002;
+                    }
+                    case ISSUE_YEAR -> {
+                        int parsed = Integer.parseInt(data);
+                        return parsed >= 2010 && parsed <= 2020;
+                    }
+                    case EXPIRATION_YEAR -> {
+                        int parsed = Integer.parseInt(data);
+                        return parsed >= 2020 && parsed <= 2030;
+                    }
+                    case HEIGHT -> {
+                        if (data.contains("cm")) {
+                            var parsed = Integer.parseInt(data.split("cm")[0]);
+                            return parsed >= 150 && parsed <= 193;
+                        }
+
+                        if (data.contains("in")) {
+                            var parsed = Integer.parseInt(data.split("in")[0]);
+                            return parsed >= 59 && parsed <= 76;
+                        }
+
+                        return false;
+                    }
+                    case HAIR_COLOR -> {
+                        return data.matches("#[0-9a-f]{6}");
+                    }
+                    case EYE_COLOR -> {
+                        return VALID_EYE_COLORS.contains(data);
+                    }
+                    case PASSPORT_ID -> {
+                        Integer.parseInt(data);
+                        return data.length() == 9;
+                    }
+                    case COUNTRY_ID -> {
+                        return true;
+                    }
+                }
+            } catch (RuntimeException e) {
+                logger.trace("Caught exception when checking data validity, Field: {}, Data: {}", this, data, e);
+            }
+            return false;
         }
 
     }
@@ -94,15 +151,19 @@ class Day4 implements ISolvableDay<Long> {
                 PassportField.PASSPORT_ID
         );
 
-        public boolean isValid() {
+        public boolean containsRequiredFields() {
             return passportFields.keySet().containsAll(REQUIRED_FIELDS);
+        }
+
+        public boolean fieldsContainValidData() {
+            return passportFields.entrySet().stream()
+                    .allMatch(entry -> entry.getKey().validData(entry.getValue()));
         }
 
         @Override
         public String toString() {
             return "Passport{" +
-                    "valid=" + isValid() +
-                    ", passportFields=" + passportFields +
+                    "passportFields=" + passportFields +
                     '}';
         }
     }
