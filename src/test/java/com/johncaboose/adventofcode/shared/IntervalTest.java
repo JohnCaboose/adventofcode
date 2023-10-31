@@ -1,8 +1,14 @@
 package com.johncaboose.adventofcode.shared;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 class IntervalTest {
 
@@ -479,4 +485,30 @@ class IntervalTest {
     }
 
 
+    @ParameterizedTest
+    @MethodSource("halveTestValues")
+    void halve(int start, int end, boolean upper, int expectedStart, int expectedEnd) {
+        assertEquals(new Interval(expectedStart, expectedEnd), new Interval(start, end).halve(upper));
+    }
+
+    private static Stream<Arguments> halveTestValues() {
+        boolean lower = false;
+        boolean upper = true;
+        return Stream.of(
+                arguments(0, 127, lower, 0, 63),
+                arguments(0, 127, upper, 64, 127),
+                arguments(0, 63, lower, 0, 31),
+                arguments(0, 63, upper, 32, 63),
+                arguments(32, 63, lower, 32, 47),
+                arguments(32, 63, upper, 48, 63),
+                arguments(32, 47, lower, 32, 39),
+                arguments(32, 47, upper, 40, 47),
+                arguments(40, 47, lower, 40, 43),
+                arguments(40, 47, upper, 44, 47),
+                arguments(44, 47, lower, 44, 45),
+                arguments(44, 47, upper, 46, 47),
+                arguments(44, 45, lower, 44, 44),
+                arguments(44, 45, upper, 45, 45)
+        );
+    }
 }

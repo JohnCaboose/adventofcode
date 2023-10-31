@@ -92,6 +92,23 @@ public record Interval(int startInclusive, int endInclusive) {
     }
 
     /**
+     * Halve the interval
+     *
+     * @param upperHalf keep the upper half if true, lower half if false
+     * @return an interval that contains half of the interval numbers
+     */
+    public Interval halve(boolean upperHalf) {
+        int halfwayPoint = startInclusive + ((this.endInclusive - this.startInclusive) / 2);
+
+        if (upperHalf) {
+            return new Interval(halfwayPoint + 1, this.endInclusive);
+        } else {
+            return new Interval(this.startInclusive, halfwayPoint);
+
+        }
+    }
+
+    /**
      * @return the amount of values contained in the interval
      */
     public long size() {
@@ -127,4 +144,6 @@ public record Interval(int startInclusive, int endInclusive) {
     public String toString() {
         return startInclusive + ".." + endInclusive;
     }
+
+
 }
