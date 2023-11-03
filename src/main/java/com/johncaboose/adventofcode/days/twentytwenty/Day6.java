@@ -17,28 +17,38 @@ class Day6 implements ISolvableDay<Long> {
 
     @Override
     public Long partOneSolver(String input) {
-        List<Set<Integer>> groupsAnswers = parseInputPart1(input);
-        return solve(groupsAnswers);
+        return solve(input, true);
     }
-
 
     @Override
     public Long partTwoSolver(String input) {
-        List<Set<Integer>> groupsAnswers = parseInputPart2(input);
-        return solve(groupsAnswers);
+        return solve(input, false);
     }
 
-    private static long solve(List<Set<Integer>> groupsAnswers) {
-        return groupsAnswers.stream()
-                .map(Set::size)
+    private static long solve(String input, boolean part1) {
+        List<Set<Integer>> answersPerGroup = parseInput(input, part1);
+        return answersPerGroup.stream()
+                .map(Set::size) // amount of answers per group
                 .mapToLong(Long::valueOf)
-                .sum();
+                .sum(); // sum of all groups answers
+    }
+
+    private static List<Set<Integer>> parseInput(String input, boolean part1) {
+        //finish all groups with an empty line, for parsing purposes
+        input += System.lineSeparator() + System.lineSeparator();
+
+        if (part1) {
+            return parseInputPart1(input);
+        } else {
+            return parseInputPart2(input);
+        }
+
     }
 
     private static List<Set<Integer>> parseInputPart1(String input) {
-        List<Set<Integer>> answersPerGroup = new ArrayList<>();
-
         Scanner scanner = new Scanner(input);
+
+        List<Set<Integer>> answersPerGroup = new ArrayList<>();
         Set<Integer> answeredByAnyoneInGroup = new HashSet<>();
         while (scanner.hasNextLine()) {
             String onePersonsAnswers = scanner.nextLine();
@@ -50,19 +60,18 @@ class Day6 implements ISolvableDay<Long> {
             Set<Integer> answeredByThePerson = onePersonsAnswers.chars().boxed().collect(Collectors.toSet());
             answeredByAnyoneInGroup.addAll(answeredByThePerson);
         }
-        answersPerGroup.add(answeredByAnyoneInGroup);
         return answersPerGroup;
     }
 
-    private static List<Set<Integer>> parseInputPart2(String input) {
-        List<Set<Integer>> groups = new ArrayList<>();
 
+    private static List<Set<Integer>> parseInputPart2(String input) {
         Scanner scanner = new Scanner(input);
+        List<Set<Integer>> answersPerGroup = new ArrayList<>();
         Set<Integer> answeredByAllInTheGroup = new HashSet<>(ALL_QUESTIONS);
         while (scanner.hasNextLine()) {
             String onePersonsAnswers = scanner.nextLine();
             if (onePersonsAnswers.isBlank()) {
-                groups.add(answeredByAllInTheGroup);
+                answersPerGroup.add(answeredByAllInTheGroup);
                 answeredByAllInTheGroup = new HashSet<>(ALL_QUESTIONS);
                 continue;
             }
@@ -71,7 +80,6 @@ class Day6 implements ISolvableDay<Long> {
 
             answeredByAllInTheGroup.removeAll(notAnsweredByThePerson);
         }
-        groups.add(answeredByAllInTheGroup);
-        return groups;
+        return answersPerGroup;
     }
 }
