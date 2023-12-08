@@ -34,6 +34,22 @@ public record Coordinate(int x, int y) {
         );
     }
 
+    /**
+     * @return list of neighbour coordinates INCLUDING the diagonal neighbours.
+     */
+    public List<Coordinate> allNeighbours() {
+        return List.of(
+                new Coordinate(x - 1, y),
+                new Coordinate(x + 1, y),
+                new Coordinate(x, y - 1),
+                new Coordinate(x, y + 1),
+                new Coordinate(x - 1, y - 1),
+                new Coordinate(x + 1, y + 1),
+                new Coordinate(x - 1, y + 1),
+                new Coordinate(x + 1, y - 1)
+        );
+    }
+
     @Override
     public String toString() {
         return x + SEPARATOR_STRING + y;
