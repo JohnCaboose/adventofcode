@@ -29,25 +29,19 @@ class Day5 implements ISolvableDay<Long> {
 
     @Override
     public Long partTwoSolver(String input) {
-        //TODO this takes way too long (6 minutes) and needs to be optimized
+        //TODO making this exhaustive search multi-threaded was great
+        // but I assume a more refined solution exists that is vastly more performant
         List<LongStream> seedRanges = parseSeedRanges(input);
         Almanac almanac = parseAlmanac(input);
-        long smallestFound = Long.MAX_VALUE;
-        for (LongStream stream : seedRanges) {
-            long found = stream.map(almanac::seedToLocation)
-                    .min()
-                    .orElseThrow(SolutionNotFoundException::new);
-            logger.info("Smallest found in current range: {}", found);
-            if (found < smallestFound) {
-                smallestFound = found;
-            }
-        }
 
-        if (smallestFound == Long.MAX_VALUE) {
-            throw new SolutionNotFoundException();
-        }
+        LongStream flattenedRanges = seedRanges.stream()
+                .flatMapToLong(LongStream::parallel);
 
-        return smallestFound;
+        return flattenedRanges
+                .parallel()
+                .map(almanac::seedToLocation)
+                .min()
+                .orElseThrow(SolutionNotFoundException::new);
     }
 
     private record Almanac(
