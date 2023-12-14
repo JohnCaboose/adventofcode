@@ -3,8 +3,14 @@ package com.johncaboose.adventofcode.shared;
 /**
  * Represents an integer interval, with inclusive start and end values. Assumes that the start value is less than or
  * equal to the end value.
+ * <p>
+ * Should be immutable.
  */
-public record Interval(int startInclusive, int endInclusive) {
+public record Interval(long startInclusive, long endInclusive) {
+
+    public Interval(int startInclusive, int endInclusive) {
+        this((long) startInclusive, endInclusive);
+    }
 
     /**
      * Constructs an interval with the specified start and end points, both inclusive. Assumes that startInclusive less
@@ -17,10 +23,6 @@ public record Interval(int startInclusive, int endInclusive) {
         this(Integer.parseInt(startInclusive), Integer.parseInt(endInclusive));
     }
 
-    public Interval(Interval other) {
-        this(other.startInclusive, other.endInclusive);
-    }
-
     /**
      * Returns true if this interval contains the specified value. More formally, returns true where (startInclusive >=
      * value <= endInclusive).
@@ -28,7 +30,7 @@ public record Interval(int startInclusive, int endInclusive) {
      * @param value value to check
      * @return true if specified value is inside this interval, otherwise false
      */
-    public boolean contains(int value) {
+    public boolean contains(long value) {
         return value >= startInclusive && value <= endInclusive;
     }
 
@@ -76,14 +78,14 @@ public record Interval(int startInclusive, int endInclusive) {
         }
 
         if (this.contains(otherInterval.startInclusive) && this.startInclusive != otherInterval.startInclusive) {
-            int firstEnd = otherInterval.startInclusive - 1;
-            int secondStart = firstEnd + 1;
+            long firstEnd = otherInterval.startInclusive - 1;
+            long secondStart = firstEnd + 1;
             return new Couple<>(new Interval(startInclusive, firstEnd), new Interval(secondStart, endInclusive));
         }
 
         if (this.contains(otherInterval.endInclusive)) {
-            int firstEnd = otherInterval.endInclusive;
-            int secondStart = firstEnd + 1;
+            long firstEnd = otherInterval.endInclusive;
+            long secondStart = firstEnd + 1;
             return new Couple<>(new Interval(startInclusive, firstEnd), new Interval(secondStart, endInclusive));
         }
 
@@ -98,7 +100,7 @@ public record Interval(int startInclusive, int endInclusive) {
      * @return an interval that contains half of the interval numbers
      */
     public Interval halve(boolean upperHalf) {
-        int halfwayPoint = startInclusive + ((this.endInclusive - this.startInclusive) / 2);
+        long halfwayPoint = startInclusive + ((this.endInclusive - this.startInclusive) / 2);
 
         if (upperHalf) {
             return new Interval(halfwayPoint + 1, this.endInclusive);

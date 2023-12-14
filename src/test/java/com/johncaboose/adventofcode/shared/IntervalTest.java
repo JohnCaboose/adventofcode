@@ -301,16 +301,14 @@ class IntervalTest {
     void clamped_WHEN_envelopsClamp_THEN_returnsCorrectInterval() {
         Interval sut = new Interval(10, 40);
         Interval clamp = new Interval(15, 30);
-        Interval expected = new Interval(clamp);
-        assertEquals(expected, sut.clamped(clamp));
+        assertEquals(clamp, sut.clamped(clamp));
     }
 
     @Test
     void clamped_WHEN_envelopsClamp_AND_negative_THEN_returnsCorrectInterval() {
         Interval sut = new Interval(-10, -5);
         Interval clamp = new Interval(-7, -6);
-        Interval expected = new Interval(clamp);
-        assertEquals(expected, sut.clamped(clamp));
+        assertEquals(clamp, sut.clamped(clamp));
     }
 
     @Test

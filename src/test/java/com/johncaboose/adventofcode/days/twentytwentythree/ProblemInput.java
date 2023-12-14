@@ -1814,4 +1814,10 @@ public class ProblemInput {
             3988271400 3579102893 174801271
             3118957749 1268583519 56114153
             529889429 111018407 161724523""";
+    public static final String DAY_6_EXAMPLE = """
+            Time:      7  15   30
+            Distance:  9  40  200""";
+    public static final String DAY_6_INPUT = """
+            Time:        56     97     78     75
+            Distance:   546   1927   1131   1139""";
 }
