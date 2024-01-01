@@ -52,19 +52,7 @@ class Day9 implements ISolvableDay<Long> {
     }
 
     private static long extrapolatePrevious(List<Long> history) {
-        if (history.stream().allMatch(l -> l == 0)) {
-            return 0;
-        }
-
-        List<Long> differences = new ArrayList<>();
-        for (int i = 0; i < history.size() - 1; i++) {
-            long difference = history.get(i + 1) - history.get(i);
-            differences.add(difference);
-        }
-
-        long toRemove = extrapolatePrevious(differences);
-
-        return history.getFirst() - toRemove;
+        return extrapolateNext(history.reversed());
     }
 
 }
